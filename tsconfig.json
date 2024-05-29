@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "lib": [
+            "esnext",
+            "dom",
+            "dom.iterable",
+            "scripthost"
+        ],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2015",
+        "types": [
+            "@vue/compiler-core/dist/compiler-core",
+            "@vue/compiler-dom/dist/compiler-dom",
+            "@vue/compiler-sfc/dist/compiler-sfc",
+            "@vue/compiler-ssr/dist/compiler-ssr",
+            "@vue/reactivity/dist/reactivity",
+            "@vue/runtime-core/dist/runtime-core",
+            "@vue/runtime-dom/dist/runtime-dom"
+        ],
+        "useDefineForClassFields": true
+    },
+    "include": [
+        "node_modules/@remote-ui/vue/build/ts/host/index.d.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "src/shims-*.d.ts"
+    ]
+}
