@@ -1,0 +1,27 @@
+version: '3.6'
+
+volumes:
+    redis:
+
+services:
+    node:
+        image: node:20
+        user: node
+        volumes:
+            - ./:/project
+        working_dir: /project
+
+    server:
+        image: node:20-alpine
+        user: node
+        volumes:
+            - ./:/project
+        working_dir: /project
+        command: 'node ./server.mjs'
+        labels:
+            traefik.enable: 'true'
+            traefik.http.routers.web-extensions-server.rule: 'HostRegexp(`web-extensions-server.simla.{[^.]+}`)'
+            traefik.http.routers.web-extensions-server.priority: 1
+            traefik.http.routers.web-extensions-server.service: web-extensions-server
+            traefik.http.services.web-extensions-server.loadbalancer.server.port: '80'
+
