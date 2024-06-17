@@ -34,6 +34,8 @@
     CrmYandexMap
 ```
 
+Более подробно познакомиться с этими компонентами можно на [витрине](https://design.retailcrm.tech/omnica-vue3/index.html).
+
 Доступны props, слоты (дефолтные и именнованные). Методы компонентов, компонент Transition, scoped slots, refs, директивы (кроме v-if/v-show) и модификаторы на данный момент недоступны.
 
 Доступны события:
@@ -112,6 +114,25 @@ export { UiButton, UiModalWindow, CrmYandexMap }
 ```
 Более подробно можно посмотреть в документации [@omnicajs/vue-remote](https://github.com/omnicajs/vue-remote/)
 
+## Инициализация расширения
+В CRM доступна функция `extensionsInit`, которую можно вызвать в консоли для инициализации расширения.
+В качестве параметра функция принимает массив объектов вида:
+
+```javascript
+[{
+	entrypoint: 'extension-url',
+	placement: 'delivery-address',
+	scope: 'order-card',
+	stylesheet: 'stylesheet-url',
+	uuid: '1'
+}]
+```
+
+`extension-url` - адрес страницы с подключаемыми скриптами сборки расширения.
+`stylesheet-url` - файл стилей расширения.
+
+В текущем расширении сервер, возвращающий перечисленные ресурсы, описан в файле [server.mjs](https://github.com/retailcrm/core-ui-extensions-examples/blob/master/server.mjs).
+
 # Пример удаленного приложения на основе @omnicajs/vue-remote
 
 ## Описание примера
@@ -145,6 +166,18 @@ make start
 
 ```bash
 make start
+```
+
+В консоли вызвать:
+
+```javascript
+extensionsInit([{
+    entrypoint: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
+	placement: 'delivery-address',
+	scope: 'order-card',
+	stylesheet: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
+	uuid: '1'
+}])
 ```
 
 На странице "Новый заказ" в секции "Отгрузка и доставка" под полем "Адрес" должна появиться кнопка "На карте" при клике на которую открывается модальное окно с картой.
