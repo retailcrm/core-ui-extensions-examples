@@ -120,11 +120,11 @@ export { UiButton, UiModalWindow, CrmYandexMap }
 
 ```javascript
 [{
-	entrypoint: 'extension-url',
-	placement: 'delivery-address',
-	scope: 'order-card',
-	stylesheet: 'stylesheet-url',
-	uuid: '1'
+    entrypoint: 'extension-url',
+    placement: 'delivery-address',
+    scope: 'order-card',
+    stylesheet: 'stylesheet-url',
+    uuid: '1'
 }]
 ```
 
@@ -173,10 +173,10 @@ make start
 ```javascript
 extensionsInit([{
     entrypoint: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
-	placement: 'delivery-address',
-	scope: 'order-card',
-	stylesheet: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
-	uuid: '1'
+    placement: 'delivery-address',
+    scope: 'order-card',
+    stylesheet: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
+    uuid: '1'
 }])
 ```
 
