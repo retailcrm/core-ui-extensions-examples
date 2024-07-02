@@ -85,8 +85,8 @@ app.get('/extension/:uuid/stylesheet', async (request, response) => {
     }
 })
 
-const server = app.listen(80, () => {
-    console.log('Serving on port 80')
+const server = app.listen(3000, () => {
+    console.log('Serving on port 3000')
 })
 
 process.on('SIGINT', () => {

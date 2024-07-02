@@ -23,5 +23,5 @@ services:
             traefik.http.routers.web-extensions-server.rule: 'HostRegexp(`web-extensions-server.simla.{[^.]+}`)'
             traefik.http.routers.web-extensions-server.priority: 1
             traefik.http.routers.web-extensions-server.service: web-extensions-server
-            traefik.http.services.web-extensions-server.loadbalancer.server.port: '80'
+            traefik.http.services.web-extensions-server.loadbalancer.server.port: '3000'
 
