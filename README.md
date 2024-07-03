@@ -147,38 +147,31 @@ export { UiButton, UiModalWindow, CrmYandexMap }
 
 ### Начальное развертывание
 
-Сборка пакетов
+Установка зависимостей
 ```bash
-make node_modules
+yarn install
 ```
 
 Сборка приложения
 ```bash
-make build
+yarn build
 ```
 
-Запуск
-```bash
-make start
-```
+Для инициализации приложения внутри CRM необходимо выполнить его сборку (```yarn build```), а затем предоставить html страницу с подключенными скриптами сборки в качестве значения ```entrypoint```, а так же файл стилей в качестве значения ```stylesheet``` объекта конфигурации.
 
-После запустить ядро
+В данном примере есть файл сервера, который отдает необходимые ресурсы и после сборки приложения достаточно его запустить с помощью команды ```node server.mjs```.
 
-```bash
-make start
-```
-
-В консоли вызвать:
+После этого, на странице заказа в CRM достаточно вызвать в консоли браузера метод ```extensionsInit```:
 
 ```javascript
 extensionsInit([{
-    entrypoint: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
+    entrypoint: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
     placement: 'delivery-address',
     scope: 'order-card',
-    stylesheet: 'http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
+    stylesheet: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
     uuid: '1'
 }])
 ```
 
-На странице "Новый заказ" в секции "Отгрузка и доставка" под полем "Адрес" должна появиться кнопка "На карте" при клике на которую открывается модальное окно с картой.
-Для работы карты нужен api ключ
+В секции "Отгрузка и доставка" под полем "Адрес" должна появиться кнопка "На карте". При клике на кнопку открывается модальное окно с картой.
+Для работы карты нужен api ключ.
