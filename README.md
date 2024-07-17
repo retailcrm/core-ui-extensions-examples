@@ -166,8 +166,8 @@ yarn build
 ```javascript
 extensionsInit([{
     entrypoint: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
-    placement: 'delivery-address',
-    scope: 'order-card',
+    placement: 'customer-phone',
+    scope: ['order-card', 'customer-card'],
     stylesheet: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
     uuid: '1'
 }])
