@@ -4,6 +4,7 @@ const webpack = require('webpack')
 
 const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const CSSExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -125,6 +126,10 @@ module.exports = {
             readline.clearLine(process.stdout, 0);
             readline.cursorTo(process.stdout, 0, null);
             process.stdout.write(`${Math.round(percentage * 100)}% ${message}`);
+        }),
+        new HtmlWebpackPlugin({
+            title: 'UI Extension: Yandex Maps',
+            publicPath: './',
         }),
     ],
 
