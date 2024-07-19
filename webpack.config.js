@@ -186,34 +186,6 @@ module.exports = {
         }],
     },
 
-    optimization: {
-        runtimeChunk: 'single',
-        splitChunks: {
-            chunks: 'initial',
-            cacheGroups: {
-                vue: {
-                    test: /node_modules\/(@vue\/|vue\/)/,
-                    name: 'vue',
-                    chunks: 'all',
-                    enforce: true,
-                },
-                remove_ui: {
-                    test: /node_modules\/@remote-ui\//,
-                    name: 'remote-ui',
-                    chunks: 'all',
-                    enforce: true,
-                },
-                vendor: {
-                    test (module) {
-                        return module.resource && /node_modules/.test(module.resource)
-                    },
-                    name: 'vendor',
-                    priority: -10,
-                    chunks: 'all',
-                },
-            },
-        },
-    },
 
     cache: {
         type: 'filesystem',

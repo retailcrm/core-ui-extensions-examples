@@ -30,10 +30,6 @@ const render = (name, manifest, entrypoint) => {
 <head>
     <meta charset="UTF-8">
     <title>UI Extension: ${name}</title>
-    <script type="module" src="${manifest['dist/runtime.js']}"></script>
-    <script type="module" src="${manifest['dist/vendor.js']}"></script>
-    <script type="module" src="${manifest['dist/vue.js']}"></script>
-    <script type="module" src="${manifest['dist/remote-ui.js']}"></script>
     <script type="module" src="${manifest[entrypoint]}"></script>
 </head>
 <body></body>
