@@ -73,9 +73,6 @@ module.exports = {
         'extension': [
             './src/extension.js',
         ],
-        'extension-that-fails-on-run': [
-            './src/extension-that-fails-on-run.js',
-        ],
     },
 
     output: {

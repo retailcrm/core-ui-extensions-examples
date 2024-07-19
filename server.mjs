@@ -42,12 +42,6 @@ const records = [{
     scope: 'order-card',
     entrypoint: 'dist/extension.js',
     stylesheet: 'dist/extension.css',
-}, {
-    uuid: '776baea8-1c95-4e95-a3a4-f75c7d87773a',
-    name: 'Stub',
-    scope: 'order-card',
-    entrypoint: 'dist/extension-that-fails-on-run.js',
-    stylesheet: null,
 }]
 
 app.use(cors())
