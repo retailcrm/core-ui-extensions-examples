@@ -10,7 +10,7 @@ import {
     createRemoteRenderer,
 } from '@omnicajs/vue-remote/remote'
 
-import VExtensionList from '@/extension/VExtensionList.vue'
+import VApp from '@/extension/VApp.vue'
 
 const endpoint = createEndpoint(fromInsideIframe())
 
@@ -21,6 +21,7 @@ const createApp = async (channel, component, props) => {
             'UiModalWindow',
             'UiModalWindowSurface',
             'CrmYandexMap',
+            'CrmPlacement',
         ],
     })
 
@@ -40,7 +41,7 @@ endpoint.expose({
         retain(channel)
         retain(api)
 
-        const app = await createApp(channel, VExtensionList, {
+        const app = await createApp(channel, VApp, {
             api,
             scope,
         })
