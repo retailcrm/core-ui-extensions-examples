@@ -38,9 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-
-import { onMounted, ref, computed } from 'vue'
+import { computed } from 'vue'
 
 const SCOPE = {
     ORDER_CARD: 'order-card',
@@ -48,20 +46,16 @@ const SCOPE = {
 }
 
 const props = defineProps({
-    api: {
-        type: Object as PropType<{
-            getCustomerPhone (): Promise<string | null>;
-            getCurrentScope (): string
-        }>,
-        required: true,
-    },
     scope: {
         type: String,
         default: '',
     },
-})
 
-const phone = ref('')
+    phone: {
+        type: String,
+        default: null,
+    },
+})
 
 // Пример стилизации в зависимости от scope
 const isOrderCard = computed(() => {
@@ -70,13 +64,9 @@ const isOrderCard = computed(() => {
 
 const links = computed(() => {
     return {
-        whatsapp: `https://wa.me/${phone.value}`,
-        telegram: `https://t.me/${phone.value}`,
+        whatsapp: `https://wa.me/${props.phone}`,
+        telegram: `https://t.me/${props.phone}`,
     }
-})
-
-onMounted(async () => {
-    phone.value = await props.api.getCustomerPhone() ?? ''
 })
 </script>
 

@@ -16,8 +16,11 @@ const CrmYandexMap = defineRemoteComponent('CrmYandexMap', [
     'change': (address: string) => void,
 })
 
+const CrmPlacement = defineRemoteComponent('CrmPlacement')
+
 export {
     UiButton,
     UiModalWindow,
     CrmYandexMap,
+    CrmPlacement,
 }
