@@ -31,7 +31,8 @@
     UiScrollbar,
     UiTag,
     UiTransition,
-    CrmYandexMap
+    CrmYandexMap,
+    CrmPlacement
 ```
 
 Более подробно познакомиться с этими компонентами можно на [витрине](https://design.retailcrm.tech/omnica-vue3/index.html).
@@ -60,6 +61,13 @@
 Только для карточки заказа доступно api.
 
 ## API Ядра в карточке заказа
+
+```javascript
+api.getPlacement
+```
+Возвращает информацию о placement (места встраивания компонентов приложения в интерфейс CRM).
+Метод принимает 2 параметра - имя плейсмента и название скоупа.
+Возвращает массив объектов вида {id, context}, где id - идентификатор точки монтирования, context - специфическая информация для текущего placement.
 
 ```javascript
 api.getCustomerEmail 
@@ -104,6 +112,15 @@ api.parseDeliveryAddress
 
 Стили должны быть модульными
 
+## Монтирование компонентов в интерфейсе хостового приложения
+Для монтирования компонентов используется компонент ```CrmPlacement```. В него следует обернуть компоненты приложения, которые должны быть смонтированы в конкретной точке хостового приложения.
+Компонент имеет обязательный входной параметр ```placementId``` - идентификатор точки монтирования.
+
+Для того, чтобы получить список доступных точек монтирования, нужно вызвать метод ```api.getPlacement(placementName, scopeName)```, который вернет массив объектов вида {id, context}, где
+id - идентификатор точки монтирования, context - объект с информацией, специфичной для данной точки.
+
+Например, для плеймента ```customer-phone```, контекст будет вида ```{ phone: string }```.
+
 ## В удаленном приложении нужно описать используемые компоненты
 ```typescript
 const CrmYandexMap = defineRemoteComponent('CrmYandexMap', [
@@ -121,7 +138,6 @@ export { UiButton, UiModalWindow, CrmYandexMap }
 ```javascript
 [{
     entrypoint: 'extension-url',
-    placement: 'delivery-address',
     scope: 'order-card',
     stylesheet: 'stylesheet-url',
     uuid: '1'
@@ -210,7 +226,6 @@ make zip-archive
 ```javascript
 extensionsInit([{
     entrypoint: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
-    placement: 'customer-phone',
     scope: ['order-card', 'customer-card'],
     stylesheet: 'http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet',
     uuid: '1'
