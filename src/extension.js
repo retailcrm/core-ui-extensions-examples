@@ -12,6 +12,8 @@ import {
 
 import VApp from '@/extension/VApp.vue'
 
+import { hostEvents } from './events'
+
 const endpoint = createEndpoint(fromInsideIframe())
 
 const createApp = async (channel, component, props) => {
@@ -28,6 +30,8 @@ const createApp = async (channel, component, props) => {
     await remoteRoot.mount()
 
     const app = createRemoteRenderer(remoteRoot).createApp(component, props)
+
+    app.provide('hostEventListener', hostEvents.addListener.bind(hostEvents))
 
     app.mount(remoteRoot)
 
@@ -47,6 +51,7 @@ endpoint.expose({
         })
 
         onRelease = () => {
+            hostEvents.clear()
             release(channel)
             release(api)
 
@@ -56,5 +61,13 @@ endpoint.expose({
 
     release () {
         onRelease()
+    },
+
+    /**
+     * Метод будет вызван при наступлении события в хостовом приложении
+     * Например, при добавлении нового плейсмента
+     */
+    onEvent (eventName, eventData) {
+        hostEvents.call(eventName, eventData)
     },
 })

@@ -29,6 +29,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import { onMounted, ref } from 'vue'
+import { inject } from 'vue'
 import CustomerPhoneExtension from './CustomerPhoneExtension.vue';
 import AddressExtension from './AddressExtension.vue';
 
@@ -61,11 +62,19 @@ const props = defineProps({
     },
 })
 
+const hostEventListener = inject('hostEventListener')
 const customerPhonePlacement = ref(null as unknown as IPlacement[])
 const addressDeliveryPlacement = ref(null as unknown as IPlacement[])
+
+const onNewPlacement = async (): Promise<void> => {
+    customerPhonePlacement.value = await props.api.getPlacement('customer-phone', props.scope)
+}
 
 onMounted(async () => {
     customerPhonePlacement.value = await props.api.getPlacement('customer-phone', props.scope)
     addressDeliveryPlacement.value = await props.api.getPlacement('delivery-address', props.scope)
+
+    // @ts-expect-error hostEventListener
+    hostEventListener('new-placement', onNewPlacement)
 })
 </script>
