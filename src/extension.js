@@ -10,7 +10,9 @@ import {
     createRemoteRenderer,
 } from '@omnicajs/vue-remote/remote'
 
-import VExtension from '@/extension/VExtension.vue'
+import VApp from '@/extension/VApp.vue'
+
+import { hostEvents } from './events'
 
 const endpoint = createEndpoint(fromInsideIframe())
 
@@ -21,12 +23,15 @@ const createApp = async (channel, component, props) => {
             'UiModalWindow',
             'UiModalWindowSurface',
             'CrmYandexMap',
+            'CrmPlacement',
         ],
     })
 
     await remoteRoot.mount()
 
     const app = createRemoteRenderer(remoteRoot).createApp(component, props)
+
+    app.provide('hostEventListener', hostEvents.addListener.bind(hostEvents))
 
     app.mount(remoteRoot)
 
@@ -36,15 +41,17 @@ const createApp = async (channel, component, props) => {
 let onRelease = () => {}
 
 endpoint.expose({
-    async run (channel, api) {
+    async run (channel, api, scopes) {
         retain(channel)
         retain(api)
 
-        const app = await createApp(channel, VExtension, {
+        const app = await createApp(channel, VApp, {
             api,
+            scopes,
         })
 
         onRelease = () => {
+            hostEvents.clear()
             release(channel)
             release(api)
 
@@ -54,5 +61,13 @@ endpoint.expose({
 
     release () {
         onRelease()
+    },
+
+    /**
+     * Метод будет вызван при наступлении события в хостовом приложении
+     * Например, при добавлении нового плейсмента
+     */
+    onEvent (eventName, eventData) {
+        hostEvents.call(eventName, eventData)
     },
 })
