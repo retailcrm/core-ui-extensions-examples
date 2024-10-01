@@ -26,7 +26,7 @@
         />
 
         <template #footer>
-            <UiButton @click="api.setDeliveryAddress(address); opened = false">
+            <UiButton @click="setAddress">
                 Выбрать
             </UiButton>
         </template>
@@ -46,10 +46,10 @@ import { ref, onMounted } from 'vue'
 
 const props = defineProps({
     api: {
-        type: Object as PropType<{
+        type: Object as PropType<Partial<{
             setDeliveryAddress (value: string): void;
             getDeliveryAddress (): Promise<string | null>;
-        }>,
+        }>>,
         required: true,
     },
 })
@@ -59,8 +59,18 @@ const apiKey = 'dd51f938-0693-457d-ae62-6d50fa668d0a'
 const opened = ref(false)
 const address = ref('')
 
+const setAddress = () => {
+    if (props.api?.setDeliveryAddress) {
+        props.api.setDeliveryAddress(address.value)
+    }
+
+    opened.value = false
+}
+
 onMounted(async () => {
-    address.value = await props.api.getDeliveryAddress() ?? ''
+    if (props.api?.getDeliveryAddress) {
+        address.value = await props.api.getDeliveryAddress() ?? ''
+    }
 })
 </script>
 

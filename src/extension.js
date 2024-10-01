@@ -41,13 +41,13 @@ const createApp = async (channel, component, props) => {
 let onRelease = () => {}
 
 endpoint.expose({
-    async run (channel, api, scope) {
+    async run (channel, api, scopes) {
         retain(channel)
         retain(api)
 
         const app = await createApp(channel, VApp, {
             api,
-            scope,
+            scopes,
         })
 
         onRelease = () => {

@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import type { PropType } from 'vue'
 
 const SCOPE = {
     ORDER_CARD: 'order-card',
@@ -46,9 +47,9 @@ const SCOPE = {
 }
 
 const props = defineProps({
-    scope: {
-        type: String,
-        default: '',
+    scopes: {
+        type: Array as PropType<string[]>,
+        default: () => {},
     },
 
     phone: {
@@ -59,7 +60,7 @@ const props = defineProps({
 
 // Пример стилизации в зависимости от scope
 const isOrderCard = computed(() => {
-    return props.scope === SCOPE.ORDER_CARD
+    return props.scopes.includes(SCOPE.ORDER_CARD)
 })
 
 const links = computed(() => {

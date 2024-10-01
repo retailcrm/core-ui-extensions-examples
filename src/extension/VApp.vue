@@ -7,7 +7,7 @@
     >
         <CustomerPhoneExtension
             v-if="placement?.context?.phone"
-            :scope="scope"
+            :scopes="props.scopes"
             :phone="placement.context.phone"
         />
     </CrmPlacement>
@@ -18,10 +18,7 @@
         :placement-id="addressDeliveryPlacement[0].id"
     >
         <AddressExtension
-            :api="{
-                setDeliveryAddress: api.setDeliveryAddress,
-                getDeliveryAddress: api.getDeliveryAddress,
-            }"
+            :api="orderApi"
         />
     </CrmPlacement>
 </template>
@@ -51,29 +48,38 @@ const props = defineProps({
     api: {
         type: Object as PropType<{
             getPlacement (placementName: string, scope: string): IPlacement[];
-            setDeliveryAddress (value: string): void;
-            getDeliveryAddress (): Promise<string | null>;
+            getScopeMethods (scope: string): {
+                setDeliveryAddress (value: string): void;
+                getDeliveryAddress (): Promise<string | null>;
+            };
         }>,
         required: true,
     },
-    scope: {
-        type: String,
-        default: '',
+
+    scopes: {
+        type: Array as PropType<string[]>,
+        required: true,
     },
 })
+
+let orderApi = {}
 
 const hostEventListener = inject('hostEventListener')
 const customerPhonePlacement = ref(null as unknown as IPlacement[])
 const addressDeliveryPlacement = ref(null as unknown as IPlacement[])
 
-const onNewPlacement = async (): Promise<void> => {
-    customerPhonePlacement.value = await props.api.getPlacement('customer-phone', props.scope)
+const onNewPlacement = async (placement: {id: string[], name: string, scope: string}): Promise<void> => {
+    if (placement.name === 'customer-phone') {
+        customerPhonePlacement.value = await props.api.getPlacement('customer-phone', placement.scope)
+    }
+
+    if (placement.name === 'delivery-address') {
+        orderApi = await props.api.getScopeMethods(placement.scope)
+        addressDeliveryPlacement.value = await props.api.getPlacement('delivery-address', placement.scope)
+    }
 }
 
 onMounted(async () => {
-    customerPhonePlacement.value = await props.api.getPlacement('customer-phone', props.scope)
-    addressDeliveryPlacement.value = await props.api.getPlacement('delivery-address', props.scope)
-
     // @ts-expect-error hostEventListener
     hostEventListener('new-placement', onNewPlacement)
 })
