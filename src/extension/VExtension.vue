@@ -21,13 +21,13 @@
 
         <CrmYandexMap 
             :api-key="'dd51f938-0693-457d-ae62-6d50fa668d0a'"
-            :address="address"
+            :address="address || ''"
             @change="address = $event"
         />
 
         <template #footer>
-            <UiButton @click="order.set('delivery.address', address); opened = false">
-                Выбрать
+            <UiButton appearance="secondary" @click="opened = false">
+                Закрыть
             </UiButton>
         </template>
     </UiModalWindow>
@@ -40,20 +40,19 @@ import {
     CrmYandexMap,
 } from '@/components'
 
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
-import { useOrderCardContext } from '@retailcrm/embed-ui'
+import {
+    useOrderCardContext,
+    useField,
+} from '@retailcrm/embed-ui'
 
 const order = useOrderCardContext()
 
 const opened = ref(false)
-const address = ref('')
+const address = useField(order, 'delivery.address')
 
-onMounted(async () => {
-    await order.initialize()
-
-    address.value = order['delivery.address'] ?? ''
-})
+onMounted(() => order.initialize())
 </script>
 
 <style lang="less" module>
