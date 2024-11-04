@@ -9,7 +9,7 @@
     "dependencies": {
         "@omnicajs/vue-remote": "^0.2.0",
         "@remote-ui/rpc": "^1.4.4",
-        "@retailcrm/embed-ui": "^0.2.2",
+        "@retailcrm/embed-ui": "^0.2.5",
         "pinia": "^2.2.6",
         "vue": "^3.5.12"
     },

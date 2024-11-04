@@ -1399,7 +1399,7 @@ __metadata:
     "@intlify/vue-i18n-loader": ^4.2.0
     "@omnicajs/vue-remote": ^0.2.0
     "@remote-ui/rpc": ^1.4.4
-    "@retailcrm/embed-ui": ^0.2.2
+    "@retailcrm/embed-ui": ^0.2.5
     "@types/webpack": ^5.28.5
     "@typescript-eslint/eslint-plugin": ^6.21.0
     "@typescript-eslint/parser": ^6.21.0
@@ -1708,16 +1708,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@retailcrm/embed-ui@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@retailcrm/embed-ui@npm:0.2.2"
+"@retailcrm/embed-ui@npm:^0.2.5":
+  version: 0.2.5
+  resolution: "@retailcrm/embed-ui@npm:0.2.5"
   dependencies:
     "@omnicajs/vue-remote": ^0.2.0
     "@remote-ui/rpc": ^1.4.5
   peerDependencies:
     pinia: ^2.2
     vue: ^3.5
-  checksum: 5cf22cee042767aafcaa566532f5a032a350665effab92d97447f36efa78bd02361e5c5c38baaa524e81db1a283f6b2b6aa5c3940e9aeabfd00cdfa96f9bc034
+  checksum: 6e380222e6103794a71eaa6cfd13834ebaa4b0ffc8a68a33abfa84a6bee3a14ca469de61aea886ddfb60b12b3625b7c3ceccf9ffdb35f0e4fda01e6cddbb4b3a
   languageName: node
   linkType: hard
 
