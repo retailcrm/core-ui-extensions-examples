@@ -109,7 +109,7 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
     },
     overrides: [{
-        files: ['.eslintrc.js', 'webpack.*.js'],
+        files: ['.eslintrc.js', 'webpack.*.js', 'server.mjs'],
         env: {
             node: true,
         },

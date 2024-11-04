@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const CSSExtractPlugin = require('mini-css-extract-plugin')
-const HtmlWebpackPlugin = require("html-webpack-plugin")
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -114,8 +114,8 @@ module.exports = {
             writeToFileEmit: true,
         }),
         new CSSExtractPlugin({
-            filename: '[name].[hash:8].css',
-            chunkFilename: '[name].[hash:8].css',
+            filename: '[name].[contenthash:8].css',
+            chunkFilename: '[name].[contenthash:8].css',
         }),
         new RemoveEmptyScriptsPlugin(),
         new VueLoaderPlugin(),
@@ -135,13 +135,13 @@ module.exports = {
             test: /\.(woff|woff2|ttf|eot|otf)$/,
             type: 'asset/resource',
             generator: {
-                filename: 'fonts/[name].[hash:8][ext]',
+                filename: 'fonts/[name].[contenthash:8][ext]',
             },
         }, {
             test: /\.(png|jpg|jpeg|gif|ico|svg|webp)$/,
             type: 'asset/resource',
             generator: {
-                filename: 'images/[name].[hash:8][ext]',
+                filename: 'images/[name].[contenthash:8][ext]',
             },
             exclude: path.resolve(__dirname, '../web/img2/svg-sprite/'),
         }, {
@@ -187,7 +187,6 @@ module.exports = {
             loader: '@intlify/vue-i18n-loader',
         }],
     },
-
 
     cache: {
         type: 'filesystem',

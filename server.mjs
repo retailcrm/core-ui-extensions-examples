@@ -39,7 +39,9 @@ const render = (name, manifest, entrypoint) => {
 const records = [{
     uuid: '62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
     name: 'Yandex maps',
-    scope: 'order-card',
+    targets: [
+        'order/card:delivery.address',
+    ],
     entrypoint: 'dist/extension.js',
     stylesheet: 'dist/extension.css',
 }]

@@ -20,13 +20,13 @@
         </template>
 
         <CrmYandexMap 
-            :api-key="apiKey"
+            :api-key="'dd51f938-0693-457d-ae62-6d50fa668d0a'"
             :address="address"
             @change="address = $event"
         />
 
         <template #footer>
-            <UiButton @click="api.setDeliveryAddress(address); opened = false">
+            <UiButton @click="order.set('delivery.address', address); opened = false">
                 Выбрать
             </UiButton>
         </template>
@@ -34,8 +34,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-
 import {
     UiButton,
     UiModalWindow,
@@ -44,23 +42,17 @@ import {
 
 import { ref, onMounted } from 'vue'
 
-const props = defineProps({
-    api: {
-        type: Object as PropType<{
-            setDeliveryAddress (value: string): void;
-            getDeliveryAddress (): Promise<string | null>;
-        }>,
-        required: true,
-    },
-})
+import { useOrderCardContext } from '@retailcrm/embed-ui'
 
-const apiKey = 'dd51f938-0693-457d-ae62-6d50fa668d0a'
+const order = useOrderCardContext()
 
 const opened = ref(false)
 const address = ref('')
 
 onMounted(async () => {
-    address.value = await props.api.getDeliveryAddress() ?? ''
+    await order.initialize()
+
+    address.value = order['delivery.address'] ?? ''
 })
 </script>
 

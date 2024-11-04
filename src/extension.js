@@ -1,58 +1,15 @@
-import {
-    createEndpoint,
-    fromInsideIframe,
-    release,
-    retain,
-} from '@remote-ui/rpc'
-
-import {
-    createRemoteRoot,
-    createRemoteRenderer,
-} from '@omnicajs/vue-remote/remote'
+import { createWidgetEndpoint } from '@retailcrm/embed-ui'
+import { fromInsideIframe } from '@remote-ui/rpc'
 
 import VExtension from '@/extension/VExtension.vue'
 
-const endpoint = createEndpoint(fromInsideIframe())
+createWidgetEndpoint({
+    async run (createApp, root, pinia, target) {
+        const app = createApp(VExtension, { target })
 
-const createApp = async (channel, component, props) => {
-    const remoteRoot = createRemoteRoot(channel, {
-        components: [
-            'UiButton',
-            'UiModalWindow',
-            'UiModalWindowSurface',
-            'CrmYandexMap',
-        ],
-    })
+        app.use(pinia)
+        app.mount(root)
 
-    await remoteRoot.mount()
-
-    const app = createRemoteRenderer(remoteRoot).createApp(component, props)
-
-    app.mount(remoteRoot)
-
-    return app
-}
-
-let onRelease = () => {}
-
-endpoint.expose({
-    async run (channel, api) {
-        retain(channel)
-        retain(api)
-
-        const app = await createApp(channel, VExtension, {
-            api,
-        })
-
-        onRelease = () => {
-            release(channel)
-            release(api)
-
-            app.unmount()
-        }
+        return () => app.unmount()
     },
-
-    release () {
-        onRelease()
-    },
-})
+}, fromInsideIframe())
