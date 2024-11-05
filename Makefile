@@ -50,11 +50,11 @@ $(call computable,CC_END,$(shell tput -Txterm sgr0 2>/dev/null))
 .PHONY: zip-archive
 zip-archive:
 	@read -p "Введите новую версию расширения (version): " VERSION; \
-	read -p "Введите области видимости (scope) через запятую: " SCOPE_INPUT; \
-	SCOPE_ARRAY=$$(echo $$SCOPE_INPUT | tr ',' '\n' | awk '{print "\""$$1"\""}' | paste -sd, -); \
+	read -p "Введите области видимости (targets) через запятую: " TARGETS_INPUT; \
+	TARGET_ARRAY=$$(echo $$TARGETS_INPUT | tr ',' '\n' | awk '{print "\""$$1"\""}' | paste -sd, -); \
 	CSS_FILE=$(shell ls dist/extension.*.css | head -n 1) && \
 	JS_FILE=$(shell ls dist/extension.*.js | head -n 1) && \
 	HTML_FILE=$(shell ls dist/*.html | head -n 1) && \
-	echo '{"code":"core-ui-extensions","version":"'"$$VERSION"'","scope":['"$$SCOPE_ARRAY"'],"entrypoint":"'"$${HTML_FILE##*/}"'","stylesheet":"'"$${CSS_FILE##*/}"'","scripts":["'"$${JS_FILE##*/}"'"]}' > manifest.json && \
+	echo '{"code":"core-ui-extensions","version":"'"$$VERSION"'","targets":['"$$TARGET_ARRAY"'],"entrypoint":"'"$${HTML_FILE##*/}"'","stylesheet":"'"$${CSS_FILE##*/}"'","scripts":["'"$${JS_FILE##*/}"'"]}' > manifest.json && \
 	zip -j core-ui-extensions-examples.zip "$$CSS_FILE" "$$JS_FILE" "$$HTML_FILE" manifest.json && \
 	rm manifest.json
