@@ -56,5 +56,5 @@ zip-archive:
 	JS_FILE=$(shell ls dist/extension.*.js | head -n 1) && \
 	HTML_FILE=$(shell ls dist/*.html | head -n 1) && \
 	echo '{"code":"core-ui-extensions","version":"'"$$VERSION"'","targets":['"$$TARGET_ARRAY"'],"entrypoint":"'"$${HTML_FILE##*/}"'","stylesheet":"'"$${CSS_FILE##*/}"'","scripts":["'"$${JS_FILE##*/}"'"]}' > manifest.json && \
-	zip -rjFS core-ui-extensions-examples.zip "$$CSS_FILE" "$$JS_FILE" "$$HTML_FILE" manifest.json && \
+	zip -rjFS dist/core-ui-extensions-examples.zip "$$CSS_FILE" "$$JS_FILE" "$$HTML_FILE" manifest.json && \
 	rm manifest.json
