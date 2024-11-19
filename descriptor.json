@@ -1,8 +1,0 @@
-{
-  "uuid": "62aa8145-ed53-4862-b28f-f1bc6b36a3a3",
-  "targets": [
-    "order/card:delivery.address"
-  ],
-  "entrypoint": "http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3",
-  "stylesheet": "http://web-extensions-server.simla.test/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet"
-}
