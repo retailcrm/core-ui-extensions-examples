@@ -36,16 +36,6 @@ const render = (name, manifest, entrypoint) => {
 </html>`
 }
 
-const records = [{
-    uuid: '62aa8145-ed53-4862-b28f-f1bc6b36a3a3',
-    name: 'Yandex maps',
-    targets: [
-        'order/card:delivery.address',
-    ],
-    entrypoint: 'dist/extension.js',
-    stylesheet: 'dist/extension.css',
-}]
-
 app.use(cors())
 app.use('/dist', express.static(path.join(__dirname, '/dist')))
 
@@ -56,8 +46,9 @@ app.get('/', (_, response) => {
 app.get('/extension/:uuid', async (request, response) => {
     const uuid = request.params.uuid
     const manifest = await readManifest(path.join(__dirname, '/dist/manifest.json'))
+    const records = await readManifest(path.join(__dirname, '/cases.json'))
 
-    const record = records.find(r => r.uuid === uuid)
+    const record = records.items.find(r => r.uuid === uuid)
     if (record) {
         response.send(render(record.name, manifest, record.entrypoint))
     } else {
@@ -68,13 +59,57 @@ app.get('/extension/:uuid', async (request, response) => {
 app.get('/extension/:uuid/stylesheet', async (request, response) => {
     const uuid = request.params.uuid
     const manifest = await readManifest(path.join(__dirname, '/dist/manifest.json'))
+    const records = await readManifest(path.join(__dirname, '/cases.json'))
 
-    const record = records.find(r => r.uuid === uuid)
+    const record = records.items.find(r => r.uuid === uuid)
     if (record) {
         response.sendFile(path.join(__dirname, manifest[record.stylesheet]))
     } else {
         response.sendStatus(404)
     }
+})
+
+// fiscalReceipts routes
+
+app.post('/receipts-count', async (request, response) => {
+    response.status(200).json({ count: 2 })
+})
+
+app.post('/receipts', async (request, response) => {
+    response.status(200).json({
+        receipts: [
+            {
+                id: 645,
+                details: {
+                    receiptTime: '17.11.2024 11:51',
+                    shiftNumber: 16,
+                    machineNumber: 'KZN030315',
+                    taxSystem: 'OSN',
+                    onlinePayment: true,
+                    fnNumber: '7380440801381848',
+                    kktRegistrationNumber: '0007642722037997',
+                    fdNumber: 41859,
+                    fpd: 2975038937,
+                    ffdVersion: '1.2',
+                },
+            },
+            {
+                id: 813,
+                details: {
+                    receiptTime: '28.10.2024 10:32',
+                    shiftNumber: 18,
+                    machineNumber: 'KZN1001202',
+                    taxSystem: 'OSN',
+                    onlinePayment: true,
+                    fnNumber: '7380440800998420',
+                    kktRegistrationNumber: '0007642686026725',
+                    fdNumber: 4696,
+                    fpd: 3632111203,
+                    ffdVersion: '1.2',
+                },
+            },
+        ]
+    })
 })
 
 const server = app.listen(3000, () => {

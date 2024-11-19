@@ -1,0 +1,28 @@
+{ "items": [
+  {
+    "uuid": "62aa8145-ed53-4862-b28f-f1bc6b36a3a3",
+    "name": "yandexMap",
+    "targets": [
+      "order/card:delivery.address"
+    ],
+    "entrypoint": "dist/yandexMap.js",
+    "stylesheet": "dist/yandexMap.css"
+  }, {
+    "uuid": "a796ad7e-55e8-4653-b328-51a953c4cb18",
+    "name": "customerPhone",
+    "targets": [
+      "customer/card:phone",
+      "order/card:customer.phone"
+    ],
+    "entrypoint": "dist/customerPhone.js",
+    "stylesheet": "dist/customerPhone.css"
+  }, {
+    "uuid": "db275ab4-9f7e-405d-89a1-f6d56625db7a",
+    "name": "fiscalReceipts",
+    "targets": [
+      "order/card:payment.before"
+    ],
+    "entrypoint": "dist/fiscalReceipts.js",
+    "stylesheet": "dist/fiscalReceipts.css"
+  }
+]}

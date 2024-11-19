@@ -1,3 +1,4 @@
+const glob = require('glob')
 const path = require('path')
 const readline = require('readline')
 const webpack = require('webpack')
@@ -64,20 +65,34 @@ const cssRegular = [cssExtractLoader, {
     },
 }]
 
+const entryPoints = glob.sync('./src/cases/**/index.ts').reduce((entries, file) => {
+    const match = file.match(/\/cases\/([^/]+)\/index\.ts$/)
+
+    if (match) {
+        entries[match[1]] = path.resolve(__dirname, file)
+    }
+
+    return entries
+}, {})
+
+const HtmlWebpackPlugins = Object.keys(entryPoints).map(entryName => {
+    return new HtmlWebpackPlugin({
+        title: `UI Extension: ${entryName}`,
+        filename: `${entryName}/index.html`,
+        chunks: [entryName],
+    });
+})
+
 module.exports = {
     mode: 'development',
 
     context: __dirname,
 
-    entry: {
-        'extension': [
-            './src/extension.js',
-        ],
-    },
+    entry: entryPoints,
 
     output: {
-        filename: '[name].[fullhash].js',
-        chunkFilename: '[name].[fullhash].js',
+        filename: '[name]/extension.[fullhash].js',
+        chunkFilename: '[name]/extension.[fullhash].js',
         path: path.resolve(__dirname, 'dist/'),
         pathinfo: true,
         publicPath: '/dist/',
@@ -114,8 +129,8 @@ module.exports = {
             writeToFileEmit: true,
         }),
         new CSSExtractPlugin({
-            filename: '[name].[contenthash:8].css',
-            chunkFilename: '[name].[contenthash:8].css',
+            filename: '[name]/extension.[contenthash:8].css',
+            chunkFilename: '[name]/extension.[contenthash:8].css',
         }),
         new RemoveEmptyScriptsPlugin(),
         new VueLoaderPlugin(),
@@ -124,10 +139,7 @@ module.exports = {
             readline.cursorTo(process.stdout, 0, null);
             process.stdout.write(`${Math.round(percentage * 100)}% ${message}`);
         }),
-        new HtmlWebpackPlugin({
-            title: 'UI Extension: Yandex Maps',
-            publicPath: './',
-        }),
+        ...HtmlWebpackPlugins,
     ],
 
     module: {
@@ -138,12 +150,14 @@ module.exports = {
                 filename: 'fonts/[name].[contenthash:8][ext]',
             },
         }, {
-            test: /\.(png|jpg|jpeg|gif|ico|svg|webp)$/,
+            test: /\.(png|jpg|jpeg|gif|ico|webp)$/,
             type: 'asset/resource',
             generator: {
                 filename: 'images/[name].[contenthash:8][ext]',
             },
-            exclude: path.resolve(__dirname, '../web/img2/svg-sprite/'),
+        }, {
+            test: /\.svg$/,
+            use: ['vue-loader', 'vue-svg-loader'],
         }, {
             test: /\.m?js/,
             resolve: { fullySpecified: false },
