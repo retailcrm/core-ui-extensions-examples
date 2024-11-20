@@ -5,7 +5,7 @@ import YandexMapExtension from './YandexMapExtension.vue'
 
 createWidgetEndpoint({
     async run (createApp, root, pinia, target) {
-        const app = createApp(YandexMapExtension, { target })
+        const app = createApp(YandexMapExtension)
 
         app.use(pinia)
         app.mount(root)

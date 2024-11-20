@@ -5,7 +5,7 @@ import FiscalReceiptsExtension from './FiscalReceiptsExtension.vue'
 
 createWidgetEndpoint({
     async run (createApp, root, pinia, target) {
-        const app = createApp(FiscalReceiptsExtension, { target })
+        const app = createApp(FiscalReceiptsExtension)
 
         app.use(pinia)
         app.mount(root)

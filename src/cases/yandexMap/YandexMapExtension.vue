@@ -1,5 +1,5 @@
 <template>
-    <UiButton appearance="secondary" @click="opened = true">
+    <UiButton appearance="secondary" size="xs" @click="opened = true">
         <IconMapOutlined />
         На карте
     </UiButton>
