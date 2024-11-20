@@ -81,11 +81,11 @@
                             >
                                 {{ label }}
                             </div>
-
+                            
                             <div class="omnica-text omnica-text_tiny">
                                 {{ key === 'onlinePayment'
-                                    ? receipt.details[key] ? t('yes') : t('no')
-                                    : receipt.details[key]
+                                    ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
+                                    : receipt.details[key as keyof ReceiptDetails]
                                 }}
                             </div>
                         </template>
@@ -103,14 +103,13 @@
 </template>
 
 <script lang="ts" setup>
-
 import {
     UiButton,
     UiLink,
     UiLoader,
     UiError,
     UiModalSidebar,
-} from '@/components'
+} from './components'
 
 import IconCaretDown from './assets/caret-down.svg'
 import IconCaretUp from './assets/caret-up.svg'
@@ -176,7 +175,7 @@ const labels = {
     fpd: t('fpd'),
     ffdVersion: t('ffdVersion'),
 } as {
-  [K in keyof ReceiptDetails]: string;
+    [K in keyof ReceiptDetails]: string;
 }
 
 const toggleReceipt = (id: number) => {

@@ -1,18 +1,13 @@
 {
     "name": "@crm-ui/extensions",
     "packageManager": "yarn@3.7.0",
+    "workspaces": [
+        "cases/*"
+    ],
     "scripts": {
-        "build": "webpack",
-        "lint": "eslint --ext .js,.json,.ts,.vue src",
-        "lint:fix": "eslint --fix --ext .js,.json,.ts,.vue src"
-    },
-    "dependencies": {
-        "@omnicajs/vue-remote": "^0.2.0",
-        "@remote-ui/rpc": "^1.4.4",
-        "@retailcrm/embed-ui": "^0.3.1",
-        "pinia": "^2.2.6",
-        "vue": "^3.5.12",
-        "vue-i18n": "^10.0.4"
+        "build": "webpack --mode=production",
+        "lint": "eslint --ext .js,.json,.ts,.vue cases",
+        "lint:fix": "eslint --fix --ext .js,.json,.ts,.vue cases"
     },
     "devDependencies": {
         "@babel/core": "^7.23.9",
@@ -30,7 +25,8 @@
         "clean-webpack-plugin": "^4.0.0",
         "cors": "^2.8.5",
         "css-loader": "^6.9.0",
-        "css-minimizer-webpack-plugin": "^5.0.1",
+        "css-minimizer-webpack-plugin": "^7.0.0",
+        "cssnano": "^7.0.6",
         "dotenv": "^16.3.2",
         "eslint": "^8.56.0",
         "eslint-plugin-import": "^2.29.1",
