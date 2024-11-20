@@ -1,11 +1,11 @@
 <template>
     <UiButton appearance="secondary" @click="opened = true">
         <template v-if="count">
-            Фискальные чеки ({{ count }})
+            {{ t('fiscalReceipts') }} ({{ count }})
         </template>
 
         <template v-else>
-            Фискальные чеки
+            {{ t('fiscalReceipts') }}
 
             <!-- Анимации SVG пока не поддерживаются при выносе svg в отдельный файл -->
             <svg
@@ -41,7 +41,7 @@
         @update:opened="onSidebarOpened"
     >
         <template #title>
-            Фискальные чеки ({{ count }})
+            {{ t('fiscalReceipts') }} ({{ count }})
         </template>
 
         <UiLoader :class="{ [$style.hide]: !loading }" :overlay="false" />
@@ -60,7 +60,7 @@
                     :class="$style.receipt"
                 >
                     <UiLink size="body" @click="toggleReceipt(receipt.id)">
-                        Чек #{{ receipt.id }}
+                        {{ t('receipt') }} #{{ receipt.id }}
 
                         <template #icon>
                             <IconCaretUp v-if="!collapsed.includes(receipt.id)" />
@@ -83,7 +83,10 @@
                             </div>
 
                             <div class="omnica-text omnica-text_tiny">
-                                {{ key === 'onlinePayment' ? (receipt.details[key] ? 'Да' : 'Нет') : receipt.details[key] }}
+                                {{ key === 'onlinePayment'
+                                    ? receipt.details[key] ? t('yes') : t('no')
+                                    : receipt.details[key]
+                                }}
                             </div>
                         </template>
                     </div>
@@ -93,7 +96,7 @@
 
         <template #footer>
             <UiButton appearance="secondary" @click="opened = false">
-                Закрыть
+                {{ t('close') }}
             </UiButton>
         </template>
     </UiModalSidebar>
@@ -112,8 +115,19 @@ import {
 import IconCaretDown from './assets/caret-down.svg'
 import IconCaretUp from './assets/caret-up.svg'
 
-import { onMounted, ref } from 'vue'
-import { useHost } from '@retailcrm/embed-ui'
+import {
+    onMounted,
+    ref,
+    watch,
+} from 'vue'
+
+import { useI18n } from 'vue-i18n'
+
+import {
+    useHost,
+    useField,
+    useSettingsContext,
+} from '@retailcrm/embed-ui'
 
 type ReceiptDetails = {
   receiptTime: string;
@@ -128,8 +142,21 @@ type ReceiptDetails = {
   ffdVersion: string;
 }
 
+// set locale
+const settings = useSettingsContext()
+const locale = useField(settings, 'system.locale')
+
+settings.initialize()
+
+const i18n = useI18n()
+const t = i18n.t
+
+watch(locale, locale => i18n.locale.value = locale, { immediate: true })
+
+// host for http calls
 const host = useHost()
 
+// data
 const opened = ref(false)
 const loading = ref(false)
 const count = ref('')
@@ -138,16 +165,16 @@ const errors = ref<string[]>([])
 const collapsed = ref<number[]>([])
 
 const labels = {
-    receiptTime: 'Приход',
-    shiftNumber: 'Смена',
-    machineNumber: 'Номер автомата',
-    taxSystem: 'Применяемая система налогообложения',
-    onlinePayment: 'Признак расчетов в сети Интернет',
-    fnNumber: 'N ФН',
-    kktRegistrationNumber: 'Регистрационный номер ККТ',
-    fdNumber: 'N ФД',
-    fpd: 'ФПД',
-    ffdVersion: 'Версия ФФД',
+    receiptTime: t('receiptTime'),
+    shiftNumber: t('shiftNumber'),
+    machineNumber: t('machineNumber'),
+    taxSystem: t('taxSystem'),
+    onlinePayment: t('onlinePayment'),
+    fnNumber: t('fnNumber'),
+    kktRegistrationNumber: t('kktRegistrationNumber'),
+    fdNumber: t('fdNumber'),
+    fpd: t('fpd'),
+    ffdVersion: t('ffdVersion'),
 } as {
   [K in keyof ReceiptDetails]: string;
 }
@@ -189,6 +216,66 @@ onMounted(async () => {
     loading.value = false
 })
 </script>
+
+<i18n locale="en-GB">
+{
+    "fiscalReceipts": "Fiscal receipts",
+    "receipt": "Receipt",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "receiptTime": "Receipt Time",
+    "shiftNumber": "Shift Number",
+    "machineNumber": "Machine Number",
+    "taxSystem": "Applied Tax System",
+    "onlinePayment": "Internet Payment Indicator",
+    "fnNumber": "FN Number",
+    "kktRegistrationNumber": "KKT Registration Number",
+    "fdNumber": "FD Number",
+    "fpd": "FPD",
+    "ffdVersion": "FFD Version"
+}
+</i18n>
+
+<i18n locale="es-ES">
+{
+    "fiscalReceipts": "Recibos fiscales",
+    "receipt": "Recibo",
+    "yes": "Sí",
+    "no": "No",
+    "close": "Cerrar",
+    "receiptTime": "Hora del Recibo",
+    "shiftNumber": "Número de Turno",
+    "machineNumber": "Número de Máquina",
+    "taxSystem": "Sistema Fiscal Aplicado",
+    "onlinePayment": "Indicador de Pago en Línea",
+    "fnNumber": "Número FN",
+    "kktRegistrationNumber": "Número de Registro de KKT",
+    "fdNumber": "Número FD",
+    "fpd": "FPD",
+    "ffdVersion": "Versión FFD"
+}
+</i18n>
+
+<i18n locale="ru-RU">
+{
+    "fiscalReceipts": "Фискальные чеки",
+    "receipt": "Чек",
+    "yes": "Да",
+    "no": "Нет",
+    "close": "Закрыть",
+    "receiptTime": "Приход",
+    "shiftNumber": "Смена",
+    "machineNumber": "Номер автомата",
+    "taxSystem": "Применяемая система налогообложения",
+    "onlinePayment": "Признак расчетов в сети Интернет",
+    "fnNumber": "N ФН",
+    "kktRegistrationNumber": "Регистрационный номер ККТ",
+    "fdNumber": "N ФД",
+    "fpd": "ФПД",
+    "ffdVersion": "Версия ФФД"
+}
+</i18n>
 
 <style lang="less" module>
 .hide {
