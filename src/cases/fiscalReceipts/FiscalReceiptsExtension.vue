@@ -48,47 +48,47 @@
 
         <div :class="{ [$style.hide]: loading }">
             <UiError
-                v-if="errors.length"
                 v-for="(error, index) in errors"
                 :key="index"
                 :message="error"
             />
 
-            <div
-                v-else
-                v-for="receipt in receipts"
-                :key="receipt.id"
-                :class="$style.receipt"
-            >
-                <UiLink size="body" @click="toggleReceipt(receipt.id)">
-                    Чек #{{ receipt.id }}
-
-                    <template #icon>
-                        <IconCaretUp v-if="!collapsed.includes(receipt.id)" />
-                        <IconCaretDown v-else />
-                    </template>
-                </UiLink>
-
+            <template v-if="errors.length === 0">
                 <div
-                    :class="{
-                        [$style.hide]: !!collapsed.includes(receipt.id),
-                        [$style.details]: true
-                    }"
+                    v-for="receipt in receipts"
+                    :key="receipt.id"
+                    :class="$style.receipt"
                 >
-                    <template v-for="(label, key) in details" :key="key">
-                        <div
-                            :class="$style.muted"
-                            class="omnica-text omnica-text_tiny omnica-text_accent"
-                        >
-                            {{ label }}
-                        </div>
+                    <UiLink size="body" @click="toggleReceipt(receipt.id)">
+                        Чек #{{ receipt.id }}
 
-                        <div class="omnica-text omnica-text_tiny">
-                            {{ key === 'onlinePayment' ? (receipt.details[key] ? 'Да' : 'Нет') : receipt.details[key] }}
-                        </div>
-                    </template>
+                        <template #icon>
+                            <IconCaretUp v-if="!collapsed.includes(receipt.id)" />
+                            <IconCaretDown v-else />
+                        </template>
+                    </UiLink>
+
+                    <div
+                        :class="{
+                            [$style.hide]: collapsed.includes(receipt.id),
+                            [$style.details]: true
+                        }"
+                    >
+                        <template v-for="(label, key) in labels" :key="key">
+                            <div
+                                :class="$style.muted"
+                                class="omnica-text omnica-text_tiny omnica-text_accent"
+                            >
+                                {{ label }}
+                            </div>
+
+                            <div class="omnica-text omnica-text_tiny">
+                                {{ key === 'onlinePayment' ? (receipt.details[key] ? 'Да' : 'Нет') : receipt.details[key] }}
+                            </div>
+                        </template>
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
 
         <template #footer>
@@ -100,7 +100,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useHost } from '@retailcrm/embed-ui'
 
 import {
     UiButton,
@@ -114,17 +113,31 @@ import IconCaretDown from './assets/caret-down.svg'
 import IconCaretUp from './assets/caret-up.svg'
 
 import { onMounted, ref } from 'vue'
+import { useHost } from '@retailcrm/embed-ui'
+
+type ReceiptDetails = {
+  receiptTime: string;
+  shiftNumber: number;
+  machineNumber: string;
+  taxSystem: string;
+  onlinePayment: boolean;
+  fnNumber: string;
+  kktRegistrationNumber: string;
+  fdNumber: number;
+  fpd: number;
+  ffdVersion: string;
+}
 
 const host = useHost()
 
 const opened = ref(false)
 const loading = ref(false)
 const count = ref('')
-const receipts = ref([])
+const receipts = ref<Array<{ id: number; details: ReceiptDetails }>>([])
 const errors = ref<string[]>([])
 const collapsed = ref<number[]>([])
 
-const details = {
+const labels = {
     receiptTime: 'Приход',
     shiftNumber: 'Смена',
     machineNumber: 'Номер автомата',
@@ -135,15 +148,13 @@ const details = {
     fdNumber: 'N ФД',
     fpd: 'ФПД',
     ffdVersion: 'Версия ФФД',
+} as {
+  [K in keyof ReceiptDetails]: string;
 }
 
 const toggleReceipt = (id: number) => {
-    const isCollapsed = collapsed.value.includes(id)
-
-    if (isCollapsed) {
-        const index = collapsed.value.findIndex(i => i === id)
-
-        collapsed.value.splice(index, 1);
+    if (collapsed.value.includes(id)) {
+        collapsed.value.splice(collapsed.value.findIndex(i => i === id), 1)
     } else {
         collapsed.value.push(id)
     }
@@ -158,9 +169,9 @@ const onSidebarOpened = async (opened: boolean) => {
 
     const { body, status } = await host.httpCall('/receipts', { order_id: 1 })
     if (status === 200) {
-        receipts.value = JSON.parse(body).receipts
+        receipts.value = JSON.parse(body).receipts as Array<{ id: number; details: ReceiptDetails }>
     } else {
-        errors.value = ["Error of loading: " + body]
+        errors.value = ['Error of loading: ' + body]
     }
 
     loading.value = false
@@ -170,11 +181,10 @@ onMounted(async () => {
     loading.value = true
 
     const { body, status } = await host.httpCall('/receipts-count')
-    if (status === 200) {
-        count.value = JSON.parse(body).count.toString()
-    } else {
-        count.value = 'ERR#' + status
-    }
+
+    count.value = status === 200
+        ? JSON.parse(body).count.toString()
+        : 'ERR#' + status;
 
     loading.value = false
 })

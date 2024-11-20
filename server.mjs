@@ -75,41 +75,38 @@ app.post('/receipts-count', async (request, response) => {
     response.status(200).json({ count: 2 })
 })
 
+const receipts = [{
+    id: 645,
+    details: {
+        receiptTime: '17.11.2024 11:51',
+        shiftNumber: 16,
+        machineNumber: 'KZN030315',
+        taxSystem: 'OSN',
+        onlinePayment: true,
+        fnNumber: '7380440801381848',
+        kktRegistrationNumber: '0007642722037997',
+        fdNumber: 41859,
+        fpd: 2975038937,
+        ffdVersion: '1.2',
+    },
+}, {
+    id: 813,
+    details: {
+        receiptTime: '28.10.2024 10:32',
+        shiftNumber: 18,
+        machineNumber: 'KZN1001202',
+        taxSystem: 'OSN',
+        onlinePayment: true,
+        fnNumber: '7380440800998420',
+        kktRegistrationNumber: '0007642686026725',
+        fdNumber: 4696,
+        fpd: 3632111203,
+        ffdVersion: '1.2',
+    },
+}]
+
 app.post('/receipts', async (request, response) => {
-    response.status(200).json({
-        receipts: [
-            {
-                id: 645,
-                details: {
-                    receiptTime: '17.11.2024 11:51',
-                    shiftNumber: 16,
-                    machineNumber: 'KZN030315',
-                    taxSystem: 'OSN',
-                    onlinePayment: true,
-                    fnNumber: '7380440801381848',
-                    kktRegistrationNumber: '0007642722037997',
-                    fdNumber: 41859,
-                    fpd: 2975038937,
-                    ffdVersion: '1.2',
-                },
-            },
-            {
-                id: 813,
-                details: {
-                    receiptTime: '28.10.2024 10:32',
-                    shiftNumber: 18,
-                    machineNumber: 'KZN1001202',
-                    taxSystem: 'OSN',
-                    onlinePayment: true,
-                    fnNumber: '7380440800998420',
-                    kktRegistrationNumber: '0007642686026725',
-                    fdNumber: 4696,
-                    fpd: 3632111203,
-                    ffdVersion: '1.2',
-                },
-            },
-        ]
-    })
+    response.status(200).json({ receipts })
 })
 
 const server = app.listen(3000, () => {
