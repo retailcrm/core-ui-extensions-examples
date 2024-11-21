@@ -31,7 +31,7 @@ import {
     UiButton,
     UiModalWindow,
     CrmYandexMap,
-} from '@/components'
+} from './components'
 
 import IconMapOutlined from './assets/map-outlined.svg'
 
