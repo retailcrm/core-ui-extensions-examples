@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType, ComputedRef } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 import type { WidgetTarget } from '@retailcrm/embed-ui/types/widget'
 
 import IconTelegram from './assets/telegram.svg'
