@@ -17,6 +17,8 @@
         "@babel/plugin-transform-classes": "^7.23.8",
         "@babel/preset-env": "^7.23.9",
         "@intlify/vue-i18n-loader": "^4.2.0",
+        "@retailcrm/embed-ui": "^0.4.1-alpha.8",
+        "@retailcrm/embed-ui-v1-components": "^0.4.1-alpha.8",
         "@types/webpack": "^5.28.5",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",

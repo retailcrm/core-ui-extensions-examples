@@ -109,10 +109,10 @@ import {
     UiLoader,
     UiError,
     UiModalSidebar,
-} from './components'
+} from '@retailcrm/embed-ui-v1-components/remote'
 
-import IconCaretDown from './assets/caret-down.svg'
-import IconCaretUp from './assets/caret-up.svg'
+import IconCaretDown from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-down.svg'
+import IconCaretUp from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-up.svg'
 
 import {
     onMounted,

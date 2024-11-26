@@ -27,11 +27,12 @@
 </template>
 
 <script lang="ts" setup>
+import { CrmYandexMap } from './components'
+
 import {
     UiButton,
     UiModalWindow,
-    CrmYandexMap,
-} from './components'
+} from '@retailcrm/embed-ui-v1-components/remote'
 
 import IconMapOutlined from './assets/map-outlined.svg'
 
