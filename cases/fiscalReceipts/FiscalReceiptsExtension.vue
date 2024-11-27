@@ -1,5 +1,5 @@
 <template>
-    <UiButton appearance="secondary" @click="opened = true">
+    <UiToolbarButton @click="opened = true">
         <template v-if="count">
             {{ t('fiscalReceipts') }} ({{ count }})
         </template>
@@ -34,7 +34,7 @@
                 </g>
             </svg>
         </template>
-    </UiButton>
+    </UiToolbarButton>
 
     <UiModalSidebar
         v-model:opened="opened"
@@ -109,6 +109,7 @@ import {
     UiLoader,
     UiError,
     UiModalSidebar,
+    UiToolbarButton,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
 import IconCaretDown from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-down.svg'
