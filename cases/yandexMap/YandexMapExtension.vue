@@ -90,7 +90,7 @@ onMounted(() => order.initialize())
 </i18n>
 
 <style lang="less" module>
-.window :global(.omnica-modal-window__content) {
+.window :global(.ui-v1-modal-window__content) {
     padding: 0;
 }
 </style>
