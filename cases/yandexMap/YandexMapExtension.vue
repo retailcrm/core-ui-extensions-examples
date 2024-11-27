@@ -1,8 +1,8 @@
 <template>
-    <UiButton appearance="secondary" size="xs" @click="opened = true">
+    <UiToolbarButton @click="opened = true">
         <IconMapOutlined />
         {{ t('onTheMap') }}
-    </UiButton>
+    </UiToolbarButton>
 
     <UiModalWindow
         v-model:opened="opened"
@@ -31,6 +31,7 @@ import { CrmYandexMap } from './components'
 
 import {
     UiButton,
+    UiToolbarButton,
     UiModalWindow,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
