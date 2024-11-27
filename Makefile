@@ -67,3 +67,40 @@ zip-archive:
 	echo $$JSON_CONTENT > $$DIR/manifest.json; \
 	zip -rjFS $$DIR.zip $$DIR/*; \
 	rm $$DIR/manifest.json; \
+
+# Register module in CRM
+.PHONY: register
+register:
+	@read -p "Введите URL CRM (CRM_URL): " CRM_URL; \
+	read -p "Введите API ключ (API_KEY): " API_KEY; \
+	read -p "Введите название модуля (MODULE_NAME): " MODULE_NAME; \
+	read -p "Введите базовый адрес модуля (MODULE_URL): " MODULE_URL; \
+	MODULE_DATA=$$(jq -r '.items[] | select(.name=="'"$$MODULE_NAME"'")' ./cases.json); \
+	if [ -z "$$MODULE_DATA" ]; then \
+		echo "Модуль $$MODULE_NAME не найден в cases.json"; \
+		exit 1; \
+	fi; \
+	MODULE_UUID=$$(echo $$MODULE_DATA | jq -r '.uuid'); \
+	MODULE_TARGETS=$$(echo $$MODULE_DATA | jq -r '.targets | map("\"" + . + "\"") | join(",")'); \
+	MODULE_ENTRYPOINT=$$(echo $$MODULE_DATA | jq -r '.entrypoint'); \
+	MODULE_STYLESHEET=$$(echo $$MODULE_DATA | jq -r '.stylesheet // empty'); \
+	CURL_DATA=$$( \
+		echo '{"code":"'"$$MODULE_NAME"'",' \
+		     '"integrationCode":"'"$$MODULE_NAME"'",' \
+		     '"active":true,' \
+		     '"name":"'"$$MODULE_NAME"'",' \
+		     '"clientId":"client-id-xxx",' \
+		     '"baseUrl":"'"$$MODULE_URL"'",' \
+		     '"integrations":{"embedJs":{' \
+		     '"entrypoint":"/extension/'"$$MODULE_UUID"'",'; \
+		if [ -n "$$MODULE_STYLESHEET" ]; then \
+			echo '"stylesheet":"/extension/'"$$MODULE_UUID"'/stylesheet",'; \
+		fi; \
+		echo '"targets":['"$$MODULE_TARGETS"']}}}'; \
+	); \
+	echo "Sending request to CRM..."; \
+	curl --request POST \
+		--url "$$CRM_URL/api/v5/integration-modules/$$MODULE_NAME/edit" \
+		--header "X-Api-Key: $$API_KEY" \
+		--header "content-type: multipart/form-data" \
+		--form "integrationModule=$$CURL_DATA"; \
