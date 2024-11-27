@@ -79,9 +79,9 @@
                                 :class="$style.muted"
                                 class="omnica-text omnica-text_tiny omnica-text_accent"
                             >
-                                {{ label }}
+                                {{ label() }}
                             </div>
-                            
+
                             <div class="omnica-text omnica-text_tiny">
                                 {{ key === 'onlinePayment'
                                     ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
@@ -165,18 +165,18 @@ const errors = ref<string[]>([])
 const collapsed = ref<number[]>([])
 
 const labels = {
-    receiptTime: t('receiptTime'),
-    shiftNumber: t('shiftNumber'),
-    machineNumber: t('machineNumber'),
-    taxSystem: t('taxSystem'),
-    onlinePayment: t('onlinePayment'),
-    fnNumber: t('fnNumber'),
-    kktRegistrationNumber: t('kktRegistrationNumber'),
-    fdNumber: t('fdNumber'),
-    fpd: t('fpd'),
-    ffdVersion: t('ffdVersion'),
+    receiptTime: () => t('receiptTime'),
+    shiftNumber: () => t('shiftNumber'),
+    machineNumber: () => t('machineNumber'),
+    taxSystem: () => t('taxSystem'),
+    onlinePayment: () => t('onlinePayment'),
+    fnNumber: () => t('fnNumber'),
+    kktRegistrationNumber: () => t('kktRegistrationNumber'),
+    fdNumber: () => t('fdNumber'),
+    fpd: () => t('fpd'),
+    ffdVersion: () => t('ffdVersion'),
 } as {
-    [K in keyof ReceiptDetails]: string;
+    [K in keyof ReceiptDetails]: () => string;
 }
 
 const toggleReceipt = (id: number) => {
