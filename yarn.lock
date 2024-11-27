@@ -2243,6 +2243,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"allTargetsButton-500cc6@workspace:cases/allTargetsButton":
+  version: 0.0.0-use.local
+  resolution: "allTargetsButton-500cc6@workspace:cases/allTargetsButton"
+  dependencies:
+    "@omnicajs/vue-remote": ^0.2.0
+    "@remote-ui/rpc": ^1.4.5
+    "@retailcrm/embed-ui": ^0.4.1-alpha.18
+    "@retailcrm/embed-ui-v1-components": ^0.4.1-alpha.18
+    pinia: ^2.2.6
+    vue: ^3.5.13
+    vue-i18n: ^10.0.4
+  languageName: unknown
+  linkType: soft
+
 "ansi-regex@npm:^5.0.1":
   version: 5.0.1
   resolution: "ansi-regex@npm:5.0.1"
@@ -5837,6 +5851,20 @@ __metadata:
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
   languageName: node
   linkType: hard
+
+"phoneReactive-6bfcc7@workspace:cases/phoneReactive":
+  version: 0.0.0-use.local
+  resolution: "phoneReactive-6bfcc7@workspace:cases/phoneReactive"
+  dependencies:
+    "@omnicajs/vue-remote": ^0.2.0
+    "@remote-ui/rpc": ^1.4.5
+    "@retailcrm/embed-ui": ^0.4.1-alpha.18
+    "@retailcrm/embed-ui-v1-components": ^0.4.1-alpha.18
+    pinia: ^2.2.6
+    vue: ^3.5.13
+    vue-i18n: ^10.0.4
+  languageName: unknown
+  linkType: soft
 
 "picocolors@npm:^1.0.0, picocolors@npm:^1.1.0, picocolors@npm:^1.1.1":
   version: 1.1.1

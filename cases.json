@@ -24,5 +24,33 @@
     ],
     "entrypoint": "dist/fiscalReceipts.js",
     "stylesheet": "dist/fiscalReceipts.css"
+  }, {
+    "uuid": "930ab49c-f6a2-4407-b64b-54ffe4c785a2",
+    "name": "phoneReactive",
+    "targets": [
+      "order/card:customer.phone"
+    ],
+    "entrypoint": "dist/phoneReactive.js"
+  }, {
+    "uuid": "30ff05b5-4473-4b41-a910-1428cc13394e",
+    "name": "allTargetsButton",
+    "targets": [
+      "order/card:common.before",
+      "order/card:common.after",
+      "order/card:customer.before",
+      "order/card:customer.after",
+      "order/card:customer.email",
+      "order/card:customer.phone",
+      "order/card:list.before",
+      "order/card:list.after",
+      "order/card:store.before",
+      "order/card:dimensions.before",
+      "order/card:dimensions.before",
+      "order/card:delivery.before",
+      "order/card:delivery.after",
+      "order/card:delivery.address",
+      "order/card:payment.before"
+    ],
+    "entrypoint": "dist/allTargetsButton.js"
   }
 ]}
