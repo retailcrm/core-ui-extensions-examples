@@ -75,14 +75,11 @@
                         }"
                     >
                         <template v-for="(label, key) in labels" :key="key">
-                            <div
-                                :class="$style.muted"
-                                class="omnica-text omnica-text_tiny omnica-text_accent"
-                            >
+                            <div :class="$style.receipt__label">
                                 {{ label() }}
                             </div>
 
-                            <div class="omnica-text omnica-text_tiny">
+                            <div :class="$style.receipt__value">
                                 {{ key === 'onlinePayment'
                                     ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
                                     : receipt.details[key as keyof ReceiptDetails]
@@ -278,13 +275,27 @@ onMounted(async () => {
 </i18n>
 
 <style lang="less" module>
+@import (reference) '~@retailcrm/embed-ui-v1-components/assets/stylesheets/palette';
+@import (reference) '~@retailcrm/embed-ui-v1-components/assets/stylesheets/typography';
+
 .hide {
     display: none !important;
 }
 
 .receipt {
+    color: @grey-800;
+    font-family: @font-family;
+
     &:not(:last-child) {
         margin-bottom: 16px;
+    }
+
+    &__label {
+        .text-tiny-accent();
+    }
+
+    &__value {
+        .text-tiny();
     }
 }
 
@@ -294,9 +305,5 @@ onMounted(async () => {
     grid-template-columns: 200px 1fr;
     grid-row-gap: 8px;
     grid-column-gap: 4px;
-}
-
-.muted {
-    color: #8A96A6;
 }
 </style>
