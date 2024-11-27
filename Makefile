@@ -49,15 +49,21 @@ $(call computable,CC_END,$(shell tput -Txterm sgr0 2>/dev/null))
 ## Creates zip archive with manifest.json
 .PHONY: zip-archive
 zip-archive:
-	@for DIR in $(shell find dist -mindepth 1 -maxdepth 1 -type d); do \
-		PACKAGE_NAME=$$(basename $$DIR); \
-		read -p "Введите новую версию для $$PACKAGE_NAME (version): " VERSION; \
-		read -p "Введите области видимости (targets) для $$PACKAGE_NAME через запятую: " TARGETS_INPUT; \
-		TARGET_ARRAY=$$(echo $$TARGETS_INPUT | tr ',' '\n' | awk '{print "\""$$1"\""}' | paste -sd, -); \
-		CSS_FILE=$$(ls $$DIR/*.css | head -n 1); \
-		JS_FILE=$$(ls $$DIR/*.js | head -n 1); \
-		HTML_FILE=$$(ls $$DIR/*.html | head -n 1); \
-		echo '{"code":"'"$$PACKAGE_NAME"'","version":"'"$$VERSION"'","targets":['"$$TARGET_ARRAY"'],"entrypoint":"'"$${HTML_FILE##*/}"'","stylesheet":"'"$${CSS_FILE##*/}"'","scripts":["'"$${JS_FILE##*/}"'"]}' > $$DIR/manifest.json; \
-		zip -rjFS $$DIR.zip $$DIR/*; \
-		rm $$DIR/manifest.json; \
-	done
+	@read -p "Укажите папку модуля из папки dist/, который вы хотите собрать: " PACKAGE_NAME; \
+	read -p "Введите новую версию для $$PACKAGE_NAME (version): " VERSION; \
+	read -p "Введите области видимости (targets) для $$PACKAGE_NAME через запятую: " TARGETS_INPUT; \
+	DIR=dist/$$PACKAGE_NAME; \
+	TARGET_ARRAY=$$(echo $$TARGETS_INPUT | tr ',' '\n' | awk '{print "\""$$1"\""}' | paste -sd, -); \
+	CSS_FILE=$$(ls $$DIR/*.css 2>/dev/null | head -n 1); \
+	JS_FILE=$$(ls $$DIR/*.js | head -n 1); \
+	HTML_FILE=$$(ls $$DIR/*.html | head -n 1); \
+	JSON_CONTENT=$$( \
+		echo '{"code":"'"$$PACKAGE_NAME"'","version":"'"$$VERSION"'","targets":['"$$TARGET_ARRAY"'],"entrypoint":"'"$${HTML_FILE##*/}"'","scripts":["'"$${JS_FILE##*/}"'"]' ; \
+		if [ -n "$$CSS_FILE" ]; then \
+			echo ',"stylesheet":"'"$${CSS_FILE##*/}"'"' ; \
+		fi ; \
+		echo '}' \
+	); \
+	echo $$JSON_CONTENT > $$DIR/manifest.json; \
+	zip -rjFS $$DIR.zip $$DIR/*; \
+	rm $$DIR/manifest.json; \
