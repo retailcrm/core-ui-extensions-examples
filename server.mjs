@@ -105,8 +105,15 @@ const receipts = [{
     },
 }]
 
-app.post('/receipts', async (request, response) => {
-    response.status(200).json({ receipts })
+app.post('/receipts', express.urlencoded(), async (request, response) => {
+    const payload = JSON.parse(request.body.payload)
+    const responseReceipts = receipts.map(receipt => {
+        return {
+            ...receipt,
+            id: `ORDER${payload.order_number}_${receipt.id}`
+        }
+    })
+    response.status(200).json({ receipts: responseReceipts })
 })
 
 const server = app.listen(3000, () => {

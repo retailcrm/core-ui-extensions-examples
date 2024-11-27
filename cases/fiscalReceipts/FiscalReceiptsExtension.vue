@@ -1,5 +1,5 @@
 <template>
-    <UiToolbarButton @click="opened = true">
+    <UiToolbarButton v-if="orderNumber" @click="opened = true">
         <template v-if="count">
             {{ t('fiscalReceipts') }} ({{ count }})
         </template>
@@ -123,6 +123,7 @@ import { useI18n } from 'vue-i18n'
 import {
     useHost,
     useField,
+    useOrderCardContext,
     useSettingsContext,
 } from '@retailcrm/embed-ui'
 
@@ -150,6 +151,12 @@ const t = i18n.t
 
 watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
+// order fields
+const context = useOrderCardContext()
+const orderNumber = useField(context, 'number')
+
+context.initialize()
+
 // host for http calls
 const host = useHost()
 
@@ -157,7 +164,7 @@ const host = useHost()
 const opened = ref(false)
 const loading = ref(false)
 const count = ref('')
-const receipts = ref<Array<{ id: number; details: ReceiptDetails }>>([])
+const receipts = ref<Array<{ id: string; details: ReceiptDetails }>>([])
 const errors = ref<string[]>([])
 const collapsed = ref<number[]>([])
 
@@ -191,9 +198,9 @@ const onSidebarOpened = async (opened: boolean) => {
 
     loading.value = true
 
-    const { body, status } = await host.httpCall('/receipts', { order_id: 1 })
+    const { body, status } = await host.httpCall('/receipts', { order_number: orderNumber.value })
     if (status === 200) {
-        receipts.value = JSON.parse(body).receipts as Array<{ id: number; details: ReceiptDetails }>
+        receipts.value = JSON.parse(body).receipts as Array<{ id: string; details: ReceiptDetails }>
     } else {
         errors.value = ['Error of loading: ' + body]
     }
