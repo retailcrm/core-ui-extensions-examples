@@ -52,5 +52,12 @@
       "order/card:payment.before"
     ],
     "entrypoint": "dist/allTargetsButton.js"
+  }, {
+    "uuid": "d3301ba9-cca9-46c2-b097-b404419b64ce",
+    "name": "recordToCalendly",
+    "targets": [
+      "order/card:customer.after"
+    ],
+    "entrypoint": "dist/recordToCalendly.js"
   }
 ]}
