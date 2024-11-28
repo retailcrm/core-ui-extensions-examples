@@ -64,6 +64,8 @@ _Данный пример полноценно работает при реги
 
 Пример демонстрирует использование и передачу данных заказа и пользователя на бекенд модуля, а также обработку формы.
 
+_Данный пример полноценно работает при регистрации в виде интеграционного модуля_.
+
 ## Запуск
 
 ### Начальное развертывание
@@ -80,12 +82,14 @@ yarn build
 
 Для инициализации приложения внутри CRM необходимо выполнить его сборку (```yarn build```), а затем предоставить html страницу с подключенными скриптами сборки в качестве значения ```entrypoint```, а так же файл стилей в качестве значения ```stylesheet``` объекта конфигурации.
 
-В данном примере есть [файл сервера](https://github.com/retailcrm/core-ui-extensions-examples/blob/master/server.mjs), который отдает необходимые ресурсы и после сборки приложения достаточно его запустить с помощью команды ```node server.mjs```.
+В данном примере есть [файл сервера](https://github.com/retailcrm/core-ui-extensions-examples/blob/master/server.mjs), который отдает необходимые ресурсы и endpoint-ы для обработки HTTP-вызовов. 
+После сборки приложения достаточно его запустить с помощью команды ```node server.mjs```.
 
 После этого, на странице заказа в CRM достаточно вызвать в консоли браузера, чтобы инициализировать
 один из модулей выше (порядок сохранен):
 
 ```javascript
+// customerPhone
 window['CRM'].embed.register({
   "uuid": "a796ad7e-55e8-4653-b328-51a953c4cb18",
   "targets": [
@@ -96,6 +100,7 @@ window['CRM'].embed.register({
   "stylesheet": "http://localhost:3000/extension/a796ad7e-55e8-4653-b328-51a953c4cb18/stylesheet"
 })
 
+// fiscalReceipts
 window['CRM'].embed.register({
   "uuid": "db275ab4-9f7e-405d-89a1-f6d56625db7a",
   "targets": [
@@ -105,6 +110,7 @@ window['CRM'].embed.register({
   "stylesheet": "http://localhost:3000/extension/db275ab4-9f7e-405d-89a1-f6d56625db7a/stylesheet"
 })
 
+// yandexMap
 window['CRM'].embed.register({
     "uuid": "62aa8145-ed53-4862-b28f-f1bc6b36a3a3",
     "targets": [
@@ -114,6 +120,7 @@ window['CRM'].embed.register({
     "stylesheet": "http://localhost:3000/extension/62aa8145-ed53-4862-b28f-f1bc6b36a3a3/stylesheet"
 })
 
+// phoneReactive
 window['CRM'].embed.register({
     "uuid": "930ab49c-f6a2-4407-b64b-54ffe4c785a2",
     "targets": [
@@ -122,6 +129,7 @@ window['CRM'].embed.register({
     "entrypoint": "http://localhost:3000/extension/930ab49c-f6a2-4407-b64b-54ffe4c785a2"
 })
 
+// allTargetsButton
 window['CRM'].embed.register({
     "uuid": "30ff05b5-4473-4b41-a910-1428cc13394e",
     "targets": [
@@ -144,12 +152,23 @@ window['CRM'].embed.register({
     "entrypoint": "http://localhost:3000/extension/30ff05b5-4473-4b41-a910-1428cc13394e"
 })
 
+// recordToCalendly
 window['CRM'].embed.register({
     "uuid": "d3301ba9-cca9-46c2-b097-b404419b64ce",
     "targets": [
         "order/card:customer.after"
     ],
     "entrypoint": "http://localhost:3000/extension/d3301ba9-cca9-46c2-b097-b404419b64ce"
+})
+
+// orderNotes
+window['CRM'].embed.register({
+    "uuid": "2f34c0a1-7004-4c57-831b-7269ac2b257c",
+    "targets": [
+        "order/card:common.before"
+    ],
+    "entrypoint": "https://localhost:3000/extension/2f34c0a1-7004-4c57-831b-7269ac2b257c",
+    "stylesheet": "https://localhost:3000/extension/2f34c0a1-7004-4c57-831b-7269ac2b257c/stylesheet"
 })
 ```
 
