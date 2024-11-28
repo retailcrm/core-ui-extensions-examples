@@ -135,7 +135,6 @@ type Note = {
 // set locale
 const settings = useSettingsContext()
 const locale = useField(settings, 'system.locale')
-
 settings.initialize()
 
 const i18n = useI18n()
@@ -146,13 +145,15 @@ watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 const host = useHost()
 
 // order fields
-const context = useOrderCardContext()
-const orderId = useField(context, 'id')
+const order = useOrderCardContext()
+const orderId = useField(order, 'id')
+order.initialize()
 
 // user fields
 const user = useCurrentUserContext()
 const userFirstName = useField(user, 'firstName')
 const userLastName = useField(user, 'lastName')
+user.initialize()
 
 // data
 const opened = ref(false)
