@@ -121,6 +121,8 @@ import {
     useHost,
     useField,
     useSettingsContext,
+    useOrderCardContext,
+    useCurrentUserContext,
 } from '@retailcrm/embed-ui'
 
 type Note = {
@@ -130,6 +132,7 @@ type Note = {
     text: string;
 }
 
+// set locale
 const settings = useSettingsContext()
 const locale = useField(settings, 'system.locale')
 
@@ -142,6 +145,16 @@ watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
 const host = useHost()
 
+// order fields
+const context = useOrderCardContext()
+const orderId = useField(context, 'id')
+
+// user fields
+const user = useCurrentUserContext()
+const userFirstName = useField(user, 'firstName')
+const userLastName = useField(user, 'lastName')
+
+// data
 const opened = ref(false)
 const loading = ref(false)
 const count = ref('')
@@ -169,7 +182,7 @@ const onSidebarOpened = async (opened: boolean) => {
 
     loading.value = true
 
-    const { body, status } = await host.httpCall('/notes', { order_id: 1 })
+    const { body, status } = await host.httpCall('/notes', { order_id: orderId.value })
     if (status === 200) {
         notes.value = JSON.parse(body).notes as Array<Note>
     } else {
@@ -182,13 +195,14 @@ const onSidebarOpened = async (opened: boolean) => {
 const onSubmit = async () => {
     const data: Note = {
         id: 3,
-        author: 'string',
+        author: `${userFirstName.value} ${userLastName.value}`.trim(),
         date: new Date(),
         text: text.value,
     }
 
     const { body, status } = await host.httpCall('/notes/new', {
-        body: JSON.stringify(data),
+        order_id: orderId.value,
+        note: data,
     })
 
     if (status === 200) {
