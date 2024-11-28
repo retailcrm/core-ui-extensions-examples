@@ -59,5 +59,13 @@
       "order/card:customer.after"
     ],
     "entrypoint": "dist/recordToCalendly.js"
+  }, {
+    "uuid": "2f34c0a1-7004-4c57-831b-7269ac2b257c",
+    "name": "orderNotes",
+    "targets": [
+      "order/card:common.before"
+    ],
+    "entrypoint": "dist/orderNotes.js",
+    "stylesheet": "dist/orderNotes.css"
   }
 ]}
