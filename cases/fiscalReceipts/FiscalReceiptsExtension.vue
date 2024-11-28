@@ -53,14 +53,6 @@
                 :message="error"
             />
 
-            <UiLink size="body">
-                {{ t('receipt') }}
-
-                <template #icon>
-                    <IconCaretUp />
-                </template>
-            </UiLink>
-
             <template v-if="errors.length === 0">
                 <div
                     v-for="receipt in receipts"
@@ -89,8 +81,8 @@
 
                             <div :class="$style.receipt__value">
                                 {{ key === 'onlinePayment'
-                                    ? (receipt.details[key] ? t('yes') : t('no'))
-                                    : receipt.details[key]
+                                    ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
+                                    : receipt.details[key as keyof ReceiptDetails]
                                 }}
                             </div>
                         </template>
@@ -174,7 +166,7 @@ const loading = ref(false)
 const count = ref('')
 const receipts = ref<Array<{ id: string; details: ReceiptDetails }>>([])
 const errors = ref<string[]>([])
-const collapsed = ref<number[]>([])
+const collapsed = ref<string[]>([])
 
 const labels = {
     receiptTime: () => t('receiptTime'),
@@ -191,7 +183,7 @@ const labels = {
     [K in keyof ReceiptDetails]: () => string;
 }
 
-const toggleReceipt = (id: number) => {
+const toggleReceipt = (id: string) => {
     if (collapsed.value.includes(id)) {
         collapsed.value.splice(collapsed.value.findIndex(i => i === id), 1)
     } else {
