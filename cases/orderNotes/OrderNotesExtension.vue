@@ -228,12 +228,16 @@ onMounted(async () => {
 
 <i18n locale="en-GB">
 {
+    "orderNotes": "Order notes",
+    "send": "Send",
     "close": "Close"
 }
 </i18n>
 
 <i18n locale="es-ES">
 {
+    "orderNotes": "Notas del pedido",
+    "send": "Enviar",
     "close": "Cerrar"
 }
 </i18n>
