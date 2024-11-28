@@ -53,6 +53,14 @@
                 :message="error"
             />
 
+            <UiLink size="body">
+                {{ t('receipt') }}
+
+                <template #icon>
+                    <IconCaretUp />
+                </template>
+            </UiLink>
+
             <template v-if="errors.length === 0">
                 <div
                     v-for="receipt in receipts"
@@ -81,8 +89,8 @@
 
                             <div :class="$style.receipt__value">
                                 {{ key === 'onlinePayment'
-                                    ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
-                                    : receipt.details[key as keyof ReceiptDetails]
+                                    ? (receipt.details[key] ? t('yes') : t('no'))
+                                    : receipt.details[key]
                                 }}
                             </div>
                         </template>
