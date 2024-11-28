@@ -58,8 +58,9 @@
                     <div :class="$style.avatar" />
                 
                     <textarea
-                        v-model="text"
                         :class="$style.form__area"
+                        :value="text"
+                        @input="onInput"
                     />
 
                     <UiButton
@@ -105,8 +106,11 @@
 </template>
 
 <script lang="ts" setup>
+import type { SerializedInputEvent } from '@omnicajs/vue-remote/types/events'
+
 import {
     UiButton,
+    UiError,
     UiLink,
     UiLoader,
     UiModalSidebar,
@@ -193,10 +197,16 @@ const onSidebarOpened = async (opened: boolean) => {
     loading.value = false
 }
 
+const onInput = (e: SerializedInputEvent) => {
+    const input = e.target as HTMLInputElement
+    
+    text.value = input.value
+}
+
 const onSubmit = async () => {
     const data: Note = {
         id: 3,
-        author: `${userFirstName.value} ${userLastName.value}`.trim(),
+        author: `${userFirstName.value?.trim() || ''} ${userLastName.value?.trim() || ''}`.trim(),
         date: new Date(),
         text: text.value,
     }
@@ -208,6 +218,8 @@ const onSubmit = async () => {
 
     if (status === 200) {
         notes.value = JSON.parse(body).notes as Array<Note>
+
+        text.value = ''
     } else {
         errors.value = ['Error of loading: ' + body]
     }
