@@ -110,7 +110,7 @@ app.post('/receipts', express.urlencoded(), async (request, response) => {
     const responseReceipts = receipts.map(receipt => {
         return {
             ...receipt,
-            id: `ORDER${payload.order_number}_${receipt.id}`
+            id: `ORDER${payload.order_number}_${receipt.id}`,
         }
     })
     response.status(200).json({ receipts: responseReceipts })
@@ -142,6 +142,31 @@ app.post('/notes/new', express.urlencoded(), async (request, response) => {
     const payload = JSON.parse(request.body.payload)
     const resultNotes = [payload.note, ...notes]
     response.status(200).json({ notes: resultNotes })
+})
+
+// customerINN routes
+
+app.post('/customer/by-inn', express.urlencoded(), async (request, response) => {
+    const { inn } = JSON.parse(request.body.payload)
+
+    if (inn === '1234567890') {
+        return response.status(200).json({
+            data: {
+                name: 'МФО ТомскАсбоцементПивБанк',
+                bank: 'Сбербанк России, ОАО, г. Москва',
+                bankAccount: '415219379646',
+                bankAddress: '877568, Липецкая область, город Клин, наб. Косиора, 61',
+                legalName: 'ОАО Глав',
+                legalAddress: '877568, Липецкая область, город Клин, наб. Косиора, 61',
+                corrAccount: '601630812474',
+                INN: '2872865074',
+                OKPO: '10720877',
+                BIK: '38630490',
+            },
+        })
+    }
+
+    response.status(400)
 })
 
 const server = app.listen(3000, () => {

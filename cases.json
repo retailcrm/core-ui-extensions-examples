@@ -67,5 +67,12 @@
     ],
     "entrypoint": "dist/orderNotes.js",
     "stylesheet": "dist/orderNotes.css"
+  }, {
+    "uuid": "c212cb60-5650-433a-82db-09f0f604056a",
+    "name": "customerINN",
+    "targets": [
+      "order/card:customer.after"
+    ],
+    "entrypoint": "dist/customerINN.js"
   }
 ]}
