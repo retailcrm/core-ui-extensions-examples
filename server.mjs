@@ -62,7 +62,7 @@ app.get('/extension/:uuid/stylesheet', async (request, response) => {
     const records = await readManifest(path.join(__dirname, '/cases.json'))
 
     const record = records.items.find(r => r.uuid === uuid)
-    if (record) {
+    if (record && record.stylesheet) {
         response.sendFile(path.join(__dirname, manifest[record.stylesheet]))
     } else {
         response.sendStatus(404)
@@ -114,6 +114,34 @@ app.post('/receipts', express.urlencoded(), async (request, response) => {
         }
     })
     response.status(200).json({ receipts: responseReceipts })
+})
+
+// orderNotes routes
+
+const notes = [{
+    id: 1,
+    author: 'Василий Петров',
+    date: '2024-10-15T16:00:00',
+    text: 'Клиент просил оставить заказ у двери',
+}, {
+    id: 2,
+    author: 'Николай Понкратов',
+    date: '2024-10-12T00:00:00',
+    text: 'Просил оповестить, как появятся мандарины, хочет добавить к заказу',
+}]
+
+app.post('/notes-count', async (request, response) => {
+    response.status(200).json({ count: notes.length })
+})
+
+app.post('/notes', async (request, response) => {
+    response.status(200).json({ notes })
+})
+
+app.post('/notes/new', express.urlencoded(), async (request, response) => {
+    const payload = JSON.parse(request.body.payload)
+    const resultNotes = [payload.note, ...notes]
+    response.status(200).json({ notes: resultNotes })
 })
 
 const server = app.listen(3000, () => {
