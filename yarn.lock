@@ -1685,6 +1685,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.13":
+  version: 4.17.13
+  resolution: "@types/lodash@npm:4.17.13"
+  checksum: d0bf8fbd950be71946e0076b30fd40d492293baea75f05931b6b5b906fd62583708c6229abdb95b30205ad24ce1ed2f48bc9d419364f682320edd03405cc0c7e
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*":
   version: 5.1.2
   resolution: "@types/minimatch@npm:5.1.2"
@@ -3180,6 +3187,22 @@ __metadata:
   checksum: 8db785cc92d259102725b3c694ec0c823f5619a84741b5c7991b8ad135dfaa66093038a1cc63e03361a6cd28d122be48f2106ae72334e067dd619a51f49eddf7
   languageName: node
   linkType: hard
+
+"customerINN-0adab0@workspace:cases/customerINN":
+  version: 0.0.0-use.local
+  resolution: "customerINN-0adab0@workspace:cases/customerINN"
+  dependencies:
+    "@omnicajs/vue-remote": ^0.2.0
+    "@remote-ui/rpc": ^1.4.5
+    "@retailcrm/embed-ui": ^0.4.1-alpha.22
+    "@retailcrm/embed-ui-v1-components": ^0.4.1-alpha.22
+    "@types/lodash": ^4.17.13
+    lodash: ^4.17.21
+    pinia: ^2.2.6
+    vue: ^3.5.13
+    vue-i18n: ^10.0.4
+  languageName: unknown
+  linkType: soft
 
 "customerPhone-5e3c97@workspace:cases/customerPhone":
   version: 0.0.0-use.local
