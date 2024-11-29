@@ -12,7 +12,7 @@
             {{ t('address') }}
         </template>
 
-        <CrmYandexMap 
+        <UiYandexMap
             :api-key="'dd51f938-0693-457d-ae62-6d50fa668d0a'"
             :address="address || ''"
             @change="address = $event"
@@ -27,12 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import { CrmYandexMap } from './components'
-
 import {
     UiButton,
-    UiToolbarButton,
     UiModalWindow,
+    UiToolbarButton,
+    UiYandexMap,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
 import IconMapOutlined from './assets/map-outlined.svg'
