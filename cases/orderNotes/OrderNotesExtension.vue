@@ -106,8 +106,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { SerializedInputEvent } from '@omnicajs/vue-remote/types/events'
-
 import {
     UiButton,
     UiError,
@@ -118,6 +116,7 @@ import {
 } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { onMounted, watch, ref } from 'vue'
+import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
 
@@ -197,11 +196,9 @@ const onSidebarOpened = async (opened: boolean) => {
     loading.value = false
 }
 
-const onInput = (e: SerializedInputEvent) => {
-    const input = e.target as HTMLInputElement
-    
-    text.value = input.value
-}
+const onInput = onSerializedEvent<InputEvent>((event) => {
+    text.value = event.target.value
+})
 
 const onSubmit = async () => {
     const data: Note = {

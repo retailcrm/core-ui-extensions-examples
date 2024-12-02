@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "@omnicajs/vue-remote": "^0.2.0",
+        "@omnicajs/vue-remote": "^0.2.2",
         "@remote-ui/rpc": "^1.4.5",
         "@retailcrm/embed-ui": "^0.4.1",
         "@retailcrm/embed-ui-v1-components": "^0.4.1",
