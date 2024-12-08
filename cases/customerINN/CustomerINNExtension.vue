@@ -10,10 +10,18 @@
 <script lang="ts" setup>
 import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { useHost, useField, useOrderCardContext, useSettingsContext } from '@retailcrm/embed-ui'
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+
+import {
+    useHost,
+    useField,
+} from '@retailcrm/embed-ui'
 
 import { useI18n } from 'vue-i18n'
-import { watch, ref } from 'vue'
+
+import { ref, watch } from 'vue'
+
 import debounce from 'lodash/debounce'
 
 type CompanyData = {
@@ -30,7 +38,7 @@ type CompanyData = {
 }
 
 // set locale
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 
 settings.initialize()
@@ -45,7 +53,7 @@ const host = useHost()
 const visible = ref(false)
 const data = ref<CompanyData | null>(null)
 
-const order = useOrderCardContext()
+const order = useOrder()
 
 const companyName = useField(order, 'company.name')
 const companyBank = useField(order, 'company.bank')

@@ -27,12 +27,10 @@ import {
     UiToolbarLink,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
-import {
-    useField,
-    useSettingsContext,
-} from '@retailcrm/embed-ui'
-
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+
 import { watch } from 'vue'
 
 const props = defineProps({
@@ -43,7 +41,7 @@ const props = defineProps({
 })
 
 // set locale
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 
 settings.initialize()
