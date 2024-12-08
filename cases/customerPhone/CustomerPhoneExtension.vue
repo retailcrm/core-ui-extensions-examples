@@ -23,11 +23,10 @@ import IconWhatsapp from './assets/whatsapp.svg'
 
 import { computed } from 'vue'
 
-import {
-    useCustomerCardPhoneContext,
-    useOrderCardContext,
-    useField,
-} from '@retailcrm/embed-ui'
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as usePhone } from '@retailcrm/embed-ui-v1-contexts/remote/customer/card-phone'
+
+import { useField } from '@retailcrm/embed-ui'
 
 const props = defineProps({
     target: {
@@ -39,13 +38,13 @@ const props = defineProps({
 let phone: ComputedRef<string | null>
 
 if (props.target === 'customer/card:phone') {
-    const context = useCustomerCardPhoneContext()
+    const context = usePhone()
 
     context.initialize()
 
     phone = useField(context, 'value')
 } else if (props.target === 'order/card:customer.phone') {
-    const context = useOrderCardContext()
+    const context = useOrder()
 
     context.initialize()
 

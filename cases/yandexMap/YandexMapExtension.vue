@@ -36,17 +36,14 @@ import {
 
 import IconMapOutlined from './assets/map-outlined.svg'
 
-import { onMounted, watch, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 
-import {
-    useSettingsContext,
-    useOrderCardContext,
-    useField,
-} from '@retailcrm/embed-ui'
-
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 
 settings.initialize()
@@ -56,7 +53,7 @@ const t = i18n.t
 
 watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
-const order = useOrderCardContext()
+const order = useOrder()
 
 const opened = ref(false)
 const address = useField(order, 'delivery.address')

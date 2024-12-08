@@ -5,18 +5,16 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    useOrderCardContext,
-    useField,
-    useSettingsContext,
-} from '@retailcrm/embed-ui'
+import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote';
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+
 import { watch } from 'vue'
 
-// set locale
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 
 settings.initialize()
@@ -26,10 +24,10 @@ const t = i18n.t
 
 watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
-const context = useOrderCardContext()
-const phone = useField(context, 'customer.phone')
+const order = useOrder()
+const phone = useField(order, 'customer.phone')
 
-context.initialize()
+order.initialize()
 </script>
 
 <i18n locale="en-GB">

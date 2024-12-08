@@ -120,11 +120,12 @@ import {
 
 import { useI18n } from 'vue-i18n'
 
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+
 import {
     useHost,
     useField,
-    useOrderCardContext,
-    useSettingsContext,
 } from '@retailcrm/embed-ui'
 
 type ReceiptDetails = {
@@ -141,7 +142,7 @@ type ReceiptDetails = {
 }
 
 // set locale
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 
 settings.initialize()
@@ -152,7 +153,7 @@ const t = i18n.t
 watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
 // order fields
-const context = useOrderCardContext()
+const context = useOrder()
 const orderNumber = useField(context, 'number')
 
 context.initialize()
