@@ -120,12 +120,13 @@ import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
 
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useContext as useUser } from '@retailcrm/embed-ui-v1-contexts/remote/user/current'
+
 import {
     useHost,
     useField,
-    useSettingsContext,
-    useOrderCardContext,
-    useCurrentUserContext,
 } from '@retailcrm/embed-ui'
 
 type Note = {
@@ -136,7 +137,7 @@ type Note = {
 }
 
 // set locale
-const settings = useSettingsContext()
+const settings = useSettings()
 const locale = useField(settings, 'system.locale')
 settings.initialize()
 
@@ -148,12 +149,12 @@ watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 const host = useHost()
 
 // order fields
-const order = useOrderCardContext()
+const order = useOrder()
 const orderId = useField(order, 'id')
 order.initialize()
 
 // user fields
-const user = useCurrentUserContext()
+const user = useUser()
 const userFirstName = useField(user, 'firstName')
 const userLastName = useField(user, 'lastName')
 user.initialize()
@@ -162,7 +163,7 @@ user.initialize()
 const opened = ref(false)
 const loading = ref(false)
 const count = ref('')
-const notes = ref<Array<Note>>([])
+const notes = ref<Note[]>([])
 const errors = ref<string[]>([])
 const text = ref('')
 
