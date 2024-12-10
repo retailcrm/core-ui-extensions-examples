@@ -2,8 +2,10 @@
     "dependencies": {
         "@omnicajs/vue-remote": "^0.2.3",
         "@remote-ui/rpc": "^1.4.5",
-        "@retailcrm/embed-ui": "^0.4.8",
-        "@retailcrm/embed-ui-v1-components": "^0.4.8",
+        "@retailcrm/embed-ui": "^0.4.9",
+        "@retailcrm/embed-ui-v1-components": "^0.4.9",
+        "@retailcrm/embed-ui-v1-contexts": "^0.4.9",
+        "@retailcrm/embed-ui-v1-types": "^0.4.9",
         "lodash": "^4.17.21",
         "pinia": "^2.2.8",
         "vue": "^3.5.13",
