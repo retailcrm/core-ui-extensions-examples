@@ -22,6 +22,8 @@
         "strict": true,
         "target": "ES2017",
         "types": [
+            "@retailcrm/embed-ui-v1-types/context",
+            "@retailcrm/embed-ui-v1-types/scaffolding",
             "@vue/compiler-core/dist/compiler-core",
             "@vue/compiler-dom/dist/compiler-dom",
             "@vue/compiler-sfc/dist/compiler-sfc",

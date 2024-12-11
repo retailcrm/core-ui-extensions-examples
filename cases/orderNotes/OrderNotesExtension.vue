@@ -120,9 +120,9 @@ import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
 
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
-import { useContext as useUser } from '@retailcrm/embed-ui-v1-contexts/remote/user/current'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
+import { useCurrentUserContext as useUser } from '@retailcrm/embed-ui'
 
 import {
     useHost,

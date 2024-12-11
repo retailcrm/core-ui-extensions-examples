@@ -23,8 +23,8 @@ import IconWhatsapp from './assets/whatsapp.svg'
 
 import { computed } from 'vue'
 
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as usePhone } from '@retailcrm/embed-ui-v1-contexts/remote/customer/card-phone'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useCustomerCardPhoneContext as usePhone } from '@retailcrm/embed-ui'
 
 import { useField } from '@retailcrm/embed-ui'
 

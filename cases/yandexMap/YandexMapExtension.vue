@@ -38,8 +38,8 @@ import IconMapOutlined from './assets/map-outlined.svg'
 
 import { onMounted, ref, watch } from 'vue'
 
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 

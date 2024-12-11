@@ -10,8 +10,8 @@
 <script lang="ts" setup>
 import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 import {
     useHost,
