@@ -120,8 +120,8 @@ import {
 
 import { useI18n } from 'vue-i18n'
 
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 import {
     useHost,
