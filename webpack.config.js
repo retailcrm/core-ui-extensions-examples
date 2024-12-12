@@ -67,9 +67,8 @@ const cssRegular = [cssExtractLoader, {
     },
 }]
 
-const entryPoints = glob.sync('cases/*/index.ts').reduce((entries, file) => {
+const entries = glob.sync('cases/*/index.ts').reduce((entries, file) => {
     const match = file.match(/^cases\/([^/]+)\/index\.ts$/)
-
     if (match) {
         entries[match[1]] = path.resolve(__dirname, file)
     }
@@ -77,182 +76,179 @@ const entryPoints = glob.sync('cases/*/index.ts').reduce((entries, file) => {
     return entries
 }, {})
 
-const HtmlWebpackPlugins = Object.keys(entryPoints).map(entryName => {
-    return new HtmlWebpackPlugin({
-        title: `UI Extension: ${entryName}`,
-        filename: `${entryName}/index.html`,
-        chunks: [entryName],
-    });
-})
+const resolve = {
+    extensions: [
+        '.wasm',
+        '.mjs',
+        '.js',
+        '.json',
+        '.jsx',
+        '.vue',
+        '.ts',
+        '.tsx',
+    ],
+}
+
+const plugins = () => [
+    new webpack.DefinePlugin({
+        __VUE_OPTIONS_API__: JSON.stringify(false),
+        __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(true),
+    }),
+    new CleanPlugin(),
+    new ManifestPlugin({
+        writeToFileEmit: true,
+    }),
+    new CSSExtractPlugin({
+        filename: 'extension.[contenthash:8].css',
+        chunkFilename: 'extension.[contenthash:8].css',
+    }),
+    new RemoveEmptyScriptsPlugin(),
+    new VueLoaderPlugin(),
+    new webpack.ProgressPlugin(),
+]
+
+const rules = [{
+    test: /\.(woff|woff2|ttf|eot|otf)$/,
+    type: 'asset/resource',
+    generator: {
+        filename: 'fonts/[name].[contenthash:8][ext]',
+    },
+}, {
+    test: /\.(png|jpg|jpeg|gif|ico|webp)$/,
+    type: 'asset/resource',
+    generator: {
+        filename: 'images/[name].[contenthash:8][ext]',
+    },
+}, {
+    test: /\.svg$/,
+    use: ['vue-loader', 'vue-svg-loader'],
+}, {
+    test: /\.m?js/,
+    resolve: { fullySpecified: false },
+}, {
+    test: /\.m?jsx?$/,
+    exclude: /node_modules/,
+    use: [babelLoader],
+}, {
+    test: /\.tsx?$/,
+    exclude: /node_modules/,
+    use: [babelLoader, {
+        loader: 'ts-loader',
+        options: {
+            appendTsSuffixTo: [/\.vue$/],
+        },
+    }],
+}, {
+    test: /\.css$/,
+    oneOf: [{
+        resourceQuery: /module/,
+        use: cssModular,
+    }, {
+        use: cssRegular,
+    }],
+}, {
+    test: /\.less/,
+    oneOf: [{
+        resourceQuery: /module/,
+        use: [...cssModular, lessLoader],
+    }, {
+        use: [...cssRegular, lessLoader],
+    }],
+}, {
+    test: /\.vue$/,
+    use: [{
+        loader: 'vue-loader',
+    }],
+}, {
+    resourceQuery: /blockType=i18n/,
+    type: 'javascript/auto',
+    loader: '@intlify/vue-i18n-loader',
+}]
+
+const optimization = {
+    minimize: true,
+    minimizer: [
+        new TerserPlugin({
+            terserOptions: {
+                compress: { drop_console: true },
+            },
+        }),
+        new CssMinimizerPlugin({
+            minimizerOptions: {
+                preset: [
+                    'default',
+                    {
+                        discardComments: {
+                            removeAll: true,
+                        },
+                    },
+                ],
+            },
+        }),
+    ],
+}
+
+const cache = {
+    type: 'filesystem',
+    buildDependencies: { config: [__filename] },
+}
+
+const stats = {
+    assets: false,
+    builtAt: false,
+    children: false,
+    chunks: false,
+    errorDetails: true,
+    errorStack: true,
+    entrypoints: true,
+    hash: false,
+    modules: false,
+    publicPath: false,
+    reasons: false,
+    source: false,
+    timings: true,
+    version: false,
+    warnings: false,
+}
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production'
 
-    return {
+    return Object.keys(entries).map(name => ({
         mode: isProduction ? 'production' : 'development',
 
         context: __dirname,
 
-        entry: entryPoints,
-
-        output: {
-            filename: '[name]/extension.[fullhash].js',
-            chunkFilename: '[name]/extension.[fullhash].js',
-            path: path.resolve(__dirname, 'dist/'),
-            pathinfo: true,
-            publicPath: '/dist/',
+        entry: {
+            [name]: entries[name],
         },
 
-        resolve: {
-            extensions: [
-                '.wasm',
-                '.mjs',
-                '.js',
-                '.json',
-                '.jsx',
-                '.vue',
-                '.ts',
-                '.tsx',
-            ],
+        output: {
+            filename: 'extension.[fullhash].js',
+            chunkFilename: 'extension.[fullhash].js',
+            path: path.resolve(__dirname, path.join('dist', name)),
+            pathinfo: true,
+            publicPath: '/',
         },
 
         devtool: isProduction ? false : 'inline-source-map',
 
+        resolve,
+
         plugins: [
-            new webpack.DefinePlugin({
-                __VUE_OPTIONS_API__: JSON.stringify(false),
-                __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(true),
+            ...plugins(),
+            new HtmlWebpackPlugin({
+                title: `UI Extension: ${name}`,
+                filename: 'index.html',
             }),
-            new CleanPlugin(),
-            new ManifestPlugin({
-                basePath: 'dist/',
-                writeToFileEmit: true,
-            }),
-            new CSSExtractPlugin({
-                filename: '[name]/extension.[contenthash:8].css',
-                chunkFilename: '[name]/extension.[contenthash:8].css',
-            }),
-            new RemoveEmptyScriptsPlugin(),
-            new VueLoaderPlugin(),
-            new webpack.ProgressPlugin((percentage, message) => {
-                readline.clearLine(process.stdout, 0);
-                readline.cursorTo(process.stdout, 0, null);
-                process.stdout.write(`${Math.round(percentage * 100)}% ${message}`);
-            }),
-            ...HtmlWebpackPlugins,
         ],
 
-        module: {
-            rules: [{
-                test: /\.(woff|woff2|ttf|eot|otf)$/,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'fonts/[name].[contenthash:8][ext]',
-                },
-            }, {
-                test: /\.(png|jpg|jpeg|gif|ico|webp)$/,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'images/[name].[contenthash:8][ext]',
-                },
-            }, {
-                test: /\.svg$/,
-                use: ['vue-loader', 'vue-svg-loader'],
-            }, {
-                test: /\.m?js/,
-                resolve: { fullySpecified: false },
-            }, {
-                test: /\.m?jsx?$/,
-                exclude: /node_modules/,
-                use: [babelLoader],
-            }, {
-                test: /\.tsx?$/,
-                exclude: /node_modules/,
-                use: [babelLoader, {
-                    loader: 'ts-loader',
-                    options: {
-                        appendTsSuffixTo: [/\.vue$/],
-                    },
-                }],
-            }, {
-                test: /\.css$/,
-                oneOf: [{
-                    resourceQuery: /module/,
-                    use: cssModular,
-                }, {
-                    use: cssRegular,
-                }],
-            }, {
-                test: /\.less/,
-                oneOf: [{
-                    resourceQuery: /module/,
-                    use: [...cssModular, lessLoader],
-                }, {
-                    use: [...cssRegular, lessLoader],
-                }],
-            }, {
-                test: /\.vue$/,
-                use: [{
-                    loader: 'vue-loader',
-                }],
-            }, {
-                resourceQuery: /blockType=i18n/,
-                type: 'javascript/auto',
-                loader: '@intlify/vue-i18n-loader',
-            }],
-        },
+        module: { rules },
 
-        cache: {
-            type: 'filesystem',
-            buildDependencies: { config: [__filename] },
-        },
+        ...(isProduction ? { optimization } : { cache }),
 
-        performance: {
-            hints: false,
-        },
-
-        stats: {
-            assets: false,
-            builtAt: false,
-            children: false,
-            chunks: false,
-            errorDetails: true,
-            errorStack: true,
-            entrypoints: true,
-            hash: false,
-            modules: false,
-            publicPath: false,
-            reasons: false,
-            source: false,
-            timings: true,
-            version: false,
-            warnings: false,
-        },
-
-        optimization: isProduction ? {
-            minimize: true,
-            minimizer: [
-                new TerserPlugin({
-                    terserOptions: {
-                        compress: {
-                            drop_console: true,
-                        },
-                    },
-                }),
-                new CssMinimizerPlugin({
-                    minimizerOptions: {
-                        preset: [
-                            'default',
-                            {
-                                discardComments: {
-                                    removeAll: true,
-                                },
-                            },
-                        ],
-                    },
-                }),
-            ],
-        } : {},
-    }
+        performance: { hints: false },
+        stats,
+    }))
 }
