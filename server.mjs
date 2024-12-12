@@ -24,13 +24,13 @@ const readManifest = (path) => {
     })
 }
 
-const render = (name, manifest, entrypoint) => {
+const renderEntrypoint = (name, manifest, entry) => {
     return `<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>UI Extension: ${name}</title>
-    <script type="module" src="${manifest[entrypoint]}"></script>
+    <script type="module" src="/dist/${name}${manifest[entry]}"></script>
 </head>
 <body></body>
 </html>`
@@ -45,12 +45,14 @@ app.get('/', (_, response) => {
 
 app.get('/extension/:uuid', async (request, response) => {
     const uuid = request.params.uuid
-    const manifest = await readManifest(path.join(__dirname, '/dist/manifest.json'))
-    const records = await readManifest(path.join(__dirname, '/cases.json'))
 
-    const record = records.items.find(r => r.uuid === uuid)
+    const known = await readManifest(path.join(__dirname, '/cases.json'))
+    const record = known.items.find(r => r.uuid === uuid)
+
     if (record) {
-        response.send(render(record.name, manifest, record.entrypoint))
+        const manifest = await readManifest(path.join(__dirname, `/dist/${record.name}/manifest.json`))
+
+        response.send(renderEntrypoint(record.name, manifest, record.script))
     } else {
         response.sendStatus(404)
     }
@@ -58,12 +60,14 @@ app.get('/extension/:uuid', async (request, response) => {
 
 app.get('/extension/:uuid/stylesheet', async (request, response) => {
     const uuid = request.params.uuid
-    const manifest = await readManifest(path.join(__dirname, '/dist/manifest.json'))
-    const records = await readManifest(path.join(__dirname, '/cases.json'))
 
-    const record = records.items.find(r => r.uuid === uuid)
+    const known = await readManifest(path.join(__dirname, '/cases.json'))
+    const record = known.items.find(r => r.uuid === uuid)
+
     if (record && record.stylesheet) {
-        response.sendFile(path.join(__dirname, manifest[record.stylesheet]))
+        const manifest = await readManifest(path.join(__dirname, `/dist/${record.name}/manifest.json`))
+
+        response.sendFile(path.join(__dirname, 'dist', record.name, manifest[record.stylesheet]))
     } else {
         response.sendStatus(404)
     }
