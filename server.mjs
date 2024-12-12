@@ -30,7 +30,7 @@ const renderEntrypoint = (name, manifest, entry) => {
 <head>
     <meta charset="UTF-8">
     <title>UI Extension: ${name}</title>
-    <script type="module" src="/dist/${name}${manifest[entry]}"></script>
+    <script type="module" src="/dist/${name}/${manifest[entry].slice(2)}"></script>
 </head>
 <body></body>
 </html>`
