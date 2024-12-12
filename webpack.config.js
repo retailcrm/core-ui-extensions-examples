@@ -229,7 +229,7 @@ module.exports = (env, argv) => {
             chunkFilename: 'extension.[fullhash].js',
             path: path.resolve(__dirname, path.join('dist', name)),
             pathinfo: true,
-            publicPath: '/',
+            publicPath: './',
         },
 
         devtool: isProduction ? false : 'inline-source-map',
