@@ -1,6 +1,5 @@
 const glob = require('glob')
 const path = require('path')
-const readline = require('readline')
 const webpack = require('webpack')
 
 const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
