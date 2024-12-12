@@ -163,9 +163,15 @@ app.post('/customer/by-inn', express.urlencoded(), async (request, response) => 
                 legalName: 'ОАО Глав',
                 legalAddress: '877568, Липецкая область, город Клин, наб. Косиора, 61',
                 corrAccount: '601630812474',
+                OGRN: '1027700132195',
+                OGRNIP: '304770000000571',
                 INN: '2872865074',
                 OKPO: '10720877',
                 BIK: '38630490',
+                certificate: {
+                    date: '15.03.2020',
+                    number: '78-20-567890',
+                },
             },
         })
     }

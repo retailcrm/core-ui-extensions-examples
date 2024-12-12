@@ -32,9 +32,15 @@ type CompanyData = {
     legalName: string;
     legalAddress: string;
     corrAccount: string;
+    OGRN?: string;
+    OGRNIP?: string;
     INN: string;
     OKPO: string;
     BIK: string;
+    certificate?: {
+        number: string;
+        date: string;
+    };
 }
 
 // set locale
@@ -56,6 +62,8 @@ const data = ref<CompanyData | null>(null)
 const order = useOrder()
 
 const companyName = useField(order, 'company.name')
+const companyOGRN = useField(order, 'company.OGRN')
+const companyOGRNIP = useField(order, 'company.OGRNIP')
 const companyBank = useField(order, 'company.bank')
 const companyBankAccount = useField(order, 'company.bankAccount')
 const companyBankAddress = useField(order, 'company.bankAddress')
@@ -65,24 +73,40 @@ const companyCorrAccount = useField(order, 'company.corrAccount')
 const companyINN = useField(order, 'company.INN')
 const companyOKPO = useField(order, 'company.OKPO')
 const companyBIK = useField(order, 'company.BIK')
+const companyCertificateNumber = useField(order, 'company.certificateNumber')
+const companyCertificateDate = useField(order, 'company.certificateDate')
 
 order.initialize()
 
 const setData = () => {
-    if (!data.value) {
+    const _data = data.value
+    if (!_data) {
         return
     }
 
-    companyName.value = data.value?.name
-    companyBank.value = data.value?.bank
-    companyBankAccount.value = data.value?.bankAccount
-    companyBankAddress.value = data.value?.bankAddress
-    companyLegalName.value = data.value?.legalName
-    companyLegalAddress.value = data.value?.legalAddress
-    companyCorrAccount.value = data.value?.corrAccount
-    companyINN.value = data.value?.INN
-    companyOKPO.value = data.value?.OKPO
-    companyBIK.value = data.value?.BIK
+    companyName.value = _data.name
+    companyBank.value = _data.bank
+    companyBankAccount.value = _data.bankAccount
+    companyBankAddress.value = _data.bankAddress
+    companyLegalName.value = _data.legalName
+    companyLegalAddress.value = _data.legalAddress
+    companyCorrAccount.value = _data.corrAccount
+    companyINN.value = _data.INN
+    companyOKPO.value = _data.OKPO
+    companyBIK.value = _data.BIK
+
+    if (_data.OGRN) {
+        companyOGRN.value = _data.OGRN
+    }
+
+    if (_data.OGRNIP) {
+        companyOGRNIP.value = _data.OGRNIP
+    }
+
+    if (_data.certificate) {
+        companyCertificateNumber.value = _data.certificate.number
+        companyCertificateDate.value = _data.certificate.date
+    }
 
     visible.value = false
 }
