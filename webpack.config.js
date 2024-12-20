@@ -170,7 +170,7 @@ const optimization = {
     minimizer: [
         new TerserPlugin({
             terserOptions: {
-                compress: { drop_console: true },
+                //compress: { drop_console: true },
             },
         }),
         new CssMinimizerPlugin({
