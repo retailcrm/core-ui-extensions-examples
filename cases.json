@@ -49,7 +49,8 @@
       "order/card:delivery.before",
       "order/card:delivery.after",
       "order/card:delivery.address",
-      "order/card:payment.before"
+      "order/card:payment.before",
+      "order/card:comment.manager.before"
     ],
     "script": "allTargetsButton.js"
   }, {

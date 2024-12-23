@@ -35,6 +35,7 @@ type CompanyData = {
     OGRN?: string;
     OGRNIP?: string;
     INN: string;
+    KPP: string;
     OKPO: string;
     BIK: string;
     certificate?: {
@@ -71,6 +72,7 @@ const companyLegalName = useField(order, 'company.legalName')
 const companyLegalAddress = useField(order, 'company.legalAddress')
 const companyCorrAccount = useField(order, 'company.corrAccount')
 const companyINN = useField(order, 'company.INN')
+const companyKPP = useField(order, 'company.KPP')
 const companyOKPO = useField(order, 'company.OKPO')
 const companyBIK = useField(order, 'company.BIK')
 const companyCertificateNumber = useField(order, 'company.certificateNumber')
@@ -94,6 +96,7 @@ const setData = () => {
     companyINN.value = _data.INN
     companyOKPO.value = _data.OKPO
     companyBIK.value = _data.BIK
+    companyKPP.value = _data.KPP
 
     if (_data.OGRN) {
         companyOGRN.value = _data.OGRN
