@@ -168,6 +168,7 @@ app.post('/customer/by-inn', express.urlencoded(), async (request, response) => 
                 INN: '2872865074',
                 OKPO: '10720877',
                 BIK: '38630490',
+                KPP: '287201001',
                 certificate: {
                     date: '15.03.2020',
                     number: '78-20-567890',

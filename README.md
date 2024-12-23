@@ -155,7 +155,8 @@ window['CRM'].embed.register({
         "order/card:delivery.before",
         "order/card:delivery.after",
         "order/card:delivery.address",
-        "order/card:payment.before"
+        "order/card:payment.before",
+        "order/card:comment.manager.before"
     ],
     "entrypoint": "http://localhost:3000/extension/30ff05b5-4473-4b41-a910-1428cc13394e"
 })
@@ -177,6 +178,15 @@ window['CRM'].embed.register({
     ],
     "entrypoint": "https://localhost:3000/extension/2f34c0a1-7004-4c57-831b-7269ac2b257c",
     "stylesheet": "https://localhost:3000/extension/2f34c0a1-7004-4c57-831b-7269ac2b257c/stylesheet"
+})
+
+// customerINN
+window['CRM'].embed.register({
+    "uuid": "c212cb60-5650-433a-82db-09f0f604056a",
+    "targets": [
+        "order/card:customer.after"
+    ],
+    "entrypoint": "https://localhost:3000/extension/c212cb60-5650-433a-82db-09f0f604056a"
 })
 ```
 
