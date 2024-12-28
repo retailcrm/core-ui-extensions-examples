@@ -75,5 +75,13 @@
       "order/card:customer.after"
     ],
     "script": "customerINN.js"
+  }, {
+    "uuid": "dca0afa1-f765-442a-8958-01230d87098f",
+    "name": "customFieldViewer",
+    "targets": [
+      "order/card:common.after"
+    ],
+    "script": "customFieldViewer.js",
+    "stylesheet": "customFieldViewer.css"
   }
 ]}
