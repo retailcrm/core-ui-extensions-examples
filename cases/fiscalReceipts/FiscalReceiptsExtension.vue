@@ -81,7 +81,7 @@
 
                             <div :class="$style.receipt__value">
                                 {{ key === 'onlinePayment'
-                                    ? (receipt.details[key as keyof ReceiptDetails] ? t('yes') : t('no'))
+                                    ? (receipt.details.onlinePayment ? t('yes') : t('no'))
                                     : receipt.details[key as keyof ReceiptDetails]
                                 }}
                             </div>
