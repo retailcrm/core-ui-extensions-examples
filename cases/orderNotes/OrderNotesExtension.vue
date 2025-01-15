@@ -55,8 +55,11 @@
 
             <template v-if="errors.length === 0">
                 <form :class="$style.form">
-                    <div :class="$style.avatar" />
-                
+                    <UiAvatar
+                        :src="userPhoto || ''"
+                        :name="userFullName"
+                    />
+
                     <textarea
                         :class="$style.form__area"
                         :value="text"
@@ -77,7 +80,10 @@
                     :class="$style.note"
                 >
                     <div :class="$style.author">
-                        <div :class="$style.avatar" />
+                        <UiAvatar
+                            :src="note.avatar"
+                            :name="note.author"
+                        />
 
                         <div>
                             <UiLink :class="$style.author__name" size="small">
@@ -107,6 +113,7 @@
 
 <script lang="ts" setup>
 import {
+    UiAvatar,
     UiButton,
     UiError,
     UiLink,
@@ -115,7 +122,13 @@ import {
     UiToolbarButton,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { onMounted, watch, ref } from 'vue'
+import {
+    computed,
+    onMounted,
+    watch,
+    ref,
+} from 'vue'
+
 import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
@@ -132,6 +145,7 @@ import {
 type Note = {
     id: number;
     author: string;
+    avatar: string;
     date: Date;
     text: string;
 }
@@ -139,7 +153,6 @@ type Note = {
 // set locale
 const settings = useSettings()
 const locale = useField(settings, 'system.locale')
-settings.initialize()
 
 const i18n = useI18n()
 const t = i18n.t
@@ -151,13 +164,13 @@ const host = useHost()
 // order fields
 const order = useOrder()
 const orderId = useField(order, 'id')
-order.initialize()
 
 // user fields
 const user = useUser()
 const userFirstName = useField(user, 'firstName')
 const userLastName = useField(user, 'lastName')
-user.initialize()
+const userFullName = computed(() => `${userFirstName.value?.trim() || ''} ${userLastName.value?.trim() || ''}`.trim())
+const userPhoto = useField(user, 'photo')
 
 // data
 const opened = ref(false)
@@ -204,7 +217,8 @@ const onInput = onSerializedEvent<InputEvent>((event) => {
 const onSubmit = async () => {
     const data: Note = {
         id: 3,
-        author: `${userFirstName.value?.trim() || ''} ${userLastName.value?.trim() || ''}`.trim(),
+        author: userFullName.value,
+        avatar: userPhoto.value ?? '',
         date: new Date(),
         text: text.value,
     }
@@ -282,13 +296,6 @@ onMounted(async () => {
         grid-row: 2;
         justify-self: start;
     }
-}
-
-.avatar {
-    width: 36px;
-    height: 36px;
-    background-color: #dee2e6;
-    border-radius: 50%;
 }
 
 .note {

@@ -14,7 +14,7 @@ createWidgetEndpoint({
         app.use(i18n)
         app.use(pinia)
 
-        await Promise.any([
+        await Promise.allSettled([
             useContext('order').initialize(),
             useSettings().initialize(),
         ])
