@@ -12,6 +12,11 @@ build: ## Builds the package
 	$(TARGET_HEADER)
 	$(YARN) build
 
+.PHONY: build-dev
+build-dev: ## Builds the package
+	$(TARGET_HEADER)
+	$(YARN) build:dev
+
 start:
 	$(TARGET_HEADER)
 	@docker-compose up -d
