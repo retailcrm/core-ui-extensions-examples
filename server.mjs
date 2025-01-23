@@ -121,7 +121,7 @@ app.post('/receipts', express.urlencoded(), async (request, response) => {
 })
 
 // orderNotes routes
-const avatar = 'https://uc7510ec36ea38a33c4d3b24500f.previews.dropboxusercontent.com/p/thumb/AChVYhPJYbeBMh4kV2gwjWCecVoAfb9dT7OZc3CJ68fnpyIaBJIoEW7uOYAFi5tUJXdaPbgO7ihSBlc7QA6sMtntrTHMgbkzpl-CnaWRGHQ9BdIo_0AUUD_wBiWObrcV2X7K2cErQF7_mgYfaZZ2OxlCjISfCgPXPYrH8yVMMSMdisDLOTtxZte1PH47A_0dO9P-GrpHpbFOz14Adx3MW8WEKasq1mwK-80mPNt8ilczJuXYa9ahOZT5J0l0V3EjD-j8u8JEvjmBDa3UHWrnorOx1GxFYkEyzyM8mIR6kZTBgLrxaMJWzWXfqdGZFtDfTBEXrM-fhOwdZblsObtj-fcb3LM-sZfm8o-i6RJxB2cz2LS91hGOMAh5NmrXEY498yCgJ9DLEuOQOXXPqhWomGyu/p.png?is_prewarmed=true'
+const avatar = 'https://on-desktop.com/wps/Animals___Cats_Red_Cat_with_open_mouth_044663_.jpg'
 
 const notes = [{
     id: 1,
