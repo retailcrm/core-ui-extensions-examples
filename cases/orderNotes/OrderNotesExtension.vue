@@ -58,6 +58,7 @@
                     <UiAvatar
                         :src="userPhoto || ''"
                         :name="userFullName"
+                        :href="router.generate('crm_users_edit', { id: userId })"
                     />
 
                     <textarea
@@ -81,13 +82,22 @@
                 >
                     <div :class="$style.author">
                         <UiAvatar
-                            :src="note.avatar"
-                            :name="note.author"
+                            :src="note.author.avatar"
+                            :name="note.author.name"
                         />
 
                         <div>
-                            <UiLink :class="$style.author__name" size="small">
-                                {{ note.author }}
+                            <!-- ID автора, используемый здесь, не настоящий. -->
+                            <!-- В реальном расширении нужно использовать ID реально пользователя системы. -->
+                            <UiLink
+                                :href="user.isAdmin
+                                    ? router.generate('crm_users_edit', { id: note.author.id })
+                                    : router.generate('crm_manager_show', { id: note.author.id })
+                                "
+                                :class="$style.author__name"
+                                size="small"
+                            >
+                                {{ note.author.name }}
                             </UiLink>
 
                             <div :class="$style.date">
@@ -138,14 +148,18 @@ import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useCurrentUserContext as useUser } from '@retailcrm/embed-ui'
 
 import {
-    useHost,
     useField,
+    useHost,
+    useRouter,
 } from '@retailcrm/embed-ui'
 
 type Note = {
     id: number;
-    author: string;
-    avatar: string;
+    author: {
+      id: number;
+      name: string;
+      avatar: string;
+    };
     date: Date;
     text: string;
 }
@@ -161,12 +175,15 @@ watch(locale, locale => i18n.locale.value = locale, { immediate: true })
 
 const host = useHost()
 
+const router = useRouter()
+
 // order fields
 const order = useOrder()
 const orderId = useField(order, 'id')
 
 // user fields
 const user = useUser()
+const userId = useField(user, 'id')
 const userFirstName = useField(user, 'firstName')
 const userLastName = useField(user, 'lastName')
 const userFullName = computed(() => `${userFirstName.value?.trim() || ''} ${userLastName.value?.trim() || ''}`.trim())
@@ -215,10 +232,17 @@ const onInput = onSerializedEvent<InputEvent>((event) => {
 })
 
 const onSubmit = async () => {
+    if (!userId.value) {
+        return
+    }
+
     const data: Note = {
         id: 3,
-        author: userFullName.value,
-        avatar: userPhoto.value ?? '',
+        author: {
+            id: userId.value,
+            name: userFullName.value,
+            avatar: userPhoto.value ?? '',
+        },
         date: new Date(),
         text: text.value,
     }
