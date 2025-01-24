@@ -1181,10 +1181,10 @@ __metadata:
     "@babel/preset-env": ^7.23.9
     "@intlify/vue-i18n-loader": ^4.2.0
     "@omnicajs/vue-remote": ^0.2.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
-    "@retailcrm/embed-ui-v1-contexts": ^0.5.13
-    "@retailcrm/embed-ui-v1-types": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
+    "@retailcrm/embed-ui-v1-contexts": ^0.5.15
+    "@retailcrm/embed-ui-v1-types": ^0.5.15
     "@types/webpack": ^5.28.5
     "@typescript-eslint/eslint-plugin": ^6.21.0
     "@typescript-eslint/parser": ^6.21.0
@@ -1529,9 +1529,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@retailcrm/embed-ui-v1-components@npm:^0.5.13":
-  version: 0.5.13
-  resolution: "@retailcrm/embed-ui-v1-components@npm:0.5.13"
+"@retailcrm/embed-ui-v1-components@npm:^0.5.15":
+  version: 0.5.15
+  resolution: "@retailcrm/embed-ui-v1-components@npm:0.5.15"
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
@@ -1539,42 +1539,43 @@ __metadata:
     remark-gfm: ^4.0.0
   peerDependencies:
     vue: ^3.5
-  checksum: 280da1842fa47305803ecc6bec3f7dadcb168856153bb6773cf77144719238e5761d3f08c9ebc0d33eac2d1bec82110af065aae7302d786a305f6fa802f8d8cc
+  checksum: b11825c4f5432943d8c04d9b46ff9124ef97d6d0015c332d75b3d6fc47ca0d5694f01c673c1e3f186882dc312de3e4fd009e56996c3e7377df412ab0efa512f1
   languageName: node
   linkType: hard
 
-"@retailcrm/embed-ui-v1-contexts@npm:^0.5.13":
-  version: 0.5.13
-  resolution: "@retailcrm/embed-ui-v1-contexts@npm:0.5.13"
+"@retailcrm/embed-ui-v1-contexts@npm:^0.5.15":
+  version: 0.5.15
+  resolution: "@retailcrm/embed-ui-v1-contexts@npm:0.5.15"
   dependencies:
     "@omnicajs/symfony-router": ^1.0.0
-    "@retailcrm/embed-ui-v1-types": ^0.5.13
+    "@retailcrm/embed-ui-v1-types": ^0.5.15
   peerDependencies:
     "@remote-ui/rpc": ^1.4.5
     pinia: ^2.2
-  checksum: a6f402b92b95977c7a74ea6eca9b877889dda2c6628ec7f036254d726d1ad3d54aaa8fa6051a17ac42657b677f514d2f0f44672675e12a104c4d164f110d1d8e
+  checksum: 2915ac10a7c582dc2cc69e8731f2910f03c247a46e7203d2d87e15c46eb31c687e9de551308574f37ab9a8b83edffc4a826a9b6cb7f5cd589beb7b60f875679d
   languageName: node
   linkType: hard
 
-"@retailcrm/embed-ui-v1-types@npm:^0.5.13":
-  version: 0.5.13
-  resolution: "@retailcrm/embed-ui-v1-types@npm:0.5.13"
-  checksum: 969c5b9fef4d3f32851a86554ddb87d1a050d54fc9a92b1797d45e33264ca6de4868d3c58278dcc9c48d033ebfded645ea8c35cf1c2941a5cca2b99787ce9d8c
+"@retailcrm/embed-ui-v1-types@npm:^0.5.15":
+  version: 0.5.15
+  resolution: "@retailcrm/embed-ui-v1-types@npm:0.5.15"
+  checksum: db77c5a88281b00672dbce9ffac995491c64b510efd97d6bf521ab2a98884f044e68484be4d8cb31f9a71bad1f2bb91e28803b99c1abde5deb264c305c604038
   languageName: node
   linkType: hard
 
-"@retailcrm/embed-ui@npm:^0.5.13":
-  version: 0.5.13
-  resolution: "@retailcrm/embed-ui@npm:0.5.13"
+"@retailcrm/embed-ui@npm:^0.5.15":
+  version: 0.5.15
+  resolution: "@retailcrm/embed-ui@npm:0.5.15"
   dependencies:
+    "@omnicajs/symfony-router": ^1.0.0
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui-v1-contexts": ^0.5.13
-    "@retailcrm/embed-ui-v1-types": ^0.5.13
+    "@retailcrm/embed-ui-v1-contexts": ^0.5.15
+    "@retailcrm/embed-ui-v1-types": ^0.5.15
   peerDependencies:
     pinia: ^2.2
     vue: ^3.5
-  checksum: bedc35ed258a9a4b22972eab708cd2dfd618896bfc40c8642dac78c57cd5232a9722767a5926b23b3ec1cd4b85885de73636a62ad630ce6924c45da5ce50091d
+  checksum: e822209354bf040d91c3d540c8c2c56f23354c143a4b666e0cf115139536bfadd625b04e910351f2c1d292be574d84eedcab7680efea4caa268b33e32f3fd06b
   languageName: node
   linkType: hard
 
@@ -2395,8 +2396,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -3316,8 +3317,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     uuid: ^11.0.3
     vue: ^3.5.13
@@ -3331,10 +3332,10 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
-    "@retailcrm/embed-ui-v1-contexts": ^0.5.13
-    "@retailcrm/embed-ui-v1-types": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
+    "@retailcrm/embed-ui-v1-contexts": ^0.5.15
+    "@retailcrm/embed-ui-v1-types": ^0.5.15
     "@types/lodash": ^4.17.13
     lodash: ^4.17.21
     pinia: ^2.2.8
@@ -3349,8 +3350,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -4411,8 +4412,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -6444,10 +6445,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "orderNotes-66a7a7@workspace:cases/orderNotes"
   dependencies:
+    "@omnicajs/symfony-router": ^1.0.0
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -6651,8 +6653,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -7240,8 +7242,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
@@ -8813,8 +8815,8 @@ __metadata:
   dependencies:
     "@omnicajs/vue-remote": ^0.2.5
     "@remote-ui/rpc": ^1.4.5
-    "@retailcrm/embed-ui": ^0.5.13
-    "@retailcrm/embed-ui-v1-components": ^0.5.13
+    "@retailcrm/embed-ui": ^0.5.15
+    "@retailcrm/embed-ui-v1-components": ^0.5.15
     pinia: ^2.2.8
     vue: ^3.5.13
     vue-i18n: ^10.0.5
