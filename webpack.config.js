@@ -168,11 +168,7 @@ const rules = [{
 const optimization = {
     minimize: true,
     minimizer: [
-        new TerserPlugin({
-            terserOptions: {
-                compress: { drop_console: true },
-            },
-        }),
+        new TerserPlugin(),
         new CssMinimizerPlugin({
             minimizerOptions: {
                 preset: [
