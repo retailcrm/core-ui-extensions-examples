@@ -44,9 +44,9 @@
             {{ t('fiscalReceipts') }} ({{ count }})
         </template>
 
-        <UiLoader :class="{ [$style.hide]: !loading }" :overlay="false" />
+        <UiLoader :class="{ [$style['hide']]: !loading }" :overlay="false" />
 
-        <div :class="{ [$style.hide]: loading }">
+        <div :class="{ [$style['hide']]: loading }">
             <UiError
                 v-for="(error, index) in errors"
                 :key="index"
@@ -57,7 +57,7 @@
                 <div
                     v-for="receipt in receipts"
                     :key="receipt.id"
-                    :class="$style.receipt"
+                    :class="$style['receipt']"
                 >
                     <UiLink size="body" @click="toggleReceipt(receipt.id)">
                         {{ t('receipt') }} #{{ receipt.id }}
@@ -70,20 +70,35 @@
 
                     <div
                         :class="{
-                            [$style.hide]: collapsed.includes(receipt.id),
-                            [$style.details]: true
+                            [$style['hide']]: collapsed.includes(receipt.id),
+                            [$style['details']]: true
                         }"
                     >
                         <template v-for="(label, key) in labels" :key="key">
-                            <div :class="$style.receipt__label">
+                            <div :class="$style['receipt__label']">
                                 {{ label() }}
                             </div>
 
-                            <div :class="$style.receipt__value">
-                                {{ key === 'onlinePayment'
-                                    ? (receipt.details.onlinePayment ? t('yes') : t('no'))
-                                    : receipt.details[key as keyof ReceiptDetails]
-                                }}
+                            <div v-if="key === 'onlinePayment'" :class="$style['receipt__value']">
+                                {{ receipt.details.onlinePayment ? t('yes') : t('no') }}
+                            </div>
+
+                            <div v-else-if="key === 'receiptTime'" :class="$style['receipt__value']">
+                                <UiDate :date="receipt.details.receiptTime" with-time />
+                            </div>
+
+                            <div v-else :class="$style['receipt__value']">
+                                {{ receipt.details[key as keyof ReceiptDetails] }}
+
+                                <UiCopyButton :text="String(receipt.details[key as keyof ReceiptDetails])">
+                                    <template #hint>
+                                        {{ t('copy') }}
+                                    </template>
+
+                                    <template #hint-copied>
+                                        {{ t('copied') }}
+                                    </template>
+                                </UiCopyButton>
                             </div>
                         </template>
                     </div>
@@ -102,6 +117,8 @@
 <script lang="ts" setup>
 import {
     UiButton,
+    UiCopyButton,
+    UiDate,
     UiLink,
     UiLoader,
     UiError,
@@ -224,6 +241,8 @@ onMounted(async () => {
 
 <i18n locale="en-GB">
 {
+    "copied": "Copied",
+    "copy": "Copy",
     "fiscalReceipts": "Fiscal receipts",
     "receipt": "Receipt",
     "yes": "Yes",
@@ -244,6 +263,8 @@ onMounted(async () => {
 
 <i18n locale="es-ES">
 {
+    "copied": "Pegado",
+    "copy": "Copiar",
     "fiscalReceipts": "Recibos fiscales",
     "receipt": "Recibo",
     "yes": "Sí",
@@ -264,6 +285,8 @@ onMounted(async () => {
 
 <i18n locale="ru-RU">
 {
+    "copied": "Скопировано",
+    "copy": "Скопировать",
     "fiscalReceipts": "Фискальные чеки",
     "receipt": "Чек",
     "yes": "Да",

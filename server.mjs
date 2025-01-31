@@ -82,7 +82,7 @@ app.post('/receipts-count', async (request, response) => {
 const receipts = [{
     id: 645,
     details: {
-        receiptTime: '17.11.2024 11:51',
+        receiptTime: '2024-11-17T11:51:00+03:00',
         shiftNumber: 16,
         machineNumber: 'KZN030315',
         taxSystem: 'OSN',
@@ -96,7 +96,7 @@ const receipts = [{
 }, {
     id: 813,
     details: {
-        receiptTime: '28.10.2024 10:32',
+        receiptTime: '2024-10-28T10:32:00+03:00',
         shiftNumber: 18,
         machineNumber: 'KZN1001202',
         taxSystem: 'OSN',
