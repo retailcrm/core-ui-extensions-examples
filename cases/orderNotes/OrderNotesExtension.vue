@@ -139,6 +139,8 @@ import {
     ref,
 } from 'vue'
 
+import { formatDate } from '@retailcrm/embed-ui-v1-components/remote'
+
 import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
@@ -196,19 +198,6 @@ const count = ref('')
 const notes = ref<Note[]>([])
 const errors = ref<string[]>([])
 const text = ref('')
-
-const formatDate = (date: string | Date): string => {
-    const d = new Date(date)
-
-    const day = String(d.getDate()).padStart(2, '0')
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const year = d.getFullYear()
-
-    const hours = String(d.getHours()).padStart(2, '0')
-    const minutes = String(d.getMinutes()).padStart(2, '0')
-
-    return `${day}.${month}.${year} ${hours}:${minutes}`
-}
 
 const onSidebarOpened = async (opened: boolean) => {
     if (!opened) {
