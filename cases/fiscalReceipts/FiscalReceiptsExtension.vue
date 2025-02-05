@@ -90,7 +90,7 @@
                             <div v-else :class="$style['receipt__value']">
                                 {{ receipt.details[key as keyof ReceiptDetails] }}
 
-                                <UiCopyButton :text="String(receipt.details[key as keyof ReceiptDetails])">
+                                <UiCopyButton :class="$style['receipt__copy']" :text="String(receipt.details[key as keyof ReceiptDetails])">
                                     <template #hint>
                                         {{ t('copy') }}
                                     </template>
@@ -327,6 +327,10 @@ onMounted(async () => {
 
     &__value {
         .text-tiny();
+    }
+
+    &__copy {
+        top: -4px;
     }
 }
 
