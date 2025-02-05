@@ -50,7 +50,8 @@
       "order/card:delivery.after",
       "order/card:delivery.address",
       "order/card:payment.before",
-      "order/card:comment.manager.before"
+      "order/card:comment.manager.before",
+      "customer/card:communications.after"
     ],
     "script": "allTargetsButton.js"
   }, {
