@@ -57,6 +57,8 @@ if (
         'order/card:customer.email',
         'order/card:customer.phone',
         'order/card:delivery.address',
+        'order/card:delivery.address',
+        'customer/card:phone',
     ].includes(props.target)
 ) {
     additional = false
