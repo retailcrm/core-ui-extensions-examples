@@ -62,6 +62,14 @@
     ],
     "script": "recordToCalendly.js"
   }, {
+    "uuid": "43b2d18a-80a8-488f-b337-493bef474b92",
+    "name": "orderPromo",
+    "targets": [
+      "order/card:list.after"
+    ],
+    "script": "orderPromo.js",
+    "stylesheet": "orderPromo.css"
+  },{
     "uuid": "2f34c0a1-7004-4c57-831b-7269ac2b257c",
     "name": "orderNotes",
     "targets": [
