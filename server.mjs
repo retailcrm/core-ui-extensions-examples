@@ -1,16 +1,23 @@
 import cors from 'cors'
 import express from 'express'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+import { config as configEnv } from 'dotenv'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import { readFile } from 'node:fs'
+
+configEnv({ path: '.env' })
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const app = express()
 
+const urlencoded = express.urlencoded({ extended: true })
+
 const readManifest = (path) => {
     return new Promise((resolve) => {
-        fs.readFile(path, 'utf-8', (e, data) => {
+        readFile(path, 'utf-8', (e, data) => {
             if (e) {
                 console.error('An error occurred reading the file', e)
                 resolve({})
@@ -37,20 +44,20 @@ const renderEntrypoint = (name, manifest, entry) => {
 }
 
 app.use(cors())
-app.use('/dist', express.static(path.join(__dirname, '/dist')))
+app.use('/dist', express.static(join(__dirname, '/dist')))
 
 app.get('/', (_, response) => {
-    response.sendFile(path.join(__dirname, '/index.html'))
+    response.sendFile(join(__dirname, '/index.html'))
 })
 
 app.get('/extension/:uuid', async (request, response) => {
     const uuid = request.params.uuid
 
-    const known = await readManifest(path.join(__dirname, '/cases.json'))
+    const known = await readManifest(join(__dirname, '/cases.json'))
     const record = known.items.find(r => r.uuid === uuid)
 
     if (record) {
-        const manifest = await readManifest(path.join(__dirname, `/dist/${record.name}/manifest.json`))
+        const manifest = await readManifest(join(__dirname, `/dist/${record.name}/manifest.json`))
 
         response.send(renderEntrypoint(record.name, manifest, record.script))
     } else {
@@ -61,13 +68,13 @@ app.get('/extension/:uuid', async (request, response) => {
 app.get('/extension/:uuid/stylesheet', async (request, response) => {
     const uuid = request.params.uuid
 
-    const known = await readManifest(path.join(__dirname, '/cases.json'))
+    const known = await readManifest(join(__dirname, '/cases.json'))
     const record = known.items.find(r => r.uuid === uuid)
 
     if (record && record.stylesheet) {
-        const manifest = await readManifest(path.join(__dirname, `/dist/${record.name}/manifest.json`))
+        const manifest = await readManifest(join(__dirname, `/dist/${record.name}/manifest.json`))
 
-        response.sendFile(path.join(__dirname, 'dist', record.name, manifest[record.stylesheet]))
+        response.sendFile(join(__dirname, 'dist', record.name, manifest[record.stylesheet]))
     } else {
         response.sendStatus(404)
     }
@@ -109,7 +116,7 @@ const receipts = [{
     },
 }]
 
-app.post('/receipts', express.urlencoded(), async (request, response) => {
+app.post('/receipts', urlencoded, async (request, response) => {
     const payload = JSON.parse(request.body.payload)
     const responseReceipts = receipts.map(receipt => {
         return {
@@ -152,15 +159,15 @@ app.post('/notes', async (request, response) => {
     response.status(200).json({ notes })
 })
 
-app.post('/notes/new', express.urlencoded(), async (request, response) => {
+app.post('/notes/new', urlencoded, async (request, response) => {
     const payload = JSON.parse(request.body.payload)
-    const resultNotes = [payload.note, ...notes]
-    response.status(200).json({ notes: resultNotes })
+
+    response.status(200).json({ notes: [payload.note, ...notes] })
 })
 
 // customerINN routes
 
-app.post('/customer/by-inn', express.urlencoded(), async (request, response) => {
+app.post('/customer/by-inn', urlencoded, async (request, response) => {
     const { inn } = JSON.parse(request.body.payload)
 
     if (inn === '1234567890') {
@@ -188,6 +195,42 @@ app.post('/customer/by-inn', express.urlencoded(), async (request, response) => 
     }
 
     response.status(400)
+})
+
+app.post('/promos', async (request, response) => {
+    response.status(200).json({
+        promos: [{
+            code: 'gift',
+            name: 'Подарок',
+            description: 'Доступен товар в подарок',
+        }, {
+            code: 'discount',
+            name: 'Скидка 5% при оплате СБП',
+            description: 'Применяется скидка 5% при оплате СБП',
+        }, {
+            code: 'third',
+            name: 'Третий товар в подарок',
+            description: 'При покупке двух товаров третий в подарок.',
+        }],
+    })
+})
+
+app.post('/offers', async (request, response) => {
+    if (!process.env.CRM_API_KEY) {
+        response.status(500).json({ errors: ['CRM_API_KEY is not defined'] })
+        return
+    }
+
+    try {
+        response.status(200).json(await (
+            await fetch(process.env.CRM_API_HOST + '/api/v5/store/offers?filter[active]=1', {
+                headers: { 'X-API-KEY': process.env.CRM_API_KEY },
+            })
+        ).json())
+    } catch (e) {
+        response.status(500).json({ errors: [String(e)] })
+        console.error(e)
+    }
 })
 
 const server = app.listen(3000, () => {

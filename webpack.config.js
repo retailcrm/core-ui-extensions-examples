@@ -2,14 +2,14 @@ const glob = require('glob')
 const path = require('path')
 const webpack = require('webpack')
 
-const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const CSSExtractPlugin = require('mini-css-extract-plugin')
+const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
-const { VueLoaderPlugin } = require('vue-loader')
 const TerserPlugin = require('terser-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 require('dotenv').config({ path: '.env' })
 

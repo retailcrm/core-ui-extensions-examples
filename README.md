@@ -175,6 +175,16 @@ window['CRM'].embed.register({
     "entrypoint": "http://localhost:3000/extension/d3301ba9-cca9-46c2-b097-b404419b64ce"
 })
 
+// orderPromo
+window['CRM'].embed.register({
+    "uuid": "43b2d18a-80a8-488f-b337-493bef474b92",
+    "targets": [
+        "order/card:list.after"
+    ],
+    "entrypoint": "localhost:3000/extension/43b2d18a-80a8-488f-b337-493bef474b92",
+    "stylesheet": "localhost:3000/extension/43b2d18a-80a8-488f-b337-493bef474b92/stylesheet"
+})
+
 // orderNotes
 window['CRM'].embed.register({
     "uuid": "2f34c0a1-7004-4c57-831b-7269ac2b257c",
