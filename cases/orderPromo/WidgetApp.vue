@@ -212,7 +212,7 @@ const addGift = async () => {
                 productId: gift.product.id,
                 offerId: gift.id,
                 priceAmount: 1,
-                priceCode: undefined,
+                priceTypeCode: undefined,
                 quantity: 1,
             })
         }
