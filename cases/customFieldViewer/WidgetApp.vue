@@ -23,7 +23,7 @@
 
             <template v-if="f.code === code">
                 <div
-                    v-if="f.readonly"
+                    v-if="f.readonly && !['integer', 'numeric'].includes(f.kind)"
                     v-text="JSON.stringify(custom.values[f.code])"
                 />
 
@@ -74,6 +74,8 @@
                     :code="f.code"
                     :label="t('setValue')"
                     :class="$style['field']"
+                    :integer="f.kind === 'integer'"
+                    :readonly="f.readonly"
                 />
             </template>
         </div>
@@ -101,12 +103,12 @@ import DictionaryField from './components/DictionaryField.vue'
 import NumberField from './components/NumberField.vue'
 import TextField from './components/TextField.vue'
 
-import { ref, watch } from 'vue'
-
+import { ref } from 'vue'
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
+import { watch } from 'vue'
 
 import { v4 } from 'uuid'
 

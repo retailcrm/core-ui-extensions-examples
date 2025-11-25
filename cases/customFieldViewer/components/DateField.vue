@@ -5,18 +5,18 @@
         </label>
 
         <div>
-            <TextInput :id="id" v-model:value="raw" />
+            <UiTextbox :id="id" v-model:value="raw" />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import TextInput from './TextInput.vue'
+import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { ref, watch } from 'vue'
-
+import { ref } from 'vue'
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
+import { watch } from 'vue'
 
 const props = defineProps({
     id: {
@@ -55,6 +55,6 @@ watch(raw, raw => {
 <style lang="less" module>
 .label {
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 </style>

@@ -1,11 +1,11 @@
 import { createWidgetEndpoint } from '@retailcrm/embed-ui'
 import { fromInsideIframe } from '@remote-ui/rpc'
 
-import CustomerPhoneExtension from './CustomerPhoneExtension.vue'
+import WidgetApp from './WidgetApp.vue'
 
 createWidgetEndpoint({
     async run (createApp, root, pinia, target) {
-        const app = createApp(CustomerPhoneExtension, { target })
+        const app = createApp(WidgetApp, { target })
 
         app.use(pinia)
         app.mount(root)

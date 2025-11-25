@@ -7,10 +7,10 @@
 <script lang="ts" setup>
 import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
-import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 import { watch } from 'vue'
 

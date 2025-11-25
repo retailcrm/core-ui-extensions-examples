@@ -2,12 +2,11 @@
     <UiToolbarButton>{{ t('demoButton1') }}</UiToolbarButton>
 
     <UiToolbarButton>
-        <IconEdit class="UiIcon-icon-2pR-" />
-        {{ t('elseButton2') }}
+        <IconEdit aria-hidden="true" /> {{ t('elseButton2') }}
     </UiToolbarButton>
 
     <UiToolbarButton v-if="additional">
-        <IconAdd class="UiIcon-icon-2pR-" />
+        <IconAdd aria-hidden="true" />
     </UiToolbarButton>
 
     <UiToolbarLink v-if="additional">

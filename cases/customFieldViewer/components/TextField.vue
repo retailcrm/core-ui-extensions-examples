@@ -4,7 +4,7 @@
             <label :for="id">{{ label }}</label>
         </div>
 
-        <TextInput
+        <UiTextbox
             :id="id"
             v-model:value="field"
             :multiline="multiline"
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import TextInput from './TextInput.vue'
+import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
