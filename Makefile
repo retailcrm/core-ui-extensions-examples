@@ -109,3 +109,12 @@ register:
 		--header "X-Api-Key: $$API_KEY" \
 		--header "content-type: multipart/form-data" \
 		--form "integrationModule=$$CURL_DATA"; \
+
+.PHONY: publish-case
+publish-case:
+	$(TARGET_HEADER)
+	@if [ -z "$(case)" ]; then \
+		echo "Usage: make publish-case case=<case-name>"; \
+		exit 1; \
+	fi
+	@node scripts/publish-extension.js "$(case)"
