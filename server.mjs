@@ -13,6 +13,28 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const app = express()
 
+const corsOrigins = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean)
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) {
+            callback(null, true)
+            return
+        }
+
+        if (corsOrigins.length === 0 || corsOrigins.includes(origin)) {
+            callback(null, true)
+            return
+        }
+
+        callback(new Error(`Not allowed by CORS: ${origin}`))
+    },
+    credentials: true,
+}
+
 const urlencoded = express.urlencoded({ extended: true })
 
 const readManifest = (path) => {
@@ -43,7 +65,8 @@ const renderEntrypoint = (name, manifest, entry) => {
 </html>`
 }
 
-app.use(cors())
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use('/dist', express.static(join(__dirname, '/dist')))
 
 app.get('/', (_, response) => {
