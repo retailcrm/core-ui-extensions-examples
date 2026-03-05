@@ -88,6 +88,28 @@ app.get('/extension/:uuid', async (request, response) => {
     }
 })
 
+app.get('/extension/:uuid/script', async (request, response) => {
+    const uuid = request.params.uuid
+
+    const known = await readManifest(join(__dirname, '/cases.json'))
+    const record = known.items.find(r => r.uuid === uuid)
+
+    if (!record) {
+        response.sendStatus(404)
+        return
+    }
+
+    const manifest = await readManifest(join(__dirname, `/dist/${record.name}/manifest.json`))
+    const script = manifest[record.script]
+
+    if (!script) {
+        response.sendStatus(404)
+        return
+    }
+
+    response.type('application/javascript').sendFile(join(__dirname, 'dist', record.name, script))
+})
+
 app.get('/extension/:uuid/stylesheet', async (request, response) => {
     const uuid = request.params.uuid
 
