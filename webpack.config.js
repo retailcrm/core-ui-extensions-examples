@@ -55,6 +55,8 @@ const cssModular = [cssExtractLoader, {
     options: {
         modules: {
             localIdentName: '[local]_[hash:base64:5]',
+            namedExport: false,
+            exportLocalsConvention: 'as-is',
         },
         sourceMap: true,
         importLoaders: 1,
