@@ -133,11 +133,12 @@
 
                     <div :class="$style['promo-settings__form-grid']">
                         <UiField id="promo-budget" :label="t('fields.budget')">
-                            <UiNumberStepper
+                            <UiTextbox
                                 id="promo-budget"
                                 v-model:value="budget"
-                                :min="0"
-                                :step="1000"
+                                inputmode="decimal"
+                                :class="$style['promo-settings__control']"
+                                :suffix="t('labels.currency')"
                             />
                         </UiField>
 
@@ -151,11 +152,12 @@
                         </UiField>
 
                         <UiField id="promo-min-order" :label="t('fields.minOrder')">
-                            <UiNumberStepper
+                            <UiTextbox
                                 id="promo-min-order"
                                 v-model:value="minOrder"
-                                :min="0"
-                                :step="100"
+                                inputmode="decimal"
+                                :class="$style['promo-settings__control']"
+                                :suffix="t('labels.currency')"
                             />
                         </UiField>
 
@@ -397,9 +399,9 @@ const owner = ref('marketing')
 const channel = ref('omni')
 const description = ref('Скидки на сезонные коллекции и товары с остатком.')
 
-const budget = ref(150000)
+const budget = ref('150000')
 const maxDiscount = ref(25)
-const minOrder = ref(2500)
+const minOrder = ref('2500')
 const segment = ref('all')
 
 const startDate = ref(new Date())
@@ -665,9 +667,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "channel": "Launch channel",
         "active": "Promotion active",
         "description": "Description",
-        "budget": "Budget, ₽",
+        "budget": "Budget",
         "maxDiscount": "Max discount, %",
-        "minOrder": "Min order, ₽",
+        "minOrder": "Min order",
         "segment": "Customer segment",
         "startDate": "Start date",
         "endDate": "End date",
@@ -724,7 +726,8 @@ const webhook = ref('https://example.com/hooks/promotions')
         "api": "API"
     },
     "labels": {
-        "copyCode": "Copy code"
+        "copyCode": "Copy code",
+        "currency": "₽"
     },
     "copyHints": {
         "default": "Copy promo code",
@@ -779,9 +782,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "channel": "Канал запуска",
         "active": "Акция активна",
         "description": "Описание",
-        "budget": "Бюджет, ₽",
+        "budget": "Бюджет",
         "maxDiscount": "Макс. скидка, %",
-        "minOrder": "Минимальный заказ, ₽",
+        "minOrder": "Минимальный заказ",
         "segment": "Сегмент покупателей",
         "startDate": "Дата старта",
         "endDate": "Дата окончания",
@@ -838,7 +841,8 @@ const webhook = ref('https://example.com/hooks/promotions')
         "api": "API"
     },
     "labels": {
-        "copyCode": "Скопировать код"
+        "copyCode": "Скопировать код",
+        "currency": "₽"
     },
     "copyHints": {
         "default": "Скопировать промокод",
