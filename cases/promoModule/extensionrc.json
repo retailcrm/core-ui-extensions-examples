@@ -10,8 +10,8 @@
     "pages": [
         {
             "code": "settings",
-            "menu": "settings",
-            "parentMenuItemCode": null,
+            "menu": "private_main_menu",
+            "parentMenuItemCode": "settings",
             "menuItemOrdering": 100,
             "menuItemTitle": {
                 "ru": "Акции",

@@ -13,10 +13,13 @@
 </template>
 
 <script lang="ts" setup>
+import { UiModalSidebar } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
+
 import { ref, watch } from 'vue'
-import { UiModalSidebar, UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 import { useI18n } from 'vue-i18n'
-import { useField, useSettingsContext as useSettings } from '@retailcrm/embed-ui'
+import { useField } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 const opened = ref(false)
 
@@ -31,7 +34,7 @@ const t = i18n.t
 watch(locale, value => i18n.locale.value = value, { immediate: true })
 </script>
 
-<style module lang="less">
+<style lang="less" module>
 .body {
     min-height: 120px;
 }

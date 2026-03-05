@@ -42,6 +42,32 @@
 
 `pages` в дескрипторе может быть массивом строк (коды страниц) или объектов с настройками меню.
 
+Важно про URL страниц:
+- прямой URL страницы в CRM имеет вид `/modules/<moduleCode>/<pageCode>`,
+- `moduleCode` — это `code` интеграционного модуля (из `extensionrc.json`), а не `uuid` расширения.
+Например, для `code=promoModule` и `pageCode=settings` корректный адрес — `/modules/promoModule/settings`.
+
+## Меню
+
+Поля `menu` и `parentMenuItemCode` определяют, где появится пункт меню модуля.
+
+Что указывать в `menu`:
+- это код корневого меню CRM (в текущей CRM-конфигурации это `activity_main_menu` и `private_main_menu`),
+- значение берется из ключей верхнего уровня в `crm/src/Intaro/CRMBundle/Resources/config/navigation.yml`.
+
+Что указывать в `parentMenuItemCode`:
+- это код пункта меню внутри выбранного корневого меню,
+- если `parentMenuItemCode` не указан, модуль создаст собственный корневой пункт меню,
+- можно указывать `page:<code>` чтобы привязать страницу как подпункт к странице модуля.
+
+Примеры кодов (по `navigation.yml`, могут зависеть от фич и прав):
+- `activity_main_menu`: `orders`, `customers`, `communications`, `managers`.
+- `private_main_menu`: `sites`, `dictionaries`, `statuses`, `message_templates`, `integration_list`, `integration`, `settings`, `logs`.
+
+Важно:
+- подпункт добавится только если у родительского пункта уже есть подменю (для системных пунктов без детей подпункт не добавляется),
+- видимость пунктов меню зависит от прав пользователя и фич-тогглов CRM.
+
 ```json
 {
   "uuid": "8ebe1617-d609-43e4-b35a-fbfae011eee3",
@@ -53,13 +79,13 @@
   "pages": [
     {
       "code": "settings",
-      "menu": "settings",
-      "parentMenuItemCode": null,
+      "menu": "private_main_menu",
+      "parentMenuItemCode": "settings",
       "menuItemOrdering": 100,
       "menuItemTitle": {
         "ru": "Акции",
         "en": "Promotions",
-        "es": null
+        "es": "Promociones"
       },
       "pageHelpLink": null
     }
