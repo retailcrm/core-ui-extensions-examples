@@ -858,6 +858,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@retailcrm/embed-ui-v1-endpoint@npm:^0.9.11-alpha.1":
+  version: 0.9.11-alpha.1
+  resolution: "@retailcrm/embed-ui-v1-endpoint@npm:0.9.11-alpha.1"
+  dependencies:
+    "@remote-ui/rpc": ^1.4.7
+    "@retailcrm/embed-ui-v1-components": ^0.9.11-alpha.1
+    "@retailcrm/embed-ui-v1-contexts": ^0.9.11-alpha.1
+    "@retailcrm/embed-ui-v1-types": ^0.9.11-alpha.1
+  peerDependencies:
+    "@remote-ui/rpc": ^1.4
+    "@retailcrm/embed-ui-v1-contexts": ^0.9.11-alpha.1
+    "@retailcrm/embed-ui-v1-types": ^0.9.11-alpha.1
+    pinia: ^2.2
+    vue: ^3.5
+  checksum: d5de2a9c664b082d7ba9624013f372ad105006e639d908400fd9f9e4b897894cb912b5b7b4f4a4d7550953faca4105866b7b05a53794d3e5f522cb43c125745c
+  languageName: node
+  linkType: hard
+
 "@retailcrm/embed-ui-v1-types@npm:^0.9.11-alpha.1":
   version: 0.9.11-alpha.1
   resolution: "@retailcrm/embed-ui-v1-types@npm:0.9.11-alpha.1"
@@ -7416,6 +7434,20 @@ __metadata:
   checksum: a5b9137365690104ded6947dca2e33360bf55e62a4acd91b1b0d7baa3970e43754c628cc9e16eafbdd4e8f8bcb260a5865475d4fc17c3106ff2d61db4e72cdf3
   languageName: node
   linkType: hard
+
+"promoModule-2c529b@workspace:cases/promoModule":
+  version: 0.0.0-use.local
+  resolution: "promoModule-2c529b@workspace:cases/promoModule"
+  dependencies:
+    "@omnicajs/vue-remote": ^0.2.5
+    "@remote-ui/rpc": ^1.4.5
+    "@retailcrm/embed-ui": ^0.9.11-alpha.1
+    "@retailcrm/embed-ui-v1-components": ^0.9.11-alpha.1
+    "@retailcrm/embed-ui-v1-endpoint": ^0.9.11-alpha.1
+    pinia: ^2.2.8
+    vue: ^3.5.13
+  languageName: unknown
+  linkType: soft
 
 "proxy-addr@npm:~2.0.7":
   version: 2.0.7

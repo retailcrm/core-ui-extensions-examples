@@ -1,0 +1,23 @@
+{
+    "code": "promoModule",
+    "name": "Акции",
+    "uuid": "8ebe1617-d609-43e4-b35a-fbfae011eee3",
+    "targets": [
+        "order/card:common.after"
+    ],
+    "stylesheet": true,
+    "pages": [
+        {
+            "code": "settings",
+            "menu": "settings",
+            "parentMenuItemCode": null,
+            "menuItemOrdering": 100,
+            "menuItemTitle": {
+                "ru": "Акции",
+                "en": "Promotions",
+                "es": null
+            },
+            "pageHelpLink": null
+        }
+    ]
+}

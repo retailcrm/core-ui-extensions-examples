@@ -92,5 +92,13 @@
     ],
     "script": "customFieldViewer.js",
     "stylesheet": "customFieldViewer.css"
+  }, {
+    "uuid": "8ebe1617-d609-43e4-b35a-fbfae011eee3",
+    "name": "promoModule",
+    "targets": [
+      "order/card:common.after"
+    ],
+    "script": "promoModule.js",
+    "stylesheet": "promoModule.css"
   }
 ]}
