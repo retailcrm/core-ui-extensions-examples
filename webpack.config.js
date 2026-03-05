@@ -13,23 +13,26 @@ const { VueLoaderPlugin } = require('vue-loader')
 
 require('dotenv').config({ path: '.env' })
 
-const babelLoader = {
-    loader: 'babel-loader',
+const esbuildTarget = 'es2017'
+const esbuildJsLoader = {
+    loader: 'esbuild-loader',
     options: {
-        cacheDirectory: true,
-        presets: [['@babel/preset-env', {
-            corejs: 3,
-            forceAllTransforms: false,
-            modules: false,
-            targets: {},
-            useBuiltIns: 'entry',
-        }]],
-        plugins: [
-            '@babel/plugin-proposal-class-properties',
-            '@babel/plugin-proposal-optional-chaining',
-            '@babel/plugin-syntax-dynamic-import',
-            '@babel/plugin-transform-classes',
-        ],
+        loader: 'js',
+        target: esbuildTarget,
+    },
+}
+const esbuildTsLoader = {
+    loader: 'esbuild-loader',
+    options: {
+        loader: 'ts',
+        target: esbuildTarget,
+    },
+}
+const esbuildTsxLoader = {
+    loader: 'esbuild-loader',
+    options: {
+        loader: 'tsx',
+        target: esbuildTarget,
     },
 }
 
@@ -128,15 +131,21 @@ const rules = [{
 }, {
     test: /\.m?jsx?$/,
     exclude: /node_modules/,
-    use: [babelLoader],
+    use: [esbuildJsLoader],
 }, {
     test: /\.tsx?$/,
     exclude: /node_modules/,
-    use: [babelLoader, {
-        loader: 'ts-loader',
-        options: {
-            appendTsSuffixTo: [/\.vue$/],
-        },
+    use: [esbuildTsLoader],
+}, {
+    resourceQuery: /vue&type=script/,
+    oneOf: [{
+        resourceQuery: /lang=ts/,
+        use: [esbuildTsLoader],
+    }, {
+        resourceQuery: /lang=tsx/,
+        use: [esbuildTsxLoader],
+    }, {
+        use: [esbuildJsLoader],
     }],
 }, {
     test: /\.css$/,
