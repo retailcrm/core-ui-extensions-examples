@@ -1,8 +1,13 @@
 import { createI18n } from 'vue-i18n'
-import { defineRunner, runEndpoint } from '@retailcrm/embed-ui-v1-endpoint/remote'
+import {
+    defineRunner,
+    definePageRunner,
+    defineWidgetRunner,
+    runEndpoint,
+} from '@retailcrm/embed-ui-v1-endpoint/remote'
 
 import SettingsPage from './SettingsPage.vue'
-import WidgetApp from './WidgetApp.vue'
+import PromoPicker from './PromoPicker.vue'
 
 const createI18nInstance = () => createI18n({
     legacy: false,
@@ -12,27 +17,13 @@ const createI18nInstance = () => createI18n({
 
 runEndpoint(defineRunner({
     widgets: [{
-        'order/card:common.after': {
-            async run (createApp, root, pinia, target) {
-                const app = createApp(WidgetApp, { target })
-                app.use(pinia)
-                app.use(createI18nInstance())
-                app.mount(root)
-
-                return () => app.unmount()
-            },
-        },
+        'order/card:common.after': defineWidgetRunner(PromoPicker, app => {
+            app.use(createI18nInstance())
+        }),
     }],
     pages: [{
-        settings: {
-            async run (createApp, root, pinia, code) {
-                const app = createApp(SettingsPage, { code })
-                app.use(pinia)
-                app.use(createI18nInstance())
-                app.mount(root)
-
-                return () => app.unmount()
-            },
-        },
+        settings: definePageRunner(SettingsPage, app => {
+            app.use(createI18nInstance())
+        }),
     }],
 }))
