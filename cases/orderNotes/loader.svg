@@ -1,0 +1,25 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 128 128"
+    style="padding: 2px;"
+>
+    <g transform="matrix(-1 0 0 1 128 0)">
+        <circle cx="16" cy="64" r="13" />
+        <circle cx="16" cy="64" r="11.344" transform="rotate(45 64 64)" />
+        <circle cx="16" cy="64" r="9.531" transform="rotate(90 64 64)" />
+        <circle cx="16" cy="64" r="7.75" transform="rotate(135 64 64)" />
+        <circle cx="16" cy="64" r="7.063" transform="rotate(180 64 64)" />
+        <circle cx="16" cy="64" r="5.063" transform="rotate(225 64 64)" />
+        <circle cx="16" cy="64" r="4.438" transform="rotate(270 64 64)" />
+        <circle cx="16" cy="64" r="3.375" transform="rotate(315 64 64)" />
+        <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64;"
+            calcMode="discrete"
+            dur="960ms"
+            repeatCount="indefinite"
+        />
+    </g>
+</svg>
