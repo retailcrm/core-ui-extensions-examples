@@ -2,9 +2,10 @@
     <section :class="$style['promo-settings']">
         <header :class="$style['promo-settings__header']">
             <div>
-                <h1 :class="$style['promo-settings__title']">
+                <h2 :class="$style['promo-settings__title']">
                     {{ t('title') }}
-                </h1>
+                </h2>
+
                 <p :class="$style['promo-settings__subtitle']">
                     {{ t('subtitle') }}
                 </p>
@@ -92,16 +93,15 @@
                             </UiSelect>
                         </UiField>
 
-                        <UiField id="promo-active" :label="t('fields.active')">
+                        <UiField id="promo-active" :label="t('fields.active')" :interactive="false">
                             <div :class="$style['promo-settings__switch-row']">
                                 <UiSwitch
-                                    id="promo-active"
-                                    :value="isActive"
-                                    @click="isActive = !isActive"
+                                    id="promo-active-switch"
+                                    v-model:value="isActive"
                                 />
-                                <span :class="$style['promo-settings__switch-label']">
+                                <label :class="$style['promo-settings__switch-label']" for="promo-active-switch">
                                     {{ isActive ? t('states.active') : t('states.inactive') }}
-                                </span>
+                                </label>
                             </div>
                         </UiField>
 
@@ -176,16 +176,22 @@
 
                     <div :class="$style['promo-settings__options']">
                         <div :class="$style['promo-settings__option']">
-                            <UiSwitch :value="stackable" @click="stackable = !stackable" />
-                            <span>{{ t('options.stackable') }}</span>
+                            <UiSwitch id="promo-stackable-switch" v-model:value="stackable" />
+                            <label :class="$style['promo-settings__switch-label']" for="promo-stackable-switch">
+                                {{ t('options.stackable') }}
+                            </label>
                         </div>
                         <div :class="$style['promo-settings__option']">
-                            <UiSwitch :value="requiresCoupon" @click="requiresCoupon = !requiresCoupon" />
-                            <span>{{ t('options.requiresCoupon') }}</span>
+                            <UiSwitch id="promo-requires-coupon-switch" v-model:value="requiresCoupon" />
+                            <label :class="$style['promo-settings__switch-label']" for="promo-requires-coupon-switch">
+                                {{ t('options.requiresCoupon') }}
+                            </label>
                         </div>
                         <div :class="$style['promo-settings__option']">
-                            <UiSwitch :value="limitPerClient" @click="limitPerClient = !limitPerClient" />
-                            <span>{{ t('options.limitPerClient') }}</span>
+                            <UiSwitch id="promo-limit-per-client-switch" v-model:value="limitPerClient" />
+                            <label :class="$style['promo-settings__switch-label']" for="promo-limit-per-client-switch">
+                                {{ t('options.limitPerClient') }}
+                            </label>
                         </div>
                     </div>
                 </section>
@@ -208,6 +214,7 @@
                                 :class="$style['promo-settings__control']"
                             />
                         </UiField>
+
                         <UiField id="promo-end-date" :label="t('fields.endDate')">
                             <UiDatePicker
                                 id="promo-end-date"
@@ -215,6 +222,7 @@
                                 :class="$style['promo-settings__control']"
                             />
                         </UiField>
+
                         <UiField id="promo-start-time" :label="t('fields.startTime')">
                             <UiTimePicker
                                 id="promo-start-time"
@@ -222,6 +230,7 @@
                                 :class="$style['promo-settings__control']"
                             />
                         </UiField>
+
                         <UiField id="promo-end-time" :label="t('fields.endTime')">
                             <UiTimePicker
                                 id="promo-end-time"
@@ -233,15 +242,16 @@
 
                     <div :class="$style['promo-settings__options']">
                         <div :class="$style['promo-settings__option']">
-                            <UiSwitch
-                                :value="useStoreTimezone"
-                                @click="useStoreTimezone = !useStoreTimezone"
-                            />
-                            <span>{{ t('options.useStoreTimezone') }}</span>
+                            <UiSwitch id="promo-use-store-timezone-switch" v-model:value="useStoreTimezone" />
+                            <label :class="$style['promo-settings__switch-label']" for="promo-use-store-timezone-switch">
+                                {{ t('options.useStoreTimezone') }}
+                            </label>
                         </div>
                         <div :class="$style['promo-settings__option']">
-                            <UiSwitch :value="autoExtend" @click="autoExtend = !autoExtend" />
-                            <span>{{ t('options.autoExtend') }}</span>
+                            <UiSwitch id="promo-auto-extend-switch" v-model:value="autoExtend" />
+                            <label :class="$style['promo-settings__switch-label']" for="promo-auto-extend-switch">
+                                {{ t('options.autoExtend') }}
+                            </label>
                         </div>
                     </div>
                 </section>
@@ -262,6 +272,7 @@
                                 :class="$style['promo-settings__control']"
                             />
                         </UiField>
+
                         <UiField id="promo-webhook" :label="t('fields.webhook')">
                             <UiTextbox
                                 id="promo-webhook"
@@ -276,6 +287,7 @@
                         <UiAddButton small>
                             {{ t('actions.addRecipient') }}
                         </UiAddButton>
+
                         <div :class="$style['promo-settings__copy-block']">
                             <span :class="$style['promo-settings__copy-label']">{{ t('labels.copyCode') }}</span>
                             <UiCopyButton :text="promoCode" size="sm">
@@ -297,26 +309,32 @@
                         <h3 :class="$style['promo-settings__card-title']">
                             {{ t('sections.summary') }}
                         </h3>
+
                         <UiTag background="#E0F2FE">{{ t('status.draft') }}</UiTag>
                     </div>
+
                     <div :class="$style['promo-settings__summary']">
                         <div :class="$style['promo-settings__summary-item']">
                             <span>{{ t('summary.status') }}</span>
                             <strong>{{ t(`status.${status}`) }}</strong>
                         </div>
+
                         <div :class="$style['promo-settings__summary-item']">
                             <span>{{ t('summary.segment') }}</span>
                             <strong>{{ t(`segments.${segment}`) }}</strong>
                         </div>
+
                         <div :class="$style['promo-settings__summary-item']">
                             <span>{{ t('summary.budget') }}</span>
                             <strong>{{ budget }} ₽</strong>
                         </div>
+
                         <div :class="$style['promo-settings__summary-item']">
                             <span>{{ t('summary.period') }}</span>
                             <strong>{{ t('summary.periodValue') }}</strong>
                         </div>
                     </div>
+
                     <div :class="$style['promo-settings__tag-list']">
                         <UiTag background="#DCFCE7">{{ t('tags.checkout') }}</UiTag>
                         <UiTag background="#F3F4F6">{{ t('tags.crm') }}</UiTag>
@@ -330,6 +348,7 @@
                             {{ t('sections.checks') }}
                         </h3>
                     </div>
+
                     <div :class="$style['promo-settings__checks']">
                         <UiAlert variant="success" :text="t('checks.pass')" small />
                         <UiAlert variant="warning" :text="t('checks.warning')" small />
@@ -342,13 +361,16 @@
                             {{ t('sections.tools') }}
                         </h3>
                     </div>
+
                     <div :class="$style['promo-settings__tools']">
                         <UiButton appearance="secondary">
                             {{ t('actions.test') }}
                         </UiButton>
+
                         <UiButton appearance="outlined">
                             {{ t('actions.export') }}
                         </UiButton>
+
                         <UiButton appearance="tertiary">
                             {{ t('actions.archive') }}
                         </UiButton>
@@ -360,9 +382,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useField, useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import {
     UiAddButton,
     UiAlert,
@@ -379,6 +398,12 @@ import {
     UiTextbox,
     UiTimePicker,
 } from '@retailcrm/embed-ui-v1-components/remote'
+
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useField } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
+import { watch } from 'vue'
 
 defineProps<{ code: string }>()
 
@@ -528,6 +553,7 @@ const webhook = ref('https://example.com/hooks/promotions')
     &__switch-label {
         color: #374151;
         font-size: 13px;
+        cursor: pointer;
     }
 
     &__options {
