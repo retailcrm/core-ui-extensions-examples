@@ -55,7 +55,8 @@ const manifestSchema = z.object({
     pages: z.array(descriptorPagePayloadSchema).optional(),
     baseUrl: z.string().min(1).optional(),
     clientId: z.string().min(1).optional(),
-    entrypoint: z.string().min(1).optional(),
+    entrypoint: z.union([z.enum(['html', 'script']), z.string().min(1)]).optional(),
+    entrypointType: z.enum(['html', 'script']).optional(),
 })
 
 const parsedManifest = manifestSchema.safeParse(manifestRaw)
@@ -94,6 +95,9 @@ const code = manifest.code || caseName
 const name = manifest.name || code
 const clientId = manifest.clientId || 'client-id-xxx'
 const version = manifest.version
+const entrypointType = manifest.entrypoint === 'html' || manifest.entrypoint === 'script'
+    ? manifest.entrypoint
+    : (manifest.entrypointType || 'html')
 
 if (!Array.isArray(manifest.targets) || manifest.targets.length === 0) {
     console.error('Missing or empty "targets" in extensionrc.json')
@@ -105,7 +109,6 @@ if (!version) {
     process.exit(1)
 }
 
-const entrypoint = manifest.entrypoint || `/extension/${manifest.uuid}`
 let stylesheet = null
 
 if (typeof manifest.stylesheet === 'string') {
@@ -152,16 +155,32 @@ const entryHtml = pickFromManifest(['index.html']) || pickFromFiles('.html')
 const scriptFile = pickFromManifest([`${caseName}.js`, `${code}.js`]) || pickFromFiles('.js')
 const styleFile = pickFromManifest([`${caseName}.css`, `${code}.css`]) || pickFromFiles('.css')
 
-if (!entryHtml || !scriptFile) {
-    console.error('Missing build artifacts. Ensure build produced HTML and JS files.')
+if (!scriptFile) {
+    console.error('Missing build artifacts. Ensure build produced a JS file.')
     process.exit(1)
 }
+
+if (entrypointType === 'html' && !entryHtml) {
+    console.error('Missing HTML build artifact. Ensure build produced an HTML file or switch entrypointType to "script".')
+    process.exit(1)
+}
+
+const archiveEntrypoint = entrypointType === 'script' ? scriptFile : entryHtml
+const entrypoint = (
+    typeof manifest.entrypoint === 'string' && manifest.entrypoint !== 'html' && manifest.entrypoint !== 'script'
+        ? manifest.entrypoint
+        : null
+) || (
+    entrypointType === 'script'
+        ? `/extension/${manifest.uuid}/script`
+        : `/extension/${manifest.uuid}`
+)
 
 const extensionManifest = {
     code,
     version,
     targets: manifest.targets,
-    entrypoint: entryHtml,
+    entrypoint: archiveEntrypoint,
     scripts: [scriptFile],
 }
 

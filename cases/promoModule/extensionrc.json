@@ -3,6 +3,7 @@
     "name": "Акции",
     "uuid": "8ebe1617-d609-43e4-b35a-fbfae011eee3",
     "version": "0.1.0",
+    "entrypoint": "script",
     "targets": [
         "order/card:common.after"
     ],

@@ -16,12 +16,18 @@
 - собирает zip-архив `dist/promoModule.zip`,
 - отправляет дескриптор в CRM API.
 
+Для `promoModule` включен режим `entrypoint: "script"`.
+Это значит:
+- в `dist/promoModule.zip` поле `manifest.json.entrypoint` будет указывать на собранный JS-файл,
+- в CRM по умолчанию уйдет `integrations.embedJs.entrypoint = "/extension/8ebe1617-d609-43e4-b35a-fbfae011eee3/script"`.
+
 Что должно быть в кейсе:
 - `cases/<case>/extensionrc.json` с полями:
   - `code` — код модуля,
   - `name` — название модуля,
   - `uuid` — UUID модуля,
   - `version` — версия модуля,
+  - `entrypoint` — `html`, `script` или явный URL/путь; в режиме `script` рецепт публикует JS как entrypoint внутри zip и переключает дефолтный CRM endpoint на `/extension/<uuid>/script`,
   - `targets` — массив целей,
   - `stylesheet` — `true` (автоподстановка `/extension/<uuid>/stylesheet`) или строка,
   - `pages` — массив кодов страниц или объектов с меню и переводами (опционально),
