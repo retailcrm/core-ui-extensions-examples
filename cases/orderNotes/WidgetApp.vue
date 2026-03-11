@@ -34,11 +34,7 @@
                         :href="router.generate('crm_users_edit', { id: userId })"
                     />
 
-                    <textarea
-                        :class="$style.form__area"
-                        :value="text"
-                        @input="onInput"
-                    />
+                    <textarea v-model="text" :class="$style.form__area" />
 
                     <UiButton
                         :class="$style.form__button"
@@ -124,8 +120,6 @@ import { useField, useHost, useRouter } from '@retailcrm/embed-ui'
 
 import IconLoader from './loader.svg'
 
-import { onSerializedEvent } from './serialized'
-
 type Note = {
     id: number;
     author: {
@@ -186,10 +180,6 @@ const onSidebarOpened = async (opened: boolean) => {
 
     loading.value = false
 }
-
-const onInput = onSerializedEvent<InputEvent>((event) => {
-    text.value = event.target.value
-})
 
 const onSubmit = async () => {
     if (!userId.value) {
