@@ -94,7 +94,7 @@
     </UiModalSidebar>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import {
     UiAvatar,
     UiButton,

@@ -34,6 +34,11 @@
         ],
         "useDefineForClassFields": true
     },
+    "vueCompilerOptions": {
+        "plugins": [
+            "@omnicajs/vue-remote/tooling"
+        ]
+    },
     "exclude": [
         "node_modules"
     ],

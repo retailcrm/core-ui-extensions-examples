@@ -4,7 +4,7 @@
     </UiToolbarButton>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useField } from '@retailcrm/embed-ui'

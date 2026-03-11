@@ -37,7 +37,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import type { CustomDictionary } from '@retailcrm/embed-ui-v1-types/context'
 
 import { UiCheckbox, UiRadio } from '@retailcrm/embed-ui-v1-components/remote'

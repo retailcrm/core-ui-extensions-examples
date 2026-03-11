@@ -1,7 +1,7 @@
 <template>
     <template v-if="picked.length > 0">
         {{ t('promoIsApplied', {
-            promos: picked.map(p => t('quote', { term: p.name })).join(', ')
+            promos: pickedTitles
         }) }}
     </template>
 
@@ -61,7 +61,7 @@
     </UiModalSidebar>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import {
     UiButton,
     UiError,
@@ -70,7 +70,12 @@ import {
     UiToolbarButton,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { onMounted, ref, watch } from 'vue'
+import {
+    computed,
+    onMounted,
+    ref,
+    watch,
+} from 'vue'
 
 import { useActions } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
 import { useField } from '@retailcrm/embed-ui'
@@ -105,6 +110,9 @@ type Promo = {
 const promos = ref<Promo[]>([])
 const picked = ref<Promo[]>([])
 const errors = ref<string[]>([])
+const pickedTitles = computed(() => picked.value.map((promo) => {
+    return t('quote', { term: promo.name })
+}).join(', '))
 
 const opened = ref(false)
 const applying = ref(false)

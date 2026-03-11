@@ -10,7 +10,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { ref } from 'vue'

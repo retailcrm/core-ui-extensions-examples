@@ -14,7 +14,7 @@
     </UiToolbarLink>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import type { PropType } from 'vue'
 import type { WidgetTarget } from '@retailcrm/embed-ui/types/widget'
 

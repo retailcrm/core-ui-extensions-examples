@@ -101,6 +101,65 @@ _Данный пример полноценно работает при реги
 Модуль получает данные по пользовательским полям заказа, позволяет выбрать поле с помощью группы
 радио-кнопок и просмотреть его значение. Также можно изменить значение поля, если он редактируемое.
 
+## Tooling и IDE
+
+В проект добавлен `@omnicajs/vue-remote/tooling`, подключенный через `vueCompilerOptions.plugins` в `tsconfig.json`.
+Он нужен для корректной типизации remote-SFC в шаблонах Vue:
+
+* native `ref` внутри remote-компонентов типизируются как remote proxy, а не как `HTMLElement`;
+* `useTemplateRef(...)`, `ref(null)` и `shallowRef(null)` корректно работают на стороне remote-runtime;
+* для remote-SFC используйте marker `<script lang="ts" remote setup>`.
+
+### WebStorm / PhpStorm
+
+Рекомендуемые настройки:
+
+* `Settings | Languages & Frameworks | TypeScript`
+* в поле `TypeScript` выберите версию из проекта: `node_modules/typescript`
+* включите `TypeScript Language Service`
+* включите `Enable service-powered type engine`
+
+Для Vue:
+
+* `Settings | Languages & Frameworks | TypeScript | Vue`
+* выберите `Vue Language Server (Volar)`
+* укажите project package: `node_modules/@vue/language-server`
+* включите `Vue Language Server 3.x Preview`
+* если после этого типы в шаблонах не обновились, перезапустите `Vue` и `TypeScript` services или IDE
+
+Что означает `Vue Language Server 3.x Preview`:
+
+* в актуальных версиях PhpStorm / WebStorm этот флажок включает новый Vue TypeScript tooling для language server;
+* без него IDE может корректно запускать `@vue/language-server`, но не использовать server-side типы для шаблонов;
+* симптом такого состояния: `useTemplateRef(...)` в remote-SFC подсвечивается как `Readonly<Ref<unknown, unknown> ...>`, хотя `yarn typecheck` проходит.
+
+Как проверить, что используется именно локальный language server из проекта:
+
+* в `.idea/workspace.xml` должен быть сохранен путь `packageName="$PROJECT_DIR$/node_modules/@vue/language-server"`;
+* если этот путь выбран, PhpStorm / WebStorm запускает project-local `@vue/language-server`, а не bundled пакет IDE.
+
+### VS Code
+
+Рекомендуемые настройки:
+
+* установите расширение `Vue - Official`
+* если установлен `Vetur`, отключите его для этого workspace
+* в командной палитре выполните `TypeScript: Select TypeScript Version`
+* выберите `Use Workspace Version`
+
+При проблемах с подсветкой или типами:
+
+* выполните `Developer: Reload Window`
+* затем `Vue: Restart Vue Server`
+* при необходимости перезапустите `TypeScript: Restart TS Server`
+
+### Что проверять, если типы не подхватились
+
+* в `package.json` должны быть установлены совместимые версии `vue-tsc` и `@vue/language-server`
+* в `tsconfig.json` должен быть подключен `@omnicajs/vue-remote/tooling`
+* remote-компонент должен быть помечен как `<script lang="ts" remote setup>`
+* в PhpStorm / WebStorm должен быть включен `Vue Language Server 3.x Preview`
+
 ## Запуск
 
 ### Начальное развертывание

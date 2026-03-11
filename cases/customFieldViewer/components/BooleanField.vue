@@ -11,7 +11,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" remote setup>
 import { UiCheckbox } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
