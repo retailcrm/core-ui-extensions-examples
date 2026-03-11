@@ -1,24 +1,19 @@
 <template>
-    <div>
-        <label :for="id" :class="$style['label']">
-            {{ label }}
-        </label>
-
-        <div>
-            <UiTextbox
-                :id="id"
-                :value="field"
+    <UiField :id="id" :label="label" :readonly="readonly">
+        <template #default="{ id: fieldId }">
+            <UiNumberStepper
+                :id="fieldId"
+                v-model:value="field"
                 :decimals="integer ? 0 : '*'"
                 :readonly="readonly"
-                inputmode="decimal"
-                @update:value="field = Number($event)"
+                nullable
             />
-        </div>
-    </div>
+        </template>
+    </UiField>
 </template>
 
 <script lang="ts" remote setup>
-import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiField, UiNumberStepper } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
@@ -55,10 +50,3 @@ const field = useCustomField(custom, props.code, {
     kind: ['integer', 'numeric'],
 })
 </script>
-
-<style lang="less" module>
-.label {
-  display: inline-block;
-  margin-bottom: 4px;
-}
-</style>

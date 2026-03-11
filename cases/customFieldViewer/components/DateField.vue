@@ -1,22 +1,17 @@
 <template>
-    <div>
-        <label :for="id" :class="$style['label']">
-            {{ label }}
-        </label>
-
-        <div>
-            <UiTextbox :id="id" v-model:value="raw" />
-        </div>
-    </div>
+    <UiField :id="id" :label="label">
+        <template #default="{ id: fieldId }">
+            <UiDatePicker :id="fieldId" v-model:value="model" nullable />
+        </template>
+    </UiField>
 </template>
 
 <script lang="ts" remote setup>
-import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiDatePicker, UiField } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
-import { watch } from 'vue'
 
 const props = defineProps({
     id: {
@@ -37,24 +32,34 @@ const props = defineProps({
 
 const custom = useContext('order')
 const field = useCustomField(custom, props.code, { kind: 'date' })
-const raw = ref(field.value)
 
-watch(field, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        raw.value = newValue
-    }
+const model = computed<Date | null>({
+    get: () => parseDate(field.value),
+    set: value => field.value = value ? formatDate(value) : null,
 })
 
-watch(raw, raw => {
-    if (!isNaN(Date.parse(raw ?? ''))) {
-        field.value = raw
-    }
-})
-</script>
+function formatDate(value: Date): string {
+    const year = value.getFullYear()
+    const month = String(value.getMonth() + 1).padStart(2, '0')
+    const day = String(value.getDate()).padStart(2, '0')
 
-<style lang="less" module>
-.label {
-  display: inline-block;
-  margin-bottom: 4px;
+    return `${year}-${month}-${day}`
 }
-</style>
+
+function parseDate(value: unknown): Date | null {
+    if (typeof value !== 'string') {
+        return null
+    }
+
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+    if (!match) {
+        return null
+    }
+
+    const year = Number(match[1])
+    const month = Number(match[2]) - 1
+    const day = Number(match[3])
+
+    return new Date(year, month, day)
+}
+</script>

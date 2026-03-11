@@ -1,19 +1,17 @@
 <template>
-    <div>
-        <div>
-            <label :for="id">{{ label }}</label>
-        </div>
-
-        <UiTextbox
-            :id="id"
-            v-model:value="field"
-            :multiline="multiline"
-        />
-    </div>
+    <UiField :id="id" :label="label">
+        <template #default="{ id: fieldId }">
+            <UiTextbox
+                :id="fieldId"
+                v-model:value="field"
+                :multiline="multiline"
+            />
+        </template>
+    </UiField>
 </template>
 
 <script lang="ts" remote setup>
-import { UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiField, UiTextbox } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'

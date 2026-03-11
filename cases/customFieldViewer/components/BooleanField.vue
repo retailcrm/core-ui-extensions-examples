@@ -1,18 +1,13 @@
 <template>
-    <div>
-        <UiCheckbox
-            :id="id"
-            v-model:model="field"
-        />
-
-        <label :for="id" :class="$style['label']">
-            {{ label }}
-        </label>
-    </div>
+    <UiField :id="id" :label="label">
+        <template #default="{ id: fieldId }">
+            <UiSwitch :id="fieldId" v-model:value="field" />
+        </template>
+    </UiField>
 </template>
 
 <script lang="ts" remote setup>
-import { UiCheckbox } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiField, UiSwitch } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
@@ -39,9 +34,3 @@ const field = useCustomField(custom, props.code, {
     kind: 'boolean',
 })
 </script>
-
-<style lang="less" module>
-.label {
-  margin-left: 8px;
-}
-</style>

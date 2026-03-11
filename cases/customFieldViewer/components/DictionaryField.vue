@@ -1,52 +1,41 @@
 <template>
-    <div
-        :id="id"
-        :aria-labelledby="id + '-label'"
-    >
-        <label :id="id + '-label'" :class="$style['label']">
-            {{ label }}
-        </label>
+    <UiField :id="id" :label="label">
+        <template #default="{ id: fieldId }">
+            <UiLoader v-if="!loaded" />
 
-        <div v-if="!loaded">
-            ...
-        </div>
-
-        <div
-            v-for="o in options"
-            :key="o.code"
-            :class="$style['option']"
-        >
-            <UiCheckbox
-                v-if="descriptor && descriptor.kind === 'multiselect_dictionary'"
-                :id="id + '-option-' + o.code"
-                v-model:model="field"
-                :value="o.code"
-            />
-
-            <UiRadio
+            <UiSelect
                 v-else
-                :id="id + '-option-' + o.code"
-                v-model:model="field"
-                :value="o.code"
-            />
-
-            <label :for="id + '-option-' + o.code" :class="$style['option-label']">
-                {{ o.text }}
-            </label>
-        </div>
-    </div>
+                :id="fieldId"
+                v-model:value="field"
+                filterable
+                :multiple="multiple"
+            >
+                <UiSelectOption
+                    v-for="option in options"
+                    :key="option.code"
+                    :value="option.code"
+                    :label="option.text"
+                />
+            </UiSelect>
+        </template>
+    </UiField>
 </template>
 
 <script lang="ts" remote setup>
 import type { CustomDictionary } from '@retailcrm/embed-ui-v1-types/context'
 
-import { UiCheckbox, UiRadio } from '@retailcrm/embed-ui-v1-components/remote'
+import {
+    UiField,
+    UiLoader,
+    UiSelect,
+    UiSelectOption,
+} from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
 import { useDictionary } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
     id: {
@@ -76,6 +65,7 @@ const options = ref<CustomDictionary>([])
 const loaded = ref(false)
 
 const descriptor = custom.schema?.fields.find(f => f.code === props.code)
+const multiple = computed(() => descriptor?.kind === 'multiselect_dictionary')
 
 if (descriptor && 'dictionaryCode' in descriptor) {
     dictionary.query(descriptor.dictionaryCode).then((result) => {
@@ -86,24 +76,3 @@ if (descriptor && 'dictionaryCode' in descriptor) {
     throw new Error('No dictionary for field with code ' + props.code)
 }
 </script>
-
-<style lang="less" module>
-.label {
-  display: inline-block;
-  margin-bottom: 12px;
-}
-
-.option {
-  display: flex;
-  align-items: center;
-
-  & + & {
-    margin-top: 12px;
-  }
-}
-
-.option-label {
-  display: inline-block;
-  margin-left: 12px;
-}
-</style>
