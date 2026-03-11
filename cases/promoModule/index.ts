@@ -1,13 +1,13 @@
 import { createI18n } from 'vue-i18n'
 import {
-    defineRunner,
     definePageRunner,
+    defineRunner,
     defineWidgetRunner,
     runEndpoint,
 } from '@retailcrm/embed-ui-v1-endpoint/remote'
 
-import SettingsPage from './SettingsPage.vue'
 import PromoPicker from './PromoPicker.vue'
+import SettingsPage from './SettingsPage.vue'
 
 const createI18nInstance = () => createI18n({
     legacy: false,

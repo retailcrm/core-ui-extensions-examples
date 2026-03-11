@@ -96,13 +96,6 @@ import {
     UiToolbarLink,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
-import BooleanField from './components/BooleanField.vue'
-import DateField from './components/DateField.vue'
-import DateTimeField from './components/DateTimeField.vue'
-import DictionaryField from './components/DictionaryField.vue'
-import NumberField from './components/NumberField.vue'
-import TextField from './components/TextField.vue'
-
 import { ref } from 'vue'
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useField } from '@retailcrm/embed-ui'
@@ -111,6 +104,13 @@ import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { watch } from 'vue'
 
 import { v4 } from 'uuid'
+
+import BooleanField from './components/BooleanField.vue'
+import DateField from './components/DateField.vue'
+import DateTimeField from './components/DateTimeField.vue'
+import DictionaryField from './components/DictionaryField.vue'
+import NumberField from './components/NumberField.vue'
+import TextField from './components/TextField.vue'
 
 const uid = 'id-' + v4()
 

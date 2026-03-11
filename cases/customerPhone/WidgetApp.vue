@@ -18,15 +18,15 @@
 import type { ComputedRef, PropType } from 'vue'
 import type { WidgetTarget } from '@retailcrm/embed-ui/types/widget'
 
-import IconTelegram from './assets/telegram.svg'
-import IconWhatsapp from './assets/whatsapp.svg'
-
 import { computed } from 'vue'
 
 import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
 import { useCustomerCardPhoneContext as usePhone } from '@retailcrm/embed-ui'
 
 import { useField } from '@retailcrm/embed-ui'
+
+import IconTelegram from './assets/telegram.svg'
+import IconWhatsapp from './assets/whatsapp.svg'
 
 const props = defineProps({
     target: {

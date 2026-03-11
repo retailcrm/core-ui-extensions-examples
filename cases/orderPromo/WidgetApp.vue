@@ -62,8 +62,6 @@
 </template>
 
 <script lang="ts" setup>
-import IconLoader from './loader.svg'
-
 import {
     UiButton,
     UiError,
@@ -72,18 +70,18 @@ import {
     UiToolbarButton,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
-import {
-    onMounted,
-    ref,
-    watch,
-} from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { useActions } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
-import { useContext as useSettings } from '@retailcrm/embed-ui-v1-contexts/remote/settings'
 import { useField } from '@retailcrm/embed-ui'
 import { useHost } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+import { useContext as useOrder } from '@retailcrm/embed-ui-v1-contexts/remote/order/card'
+import {
+    useContext as useSettings,
+} from '@retailcrm/embed-ui-v1-contexts/remote/settings'
+
+import IconLoader from './loader.svg'
 
 const host = useHost()
 const i18n = useI18n()

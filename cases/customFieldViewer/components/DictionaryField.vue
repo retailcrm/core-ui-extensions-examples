@@ -17,7 +17,7 @@
             :class="$style['option']"
         >
             <UiCheckbox
-                v-if="descriptor && descriptor.kind == 'multiselect_dictionary'"
+                v-if="descriptor && descriptor.kind === 'multiselect_dictionary'"
                 :id="id + '-option-' + o.code"
                 v-model:model="field"
                 :value="o.code"
@@ -40,10 +40,7 @@
 <script lang="ts" setup>
 import type { CustomDictionary } from '@retailcrm/embed-ui-v1-types/context'
 
-import {
-    UiCheckbox,
-    UiRadio,
-} from '@retailcrm/embed-ui-v1-components/remote'
+import { UiCheckbox, UiRadio } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'

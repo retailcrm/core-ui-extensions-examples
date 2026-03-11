@@ -16,10 +16,11 @@
 import { UiModalSidebar } from '@retailcrm/embed-ui-v1-components/remote'
 import { UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 import { useField } from '@retailcrm/embed-ui'
+import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
+import { watch } from 'vue'
 
 const opened = ref(false)
 

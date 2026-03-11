@@ -95,8 +95,6 @@
 </template>
 
 <script lang="ts" setup>
-import IconLoader from './loader.svg'
-
 import {
     UiAvatar,
     UiButton,
@@ -110,13 +108,11 @@ import {
 import {
     computed,
     onMounted,
-    watch,
     ref,
+    watch,
 } from 'vue'
 
 import { formatDate } from '@retailcrm/embed-ui-v1-components/remote'
-
-import { onSerializedEvent } from './serialized'
 
 import { useI18n } from 'vue-i18n'
 
@@ -124,11 +120,11 @@ import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useCurrentUserContext as useUser } from '@retailcrm/embed-ui'
 
-import {
-    useField,
-    useHost,
-    useRouter,
-} from '@retailcrm/embed-ui'
+import { useField, useHost, useRouter } from '@retailcrm/embed-ui'
+
+import IconLoader from './loader.svg'
+
+import { onSerializedEvent } from './serialized'
 
 type Note = {
     id: number;

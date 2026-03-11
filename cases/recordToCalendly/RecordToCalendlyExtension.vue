@@ -26,19 +26,16 @@
 
 <script lang="ts" setup>
 
-import IconCalendar from  '@retailcrm/embed-ui-v1-components/assets/sprites/actions/calendar-month.svg'
+import { UiModalWindow, UiToolbarButton } from '@retailcrm/embed-ui-v1-components/remote'
 
-import {
-    UiModalWindow,
-    UiToolbarButton,
-} from '@retailcrm/embed-ui-v1-components/remote'
-
-import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
-import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+import { useOrderCardContext as useOrder } from '@retailcrm/embed-ui'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 import { ref, watch } from 'vue'
+
+import IconCalendar from  '@retailcrm/embed-ui-v1-components/assets/sprites/actions/calendar-month.svg'
 
 // set locale
 const settings = useSettings()

@@ -18,19 +18,16 @@
 import type { PropType } from 'vue'
 import type { WidgetTarget } from '@retailcrm/embed-ui/types/widget'
 
-import IconAdd from  '@retailcrm/embed-ui-v1-components/assets/sprites/actions/add-circle-outlined.svg'
-import IconEdit from '@retailcrm/embed-ui-v1-components/assets/sprites/ui/edit.svg'
+import { UiToolbarButton, UiToolbarLink } from '@retailcrm/embed-ui-v1-components/remote'
 
-import {
-    UiToolbarButton,
-    UiToolbarLink,
-} from '@retailcrm/embed-ui-v1-components/remote'
-
-import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
+import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
 import { watch } from 'vue'
+
+import IconAdd from  '@retailcrm/embed-ui-v1-components/assets/sprites/actions/add-circle-outlined.svg'
+import IconEdit from '@retailcrm/embed-ui-v1-components/assets/sprites/ui/edit.svg'
 
 const props = defineProps({
     target: {
