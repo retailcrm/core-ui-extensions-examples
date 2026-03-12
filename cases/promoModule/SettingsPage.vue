@@ -284,7 +284,7 @@
                     </div>
 
                     <div :class="$style['promo-settings__inline-actions']">
-                        <UiAddButton small>
+                        <UiAddButton>
                             {{ t('actions.addRecipient') }}
                         </UiAddButton>
 
