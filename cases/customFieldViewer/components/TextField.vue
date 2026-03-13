@@ -1,10 +1,12 @@
 <template>
-    <UiField :id="id" :label="label">
+    <UiField :id="id" :label="label" :readonly="readonly">
         <template #default="{ id: fieldId }">
             <UiTextbox
                 :id="fieldId"
                 v-model:value="field"
                 :multiline="multiline"
+                :placeholder="placeholder"
+                :readonly="readonly"
             />
         </template>
     </UiField>
@@ -36,10 +38,21 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
+    placeholder: {
+        type: String,
+        default: '',
+    },
+
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const custom = useContext('order')
 const field = useCustomField(custom, props.code, {
     kind: ['email', 'string', 'text'],
+    readonly: props.readonly,
 })
 </script>

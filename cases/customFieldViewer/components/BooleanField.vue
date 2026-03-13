@@ -1,7 +1,7 @@
 <template>
-    <UiField :id="id" :label="label">
+    <UiField :id="id" :label="label" :readonly="readonly">
         <template #default="{ id: fieldId }">
-            <UiSwitch :id="fieldId" v-model:value="field" />
+            <UiSwitch :id="fieldId" v-model:value="field" :disabled="readonly" />
         </template>
     </UiField>
 </template>
@@ -27,10 +27,16 @@ const props = defineProps({
         type: String,
         required: true,
     },
+
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const custom = useContext('order')
 const field = useCustomField(custom, props.code, {
     kind: 'boolean',
+    readonly: props.readonly,
 })
 </script>

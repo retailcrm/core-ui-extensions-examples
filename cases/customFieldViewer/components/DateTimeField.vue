@@ -1,12 +1,20 @@
 <template>
-    <UiField :id="id" :label="label">
+    <UiField :id="id" :label="label" :readonly="readonly">
         <template #default="{ id: fieldId }">
             <div :class="$style['inputs']">
-                <UiDatePicker :id="fieldId + '-date'" v-model:value="dateValue" nullable />
+                <UiDatePicker
+                    :id="fieldId + '-date'"
+                    v-model:value="dateValue"
+                    :placeholder="placeholder"
+                    :readonly="readonly"
+                    nullable
+                />
+
                 <UiTimePicker
                     :id="fieldId + '-time'"
                     v-model:value="timeValue"
                     :disabled="!dateValue"
+                    :readonly="readonly"
                 />
             </div>
         </template>
@@ -18,7 +26,7 @@ import { UiDatePicker } from '@retailcrm/embed-ui-v1-components/remote'
 import { UiField } from '@retailcrm/embed-ui-v1-components/remote'
 import { UiTimePicker } from '@retailcrm/embed-ui-v1-components/remote'
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useContext } from '@retailcrm/embed-ui-v1-contexts/remote/custom'
 import { useCustomField } from '@retailcrm/embed-ui'
 import { watch } from 'vue'
@@ -38,10 +46,34 @@ const props = defineProps({
         type: String,
         required: true,
     },
+
+    placeholder: {
+        type: String,
+        default: '',
+    },
+
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const custom = useContext('order')
-const field = useCustomField(custom, props.code, { kind: 'datetime' })
+const readonlyField = useCustomField(custom, props.code, {
+    kind: 'datetime',
+    readonly: true,
+})
+const writableField = useCustomField(custom, props.code, { kind: 'datetime' })
+const field = computed<string | null>({
+    get: () => props.readonly ? readonlyField.value : writableField.value,
+    set: value => {
+        if (props.readonly) {
+            return
+        }
+
+        writableField.value = value
+    },
+})
 const dateValue = ref(extractDate(field.value))
 const timeValue = ref(extractTime(field.value))
 

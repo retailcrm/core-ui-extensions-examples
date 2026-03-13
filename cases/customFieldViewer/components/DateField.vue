@@ -1,7 +1,13 @@
 <template>
-    <UiField :id="id" :label="label">
+    <UiField :id="id" :label="label" :readonly="readonly">
         <template #default="{ id: fieldId }">
-            <UiDatePicker :id="fieldId" v-model:value="model" nullable />
+            <UiDatePicker
+                :id="fieldId"
+                v-model:value="model"
+                nullable
+                :placeholder="placeholder"
+                :readonly="readonly"
+            />
         </template>
     </UiField>
 </template>
@@ -28,10 +34,34 @@ const props = defineProps({
         type: String,
         required: true,
     },
+
+    placeholder: {
+        type: String,
+        default: '',
+    },
+
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const custom = useContext('order')
-const field = useCustomField(custom, props.code, { kind: 'date' })
+const readonlyField = useCustomField(custom, props.code, {
+    kind: 'date',
+    readonly: true,
+})
+const writableField = useCustomField(custom, props.code, { kind: 'date' })
+const field = computed<string | null>({
+    get: () => props.readonly ? readonlyField.value : writableField.value,
+    set: value => {
+        if (props.readonly) {
+            return
+        }
+
+        writableField.value = value
+    },
+})
 
 const model = computed<Date | null>({
     get: () => parseDate(field.value),

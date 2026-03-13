@@ -5,6 +5,7 @@
                 :id="fieldId"
                 v-model:value="field"
                 :decimals="integer ? 0 : '*'"
+                :textbox-options="{ placeholder }"
                 :readonly="readonly"
                 nullable
             />
@@ -39,6 +40,11 @@ const props = defineProps({
         default: false,
     },
 
+    placeholder: {
+        type: String,
+        default: '',
+    },
+
     readonly: {
         type: Boolean,
         default: false,
@@ -48,5 +54,6 @@ const props = defineProps({
 const custom = useContext('order')
 const field = useCustomField(custom, props.code, {
     kind: ['integer', 'numeric'],
+    readonly: props.readonly,
 })
 </script>

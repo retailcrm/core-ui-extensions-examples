@@ -1,5 +1,5 @@
 <template>
-    <UiField :id="id" :label="label">
+    <UiField :id="id" :label="label" :readonly="readonly">
         <template #default="{ id: fieldId }">
             <UiLoader v-if="!loaded" />
 
@@ -9,6 +9,8 @@
                 v-model:value="field"
                 filterable
                 :multiple="multiple"
+                :placeholder="placeholder"
+                :readonly="readonly"
             >
                 <UiSelectOption
                     v-for="option in options"
@@ -52,11 +54,22 @@ const props = defineProps({
         type: String,
         required: true,
     },
+
+    placeholder: {
+        type: String,
+        default: '',
+    },
+
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 })
 
 const custom = useContext('order')
 const field = useCustomField(custom, props.code, {
     kind: ['dictionary', 'multiselect_dictionary'],
+    readonly: props.readonly,
 })
 
 const dictionary = useDictionary()
