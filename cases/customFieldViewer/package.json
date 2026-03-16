@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@omnicajs/vue-remote": "^0.2.18",
+    "@omnicajs/vue-remote": "^0.2.20",
     "@remote-ui/rpc": "^1.4.7",
-    "@retailcrm/embed-ui": "^0.9.12",
-    "@retailcrm/embed-ui-v1-components": "^0.9.12",
+    "@retailcrm/embed-ui": "^0.9.13",
+    "@retailcrm/embed-ui-v1-components": "^0.9.13",
     "pinia": "^2.2.8",
     "uuid": "^11.0.3",
     "vue": "^3.5.13",
