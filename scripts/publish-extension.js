@@ -50,7 +50,7 @@ const manifestSchema = z.object({
     name: z.string().min(1).optional(),
     uuid: z.string().min(1),
     version: z.string().min(1),
-    targets: z.array(z.string().min(1)).nonempty(),
+    targets: z.array(z.string().min(1)).optional(),
     stylesheet: z.union([z.boolean(), z.string().min(1)]).optional(),
     pages: z.array(descriptorPagePayloadSchema).optional(),
     baseUrl: z.string().min(1).optional(),
@@ -98,9 +98,12 @@ const version = manifest.version
 const entrypointType = manifest.entrypoint === 'html' || manifest.entrypoint === 'script'
     ? manifest.entrypoint
     : (manifest.entrypointType || 'html')
+const pages = manifest.pages
+const hasTargets = Array.isArray(manifest.targets) && manifest.targets.length > 0
+const hasPages = Array.isArray(pages) && pages.length > 0
 
-if (!Array.isArray(manifest.targets) || manifest.targets.length === 0) {
-    console.error('Missing or empty "targets" in extensionrc.json')
+if (!hasTargets && !hasPages) {
+    console.error('Specify at least one target or page in extensionrc.json')
     process.exit(1)
 }
 
@@ -116,8 +119,6 @@ if (typeof manifest.stylesheet === 'string') {
 } else if (manifest.stylesheet === true) {
     stylesheet = `/extension/${manifest.uuid}/stylesheet`
 }
-
-const pages = manifest.pages
 
 if (pages && !Array.isArray(pages)) {
     console.error('"pages" must be an array when provided')
@@ -179,9 +180,12 @@ const entrypoint = (
 const extensionManifest = {
     code,
     version,
-    targets: manifest.targets,
     entrypoint: archiveEntrypoint,
     scripts: [scriptFile],
+}
+
+if (hasTargets) {
+    extensionManifest.targets = manifest.targets
 }
 
 if (styleFile) {
@@ -218,7 +222,10 @@ try {
 
 const embedJs = {
     entrypoint,
-    targets: manifest.targets,
+}
+
+if (hasTargets) {
+    embedJs.targets = manifest.targets
 }
 
 if (stylesheet) {

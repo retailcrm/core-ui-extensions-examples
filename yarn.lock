@@ -6937,6 +6937,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"returnsModule-cdb9a9@workspace:cases/returnsModule":
+  version: 0.0.0-use.local
+  resolution: "returnsModule-cdb9a9@workspace:cases/returnsModule"
+  dependencies:
+    "@omnicajs/vue-remote": ^0.2.20
+    "@remote-ui/rpc": ^1.4.7
+    "@retailcrm/embed-ui": ^0.9.13
+    "@retailcrm/embed-ui-v1-components": ^0.9.13
+    "@retailcrm/embed-ui-v1-endpoint": ^0.9.13
+    pinia: ^2.2.8
+    vue: ^3.5.13
+    vue-i18n: ^10.0.5
+  languageName: unknown
+  linkType: soft
+
 "rimraf@npm:^2.6.3":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"

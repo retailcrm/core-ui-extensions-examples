@@ -51,7 +51,7 @@
 Важно про URL страниц:
 - прямой URL страницы в CRM имеет вид `/modules/<moduleCode>/<pageCode>`,
 - `moduleCode` — это `code` интеграционного модуля (из `extensionrc.json`), а не `uuid` расширения.
-Например, для `code=promoModule` и `pageCode=settings` корректный адрес — `/modules/promoModule/settings`.
+Например, для `code=promoModule` и `pageCode=settings` корректный адрес — `%crm-url%/modules/promoModule/settings`.
 
 ## Меню
 
