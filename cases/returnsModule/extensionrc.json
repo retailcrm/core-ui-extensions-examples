@@ -1,0 +1,21 @@
+{
+    "code": "returnsModule",
+    "name": "Возвраты",
+    "uuid": "79aa7a7a-3b66-4e85-b623-f7c1fef97bc7",
+    "version": "0.1.0",
+    "entrypoint": "script",
+    "stylesheet": true,
+    "pages": [
+        {
+            "code": "returns",
+            "menu": "activity_main_menu",
+            "menuItemOrdering": 15,
+            "menuItemTitle": {
+                "ru": "Возвраты",
+                "en": "Returns",
+                "es": "Devoluciones"
+            },
+            "pageHelpLink": null
+        }
+    ]
+}
