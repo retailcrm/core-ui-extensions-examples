@@ -22,4 +22,4 @@ services:
             traefik.http.routers.web-extensions-server.priority: 1
             traefik.http.routers.web-extensions-server.service: web-extensions-server
             traefik.http.services.web-extensions-server.loadbalancer.server.port: '3000'
-
+            dev.orbstack.domains: 'web-extensions-server.simla.local'
