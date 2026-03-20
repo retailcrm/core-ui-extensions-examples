@@ -8,6 +8,20 @@
                 </h1>
                 -->
 
+                <UiPageHeader
+                    v-model:value="title"
+                    :error="t('errors.titleRequired')"
+                    editable
+                    invalid
+                >
+                    <template #actions>
+                        <UiButton appearance="tertiary">
+                            Действия
+                            <IconCaretDown aria-hidden="true" />
+                        </UiButton>
+                    </template>
+                </UiPageHeader>
+
                 <p :class="$style['returns-page__subtitle']">
                     {{ t('page.subtitle') }}
                 </p>
@@ -80,12 +94,15 @@ import type {
 } from './types'
 
 import { UiButton } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiPageHeader } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { computed, onMounted, ref } from 'vue'
 import { useField, useHost } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 import { watch } from 'vue'
+
+import IconCaretDown from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-down.svg'
 
 import EditorDrawer from './components/EditorDrawer.vue'
 import FilterPanel from './components/FilterPanel.vue'
@@ -157,6 +174,7 @@ const hasOrderSearchAttempt = ref(false)
 
 const drawerOpened = computed(() => drawerMode.value !== 'closed')
 const totalPages = computed(() => Math.max(1, Math.ceil(listTotal.value / ITEMS_PER_PAGE)))
+const title = ref(t('page.title'))
 const drawerTitle = computed(() => {
     if (drawerMode.value === 'create') {
         return t('drawer.createTitle')
@@ -554,7 +572,8 @@ onMounted(async () => {
         "loadOrders": "Failed to load orders:",
         "saveReturn": "Failed to save return:",
         "requiredDate": "Specify the return date.",
-        "requiredOrder": "Select an order."
+        "requiredOrder": "Select an order.",
+        "titleRequired": "Title is required."
     }
 }
 </i18n>
@@ -633,7 +652,8 @@ onMounted(async () => {
         "loadOrders": "No se pudieron cargar los pedidos:",
         "saveReturn": "No se pudo guardar la devolución:",
         "requiredDate": "Indique la fecha de la devolución.",
-        "requiredOrder": "Seleccione un pedido."
+        "requiredOrder": "Seleccione un pedido.",
+        "titleRequired": "El título es obligatorio."
     }
 }
 </i18n>
@@ -712,7 +732,8 @@ onMounted(async () => {
         "loadOrders": "Не удалось загрузить заказы:",
         "saveReturn": "Не удалось сохранить возврат:",
         "requiredDate": "Укажите дату возврата.",
-        "requiredOrder": "Выберите заказ."
+        "requiredOrder": "Выберите заказ.",
+        "titleRequired": "Заголовок обязателен."
     }
 }
 </i18n>
