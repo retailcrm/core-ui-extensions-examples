@@ -1,0 +1,32 @@
+{
+    "code": "tasksModule",
+    "name": "Задачи CRM",
+    "uuid": "05a9f990-7cfc-46c2-af0f-3abfd3d4c334",
+    "version": "0.1.0",
+    "entrypoint": "script",
+    "stylesheet": true,
+    "pages": [
+        {
+            "code": "board",
+            "menu": "activity_main_menu",
+            "menuItemOrdering": 16,
+            "menuItemTitle": {
+                "ru": "Задачи CRM",
+                "en": "CRM tasks",
+                "es": "Tareas CRM"
+            },
+            "pageHelpLink": null
+        },
+        {
+            "code": "summary",
+            "menu": "activity_main_menu",
+            "menuItemOrdering": 17,
+            "menuItemTitle": {
+                "ru": "Сводка по задачам",
+                "en": "Tasks summary",
+                "es": "Resumen de tareas"
+            },
+            "pageHelpLink": null
+        }
+    ]
+}
