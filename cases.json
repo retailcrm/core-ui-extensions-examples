@@ -105,5 +105,10 @@
     "name": "returnsModule",
     "script": "returnsModule.js",
     "stylesheet": "returnsModule.css"
+  }, {
+    "uuid": "05a9f990-7cfc-46c2-af0f-3abfd3d4c334",
+    "name": "tasksModule",
+    "script": "tasksModule.js",
+    "stylesheet": "tasksModule.css"
   }
 ]}
