@@ -120,7 +120,7 @@
                         :accepts="['crm-task']"
                         :class="{
                             [$style['page__lane-cards']]: true,
-                            [$style['page__lane-cards_empty']]: lane.tasks.length === 0,
+                            [$style['page__lane-cards_empty']]: lane.isVisuallyEmpty,
                         }"
                         :container-id="lane.id"
                         orientation="vertical"
@@ -141,7 +141,8 @@
                             :item-id="task.id"
                             type="crm-task"
                             @dragcancel="setDragCancel(task)"
-                            @dragstart="setDragStart(task)"
+                            @dragend="clearDragState"
+                            @dragstart="setDragStart(task, lane.id)"
                         >
                             <div :class="$style['task-card__head']">
                                 <RemoteDragHandle
@@ -219,7 +220,7 @@
                         </RemoteSortableItem>
 
                         <div
-                            v-if="lane.tasks.length === 0"
+                            v-if="lane.isVisuallyEmpty"
                             :class="$style['page__lane-empty']"
                         >
                             {{ t('board.empty') }}
@@ -277,6 +278,7 @@ settings.initialize()
 watch(locale, value => i18n.locale.value = value || 'ru-RU', { immediate: true })
 const board = ref<Board>(createInitialBoard())
 const activity = ref<ActivityState>({ kind: 'idle' })
+const draggedTaskSourceLane = ref<LaneId | null>(null)
 
 const toDate = (value: string) => new Date(`${value}T00:00:00`)
 const toYMD = (date: Date) => {
@@ -294,9 +296,17 @@ const isUrgent = (task: Task, laneId: LaneId) => {
 }
 
 const getRole = (userId: string) => assignees.find(user => user.id === userId)?.role || ''
+const clearDragState = () => {
+    draggedTaskSourceLane.value = null
+}
 
 const laneUrgentCount = (laneId: LaneId) => {
     return board.value[laneId].filter(task => isUrgent(task, laneId)).length
+}
+
+const isLaneVisuallyEmpty = (laneId: LaneId) => {
+    return board.value[laneId].length === 0
+        || (draggedTaskSourceLane.value === laneId && board.value[laneId].length === 1)
 }
 
 const formatDate = (value: string) => {
@@ -354,21 +364,25 @@ const laneEntries = computed(() => {
         id: 'queue' as const,
         title: t('lane.queue.title'),
         tasks: board.value.queue.map(task => ({ ...task, priorityLabel: priorityLabels.value[task.priority] })),
+        isVisuallyEmpty: isLaneVisuallyEmpty('queue'),
         urgentCount: laneUrgentCount('queue'),
     }, {
         id: 'inProgress' as const,
         title: t('lane.inProgress.title'),
         tasks: board.value.inProgress.map(task => ({ ...task, priorityLabel: priorityLabels.value[task.priority] })),
+        isVisuallyEmpty: isLaneVisuallyEmpty('inProgress'),
         urgentCount: laneUrgentCount('inProgress'),
     }, {
         id: 'review' as const,
         title: t('lane.review.title'),
         tasks: board.value.review.map(task => ({ ...task, priorityLabel: priorityLabels.value[task.priority] })),
+        isVisuallyEmpty: isLaneVisuallyEmpty('review'),
         urgentCount: laneUrgentCount('review'),
     }, {
         id: 'done' as const,
         title: t('lane.done.title'),
         tasks: board.value.done.map(task => ({ ...task, priorityLabel: priorityLabels.value[task.priority] })),
+        isVisuallyEmpty: isLaneVisuallyEmpty('done'),
         urgentCount: laneUrgentCount('done'),
     }]
 })
@@ -379,11 +393,13 @@ const busiestMember = computed(() => {
     }, teamWorkload.value[0])
 })
 
-const setDragStart = (task: Task) => {
+const setDragStart = (task: Task, laneId: LaneId) => {
+    draggedTaskSourceLane.value = laneId
     activity.value = { kind: 'dragstart', title: task.title }
 }
 
 const setDragCancel = (task: Task) => {
+    clearDragState()
     activity.value = { kind: 'cancel', title: task.title }
 }
 
@@ -395,6 +411,7 @@ const moveTask = (event: RemoteSortableEvent) => {
         || !isLaneId(event.sourceContainerId)
         || !isLaneId(event.targetContainerId)
     ) {
+        clearDragState()
         activity.value = { kind: 'ignored', itemId: event.itemId }
         return
     }
@@ -406,23 +423,22 @@ const moveTask = (event: RemoteSortableEvent) => {
     const sourceIndex = sourceTasks.findIndex(task => task.id === event.itemId)
 
     if (sourceIndex < 0) {
+        clearDragState()
         activity.value = { kind: 'notFound', itemId: event.itemId }
         return
     }
 
     const [task] = sourceTasks.splice(sourceIndex, 1)
-    let targetIndex = Math.min(Math.max(event.targetIndex, 0), targetTasks.length)
-
-    if (sourceLane === targetLane && sourceIndex < targetIndex) {
-        targetIndex -= 1
-    }
+    const targetIndex = Math.min(Math.max(event.targetIndex, 0), targetTasks.length)
 
     targetTasks.splice(targetIndex, 0, { ...task })
+    clearDragState()
     activity.value = { kind: 'moved', title: task.title, laneId: targetLane }
 }
 
 const resetBoard = () => {
     board.value = createInitialBoard()
+    clearDragState()
     activity.value = { kind: 'idle' }
 }
 </script>
@@ -678,6 +694,7 @@ const resetBoard = () => {
         background: white;
         border: 1px dashed @grey-600;
         border-radius: @border-radius-lg;
+        pointer-events: none;
     }
 
     @container (max-width: 1200px) {
