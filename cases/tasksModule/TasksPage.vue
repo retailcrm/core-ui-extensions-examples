@@ -123,6 +123,7 @@
                             [$style['page__lane-cards_empty']]: lane.isVisuallyEmpty,
                         }"
                         :container-id="lane.id"
+                        :data-empty-label="t('board.empty')"
                         orientation="vertical"
                         @drop="moveTask"
                     >
@@ -218,13 +219,6 @@
                                 </span>
                             </footer>
                         </RemoteSortableItem>
-
-                        <div
-                            v-if="lane.isVisuallyEmpty"
-                            :class="$style['page__lane-empty']"
-                        >
-                            {{ t('board.empty') }}
-                        </div>
                     </RemoteSortableContainer>
                 </article>
             </section>
@@ -403,6 +397,23 @@ const setDragCancel = (task: Task) => {
     activity.value = { kind: 'cancel', title: task.title }
 }
 
+const applyTaskMove = (sourceLane: LaneId, targetLane: LaneId, itemId: string, targetIndex: number) => {
+    const sourceTasks = board.value[sourceLane]
+    const targetTasks = board.value[targetLane]
+    const sourceIndex = sourceTasks.findIndex(task => task.id === itemId)
+
+    if (sourceIndex < 0) {
+        activity.value = { kind: 'notFound', itemId }
+        return
+    }
+
+    const [task] = sourceTasks.splice(sourceIndex, 1)
+    const normalizedTargetIndex = Math.min(Math.max(targetIndex, 0), targetTasks.length)
+
+    targetTasks.splice(normalizedTargetIndex, 0, { ...task })
+    activity.value = { kind: 'moved', title: task.title, laneId: targetLane }
+}
+
 const moveTask = (event: RemoteSortableEvent) => {
     if (
         !event.accepted
@@ -411,29 +422,17 @@ const moveTask = (event: RemoteSortableEvent) => {
         || !isLaneId(event.sourceContainerId)
         || !isLaneId(event.targetContainerId)
     ) {
-        clearDragState()
         activity.value = { kind: 'ignored', itemId: event.itemId }
         return
     }
 
     const sourceLane = event.sourceContainerId
     const targetLane = event.targetContainerId
-    const sourceTasks = board.value[sourceLane]
-    const targetTasks = board.value[targetLane]
-    const sourceIndex = sourceTasks.findIndex(task => task.id === event.itemId)
+    const targetIndex = event.targetIndex
 
-    if (sourceIndex < 0) {
-        clearDragState()
-        activity.value = { kind: 'notFound', itemId: event.itemId }
-        return
-    }
-
-    const [task] = sourceTasks.splice(sourceIndex, 1)
-    const targetIndex = Math.min(Math.max(event.targetIndex, 0), targetTasks.length)
-
-    targetTasks.splice(targetIndex, 0, { ...task })
-    clearDragState()
-    activity.value = { kind: 'moved', title: task.title, laneId: targetLane }
+    queueMicrotask(() => {
+        applyTaskMove(sourceLane, targetLane, event.itemId, targetIndex)
+    })
 }
 
 const resetBoard = () => {
@@ -657,6 +656,24 @@ const resetBoard = () => {
         justify-content: center;
     }
 
+    &__lane-cards_empty::after {
+        .text-small();
+
+        content: attr(data-empty-label);
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+        padding: @spacing-s;
+        color: @grey-900;
+        text-align: center;
+        background: white;
+        border: 1px dashed @grey-600;
+        border-radius: @border-radius-lg;
+        pointer-events: none;
+    }
+
     &__lane-cards [data-dnd-placeholder='true'] {
         width: 100%;
         min-width: 0;
@@ -677,23 +694,6 @@ const resetBoard = () => {
         position: absolute;
         inset: 0;
         visibility: hidden;
-        pointer-events: none;
-    }
-
-    &__lane-empty {
-        .text-small();
-
-        display: flex;
-        flex: 1 1 auto;
-        align-items: center;
-        justify-content: center;
-        min-height: 100%;
-        padding: @spacing-s;
-        color: @grey-900;
-        text-align: center;
-        background: white;
-        border: 1px dashed @grey-600;
-        border-radius: @border-radius-lg;
         pointer-events: none;
     }
 
