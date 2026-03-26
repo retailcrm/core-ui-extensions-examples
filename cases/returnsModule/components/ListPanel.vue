@@ -92,8 +92,8 @@
                 </UiTableColumn>
 
                 <UiTableColumn
-                    width="88"
-                    min-width="88"
+                    width="140"
+                    min-width="140"
                     align="right"
                 >
                     <UiButton appearance="tertiary">
@@ -118,33 +118,14 @@
                 </template>
 
                 <template #footer-pagination>
-                    <UiTableFooterSection
-                        v-if="totalPages > 1"
-                        :class="$style['list-panel__table-pagination']"
-                    >
-                        <div :class="$style['list-panel__pagination']">
-                            <div
-                                :class="[
-                                    $style['list-panel__pagination-arrows'],
-                                    $style['list-panel__pagination-arrows_left'],
-                                    $style['list-panel__pagination-arrows_start']
-                                ]"
-                            >
-                                <UiTableFooterButton
-                                    :class="$style['list-panel__pagination-button']"
-                                    :disabled="currentPage === 1 || loading"
-                                    @click="emit('change-page', currentPage - 1)"
-                                >
-                                    {{ t('pagination.previous') }}
-                                </UiTableFooterButton>
-                            </div>
-
+                    <template v-if="totalPages > 1">
+                        <UiTableFooterSection :class="$style['list-panel__table-pagination']">
                             <div :class="$style['list-panel__pagination-list']">
                                 <UiTableFooterButton
-                                    :class="[
-                                        $style['list-panel__pagination-button'],
-                                        { [$style['list-panel__pagination-button_active']]: currentPage === 1 }
-                                    ]"
+                                    :class="{
+                                        [$style['list-panel__pagination-button']]: true,
+                                        [$style['list-panel__pagination-button_active']]: currentPage === 1
+                                    }"
                                     :disabled="loading"
                                     @click="emit('change-page', 1)"
                                 >
@@ -164,24 +145,28 @@
                                     {{ page }}
                                 </UiTableFooterButton>
                             </div>
+                        </UiTableFooterSection>
 
-                            <div
-                                :class="[
-                                    $style['list-panel__pagination-arrows'],
-                                    $style['list-panel__pagination-arrows_right'],
-                                    $style['list-panel__pagination-arrows_end']
-                                ]"
+                        <UiTableFooterSection :class="$style['list-panel__table-pagination']">
+                            <UiTableFooterButton
+                                :class="$style['list-panel__pagination-button']"
+                                :disabled="currentPage === 1 || loading"
+                                @click="emit('change-page', currentPage - 1)"
                             >
-                                <UiTableFooterButton
-                                    :class="$style['list-panel__pagination-button']"
-                                    :disabled="currentPage === totalPages || loading"
-                                    @click="emit('change-page', currentPage + 1)"
-                                >
-                                    {{ t('pagination.next') }}
-                                </UiTableFooterButton>
-                            </div>
-                        </div>
-                    </UiTableFooterSection>
+                                <ChevronLeft :aria-label="t('pagination.previous')" />
+                            </UiTableFooterButton>
+                        </UiTableFooterSection>
+
+                        <UiTableFooterSection :class="$style['list-panel__table-pagination']">
+                            <UiTableFooterButton
+                                :class="$style['list-panel__pagination-button']"
+                                :disabled="currentPage === totalPages || loading"
+                                @click="emit('change-page', currentPage + 1)"
+                            >
+                                <ChevronRight :aria-label="t('pagination.next')" />
+                            </UiTableFooterButton>
+                        </UiTableFooterSection>
+                    </template>
                 </template>
             </UiTable>
         </template>
@@ -204,6 +189,9 @@ import {
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+import ChevronLeft from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/chevron-left.svg'
+import ChevronRight from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/chevron-right.svg'
 
 import { formatCurrency, formatDateLabel, formatProductLine } from '../formatters'
 
@@ -329,64 +317,35 @@ const formatListProductLine = (item: ReturnItem) => {
 
   &__table-product {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: @spacing-xxs;
     min-width: 0;
   }
 
   &__product-name {
-      .text-small-accent();
-
     color: @black-500;
+    .text-small-accent();
   }
 
   &__product-details {
-      .text-tiny();
-
     color: @grey-900;
+    .text-tiny();
   }
 
   &__table-pagination {
-    width: 100%;
-  }
-
-  &__pagination {
+    --ui-v1-table-effective-padding-end: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
     justify-content: flex-end;
-    flex-wrap: wrap;
-  }
-
-  &__pagination-arrows {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  &__pagination-arrows_left {
-    order: 0;
-  }
-
-  &__pagination-arrows_right {
-    order: 2;
-  }
-
-  &__pagination-arrows_start {
-    padding-right: 8px;
-    border-right: 1px solid @grey-500;
-  }
-
-  &__pagination-arrows_end {
-    padding-left: 8px;
-    border-left: 1px solid @grey-500;
+    padding: @spacing-xs;
   }
 
   &__pagination-list {
-    order: 1;
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   &__pagination-button {
@@ -398,7 +357,6 @@ const formatListProductLine = (item: ReturnItem) => {
     justify-content: center;
     min-width: 36px;
     min-height: 36px;
-    padding: 0 @spacing-xs;
     border-radius: @border-radius-sm;
     color: @black-500;
     cursor: pointer;
@@ -425,6 +383,8 @@ const formatListProductLine = (item: ReturnItem) => {
       cursor: not-allowed;
       opacity: 0.5;
     }
+
+    svg { .square(24px); }
   }
 
   &__pagination-button_active {
@@ -437,12 +397,6 @@ const formatListProductLine = (item: ReturnItem) => {
 @container (max-width: 1180px) {
   .list-panel {
     &__head,
-    &__table-pagination {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    &__pagination,
     &__pagination-list {
       justify-content: flex-start;
     }
