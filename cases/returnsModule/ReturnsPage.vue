@@ -2,12 +2,6 @@
     <section :class="$style['returns-page']">
         <header :class="$style['returns-page__hero']">
             <div :class="$style['returns-page__hero-copy']">
-                <!--
-                <h1 :class="$style['returns-page__title']">
-                    {{ t('page.title') }}
-                </h1>
-                -->
-
                 <UiPageHeader
                     v-model:value="title"
                     :error="t('errors.titleRequired')"
@@ -15,9 +9,8 @@
                     invalid
                 >
                     <template #actions>
-                        <UiButton appearance="tertiary">
-                            Действия
-                            <IconCaretDown aria-hidden="true" />
+                        <UiButton appearance="primary" @click="openCreateDrawer()">
+                            {{ t('actions.createReturn') }}
                         </UiButton>
                     </template>
                 </UiPageHeader>
@@ -25,14 +18,6 @@
                 <p :class="$style['returns-page__subtitle']">
                     {{ t('page.subtitle') }}
                 </p>
-            </div>
-
-            <div :class="$style['returns-page__hero-actions']">
-                <div :class="$style['returns-page__hero-button']">
-                    <UiButton appearance="primary" @click="openCreateDrawer()">
-                        {{ t('actions.createReturn') }}
-                    </UiButton>
-                </div>
             </div>
         </header>
 
@@ -100,9 +85,6 @@ import { computed, onMounted, ref } from 'vue'
 import { useField, useHost } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
-import { watch } from 'vue'
-
-import IconCaretDown from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-down.svg'
 
 import EditorDrawer from './components/EditorDrawer.vue'
 import FilterPanel from './components/FilterPanel.vue'
@@ -129,7 +111,13 @@ settings.initialize()
 const i18n = useI18n()
 const t = i18n.t
 
-watch(locale, value => i18n.locale.value = value || 'ru-RU', { immediate: true })
+const customTitle = ref('')
+const title = computed({
+    get: () => t('page.title'),
+    set: (value: string) => {
+        customTitle.value = value
+    },
+})
 
 const host = useHost()
 
@@ -174,7 +162,6 @@ const hasOrderSearchAttempt = ref(false)
 
 const drawerOpened = computed(() => drawerMode.value !== 'closed')
 const totalPages = computed(() => Math.max(1, Math.ceil(listTotal.value / ITEMS_PER_PAGE)))
-const title = ref(t('page.title'))
 const drawerTitle = computed(() => {
     if (drawerMode.value === 'create') {
         return t('drawer.createTitle')
