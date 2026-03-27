@@ -1,27 +1,23 @@
 <template>
     <section :class="$style['promo-settings']">
-        <header :class="$style['promo-settings__header']">
-            <div>
-                <h2 :class="$style['promo-settings__title']">
-                    {{ t('title') }}
-                </h2>
+        <header>
+            <UiPageHeader :value="t('title')">
+                <template #actions>
+                    <UiTag :background="'#E0F2FE'" :class="$style['promo-settings__status-tag']">
+                        {{ t('status.draft') }}
+                    </UiTag>
 
-                <p :class="$style['promo-settings__subtitle']">
-                    {{ t('subtitle') }}
-                </p>
-            </div>
+                    <UiButton appearance="primary">
+                        {{ t('actions.save') }}
+                    </UiButton>
 
-            <div :class="$style['promo-settings__header-actions']">
-                <UiTag :class="$style['promo-settings__status-tag']" background="#E0F2FE">
-                    {{ t('status.draft') }}
-                </UiTag>
-                <UiButton appearance="primary">
-                    {{ t('actions.save') }}
-                </UiButton>
-                <UiButton appearance="outlined">
-                    {{ t('actions.preview') }}
-                </UiButton>
-            </div>
+                    <UiButton appearance="outlined">
+                        {{ t('actions.preview') }}
+                    </UiButton>
+                </template>
+            </UiPageHeader>
+
+            <p :class="$style['promo-settings__subtitle']" v-text="t('subtitle')" />
         </header>
 
         <UiAlert :class="$style['promo-settings__alert']" variant="warning" :text="t('alerts.draft')" />
@@ -391,6 +387,7 @@ import {
     UiField,
     UiLink,
     UiNumberStepper,
+    UiPageHeader,
     UiSelect,
     UiSelectOption,
     UiSwitch,
@@ -451,31 +448,10 @@ const webhook = ref('https://example.com/hooks/promotions')
     flex-direction: column;
     gap: 16px;
 
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    &__title {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0;
-    }
-
     &__subtitle {
         margin: 6px 0 0;
         color: #6b7280;
         font-size: 13px;
-    }
-
-    &__header-actions {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: wrap;
     }
 
     &__status-tag {
@@ -649,11 +625,6 @@ const webhook = ref('https://example.com/hooks/promotions')
         &__form-grid {
             grid-template-columns: 1fr;
         }
-
-        &__header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
     }
 }
 </style>
@@ -672,6 +643,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "test": "Test run",
         "export": "Export",
         "archive": "Archive"
+    },
+    "errors": {
+        "titleRequired": "Title is required."
     },
     "links": {
         "docs": "Documentation"
@@ -787,6 +761,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "test": "Тестовый запуск",
         "export": "Экспортировать",
         "archive": "Архивировать"
+    },
+    "errors": {
+        "titleRequired": "Заголовок обязателен."
     },
     "links": {
         "docs": "Документация"
