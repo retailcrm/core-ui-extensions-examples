@@ -1,40 +1,21 @@
 <template>
     <section :class="$style['returns-page']">
-        <header :class="$style['returns-page__hero']">
-            <div :class="$style['returns-page__hero-copy']">
-                <!--
-                <h1 :class="$style['returns-page__title']">
-                    {{ t('page.title') }}
-                </h1>
-                -->
+        <UiPageHeader
+            v-model:value="title"
+            :error="t('errors.titleRequired')"
+            editable
+            invalid
+        >
+            <template #actions>
+                <UiButton appearance="primary" size="md" @click="openCreateDrawer()">
+                    {{ t('actions.createReturn') }}
+                </UiButton>
+            </template>
+        </UiPageHeader>
 
-                <UiPageHeader
-                    v-model:value="title"
-                    :error="t('errors.titleRequired')"
-                    editable
-                    invalid
-                >
-                    <template #actions>
-                        <UiButton appearance="tertiary">
-                            Действия
-                            <IconCaretDown aria-hidden="true" />
-                        </UiButton>
-                    </template>
-                </UiPageHeader>
-
-                <p :class="$style['returns-page__subtitle']">
-                    {{ t('page.subtitle') }}
-                </p>
-            </div>
-
-            <div :class="$style['returns-page__hero-actions']">
-                <div :class="$style['returns-page__hero-button']">
-                    <UiButton appearance="primary" @click="openCreateDrawer()">
-                        {{ t('actions.createReturn') }}
-                    </UiButton>
-                </div>
-            </div>
-        </header>
+        <p :class="$style['returns-page__subtitle']">
+            {{ t('page.subtitle') }}
+        </p>
 
         <FilterPanel
             :value="appliedFilters"
@@ -100,9 +81,6 @@ import { computed, onMounted, ref } from 'vue'
 import { useField, useHost } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
-import { watch } from 'vue'
-
-import IconCaretDown from '@retailcrm/embed-ui-v1-components/assets/sprites/arrows/caret-down.svg'
 
 import EditorDrawer from './components/EditorDrawer.vue'
 import FilterPanel from './components/FilterPanel.vue'
@@ -129,7 +107,13 @@ settings.initialize()
 const i18n = useI18n()
 const t = i18n.t
 
-watch(locale, value => i18n.locale.value = value || 'ru-RU', { immediate: true })
+const customTitle = ref('')
+const title = computed({
+    get: () => t('page.title'),
+    set: (value: string) => {
+        customTitle.value = value
+    },
+})
 
 const host = useHost()
 
@@ -174,7 +158,6 @@ const hasOrderSearchAttempt = ref(false)
 
 const drawerOpened = computed(() => drawerMode.value !== 'closed')
 const totalPages = computed(() => Math.max(1, Math.ceil(listTotal.value / ITEMS_PER_PAGE)))
-const title = ref(t('page.title'))
 const drawerTitle = computed(() => {
     if (drawerMode.value === 'create') {
         return t('drawer.createTitle')
@@ -747,67 +730,17 @@ onMounted(async () => {
 .returns-page {
     .reset-box-sizing();
 
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: @spacing-s;
-  min-width: 0;
-  color: @black-500;
-
-  &__hero {
+    container-type: inline-size;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: @spacing-s;
-    min-width: 0;
-  }
-
-  &__hero-copy {
-    display: flex;
-    flex: 1 1 auto;
     flex-direction: column;
-    gap: @spacing-xs;
-    min-width: 0;
-    max-width: 680px;
-  }
-
-  &__title {
-    .h2-accent();
-    margin: 0;
-  }
-
-  &__subtitle {
-    color: @grey-900;
-    .text-small();
-    margin: 0;
-  }
-
-  &__hero-actions {
-    display: flex;
-    flex: 0 1 auto;
-    align-items: center;
     gap: @spacing-s;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
+    min-width: 0;
+    color: @black-500;
 
-  &__hero-button {
-    flex: 0 0 auto;
-  }
-
-}
-
-@container (max-width: 1180px) {
-  .returns-page {
-    &__hero,
-    &__hero-actions {
-      flex-direction: column;
-      align-items: stretch;
+    &__subtitle {
+        color: @grey-900;
+        .text-small();
+        margin: 0;
     }
-
-    &__hero-copy {
-      max-width: none;
-    }
-  }
 }
 </style>
