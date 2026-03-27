@@ -1,23 +1,18 @@
 <template>
     <section :class="$style['summary-page']">
-        <header :class="$style['summary-page__hero']">
-            <div>
-                <h1 :class="$style['summary-page__title']">
-                    {{ t('page.title') }}
-                </h1>
+        <header>
+            <UiPageHeader :value="t('page.title')">
+                <template #actions>
+                    <UiButton appearance="secondary" href="/modules/tasksModule/board">
+                        <IconBoard :class="$style['summary-page__action-icon']" aria-hidden="true" />
+                        {{ t('actions.openBoard') }}
+                    </UiButton>
+                </template>
+            </UiPageHeader>
 
-                <p :class="$style['summary-page__subtitle']">
-                    {{ t('page.subtitle') }}
-                </p>
-            </div>
-
-            <a
-                href="/modules/tasksModule/board"
-                :class="$style['summary-page__hero-link']"
-            >
-                <IconBoard :class="$style['summary-page__hero-link-icon']" aria-hidden="true" />
-                {{ t('actions.openBoard') }}
-            </a>
+            <p :class="$style['summary-page__subtitle']">
+                {{ t('page.subtitle') }}
+            </p>
         </header>
 
         <section :class="$style['summary-page__metrics']">
@@ -132,6 +127,7 @@
 import type { LaneId, Task } from './types'
 
 import { computed } from 'vue'
+import { UiButton, UiPageHeader } from '@retailcrm/embed-ui-v1-components/remote'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
@@ -233,44 +229,13 @@ const busiestMember = computed(() => {
     gap: @spacing-s;
     container-type: inline-size;
 
-    &__hero {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: @spacing-s;
-        padding: @spacing-m;
-        background: white;
-        border: 1px solid @grey-500;
-        border-radius: @border-radius-lg;
-    }
-
-    &__title {
-        .h2-accent();
-        margin: 0;
-    }
-
     &__subtitle {
         .text-regular();
-        margin: @spacing-xs 0 0;
+        margin: 0;
         color: @grey-900;
     }
 
-    &__hero-link {
-        .text-small-accent();
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: @spacing-xxs;
-        min-height: 40px;
-        padding: 0 @spacing-s;
-        color: @blue-600;
-        text-decoration: none;
-        background: white;
-        border: 1px solid @grey-500;
-        border-radius: @border-radius-md;
-    }
-
-    &__hero-link-icon {
+    &__action-icon {
         .square(16px);
 
         flex-shrink: 0;
@@ -399,12 +364,6 @@ const busiestMember = computed(() => {
         &__metrics,
         &__layout {
             grid-template-columns: 1fr;
-        }
-    }
-
-    @container (max-width: 680px) {
-        &__hero {
-            flex-direction: column;
         }
     }
 }

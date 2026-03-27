@@ -1,32 +1,23 @@
 <template>
     <section :class="$style['page']">
-        <header :class="$style['page__hero']">
-            <div :class="$style['page__hero-copy']">
-                <h1 :class="$style['page__title']">
-                    {{ t('page.title') }}
-                </h1>
+        <header>
+            <UiPageHeader :value="t('page.title')">
+                <template #actions>
+                    <UiButton
+                        appearance="secondary"
+                        href="/modules/tasksModule/summary"
+                    >
+                        <IconSummary aria-hidden="true" /> {{ t('actions.summary') }}
+                    </UiButton>
 
-                <p :class="$style['page__subtitle']">
-                    {{ t('page.subtitle') }}
-                </p>
+                    <UiButton appearance="secondary" @click="resetBoard">
+                        {{ t('actions.reset') }}
+                    </UiButton>
+                </template>
+            </UiPageHeader>
 
-                <p :class="$style['page__note']">
-                    {{ t('page.note') }}
-                </p>
-            </div>
-
-            <div :class="$style['page__hero-actions']">
-                <UiButton
-                    appearance="secondary"
-                    href="/modules/tasksModule/summary"
-                >
-                    <IconSummary aria-hidden="true" /> {{ t('actions.summary') }}
-                </UiButton>
-
-                <UiButton appearance="secondary" @click="resetBoard">
-                    {{ t('actions.reset') }}
-                </UiButton>
-            </div>
+            <p :class="$style['page__note']" v-text="t('page.subtitle')" />
+            <p :class="$style['page__note']" v-text="t('page.note')" />
         </header>
 
         <section :class="$style['page__metrics']">
@@ -243,6 +234,7 @@ import {
 } from '@omnicajs/vue-remote/remote'
 import {
     UiButton,
+    UiPageHeader,
     UiPopperConnector,
     UiPopperTarget,
     UiTooltip,
@@ -457,44 +449,6 @@ const resetBoard = () => {
     color: @black-500;
     container-type: inline-size;
 
-    &__hero {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: @spacing-s;
-        padding: @spacing-m;
-        background: white;
-        border: 1px solid @grey-500;
-        border-radius: @border-radius-lg;
-    }
-
-    &__hero-copy {
-        display: flex;
-        flex-direction: column;
-        gap: @spacing-xs;
-        max-width: 720px;
-    }
-
-    &__hero-actions {
-        display: flex;
-        align-items: center;
-        gap: @spacing-xs;
-        flex-shrink: 0;
-    }
-
-    &__title {
-        .h2-accent();
-
-        margin: 0;
-    }
-
-    &__subtitle {
-        .text-regular();
-
-        margin: 0;
-        color: @black-500;
-    }
-
     &__note {
         .text-small();
 
@@ -541,8 +495,6 @@ const resetBoard = () => {
 
         color: @grey-900;
     }
-
-    &__layout { display: block; }
 
     &__board-shell {
         overflow-x: auto;
@@ -697,22 +649,13 @@ const resetBoard = () => {
         pointer-events: none;
     }
 
-    @container (max-width: 1200px) {
-        &__layout { display: block; }
-    }
-
     @container (max-width: 960px) {
         &__metrics {
             grid-template-columns: 1fr;
         }
-
     }
 
     @container (max-width: 680px) {
-        &__hero {
-            flex-direction: column;
-        }
-
         &__lane {
             flex-basis: 320px;
             width: 320px;
