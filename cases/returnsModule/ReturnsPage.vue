@@ -2,23 +2,22 @@
     <section :class="$style['returns-page']">
         <header :class="$style['returns-page__hero']">
             <div :class="$style['returns-page__hero-copy']">
-                <!--
-                <h1 :class="$style['returns-page__title']">
-                    {{ t('page.title') }}
-                </h1>
-                -->
+                <UiPageHeader
+                    v-model:value="title"
+                    :error="t('errors.titleRequired')"
+                    editable
+                    invalid
+                >
+                    <template #actions>
+                        <UiButton appearance="primary" @click="openCreateDrawer()">
+                            {{ t('actions.createReturn') }}
+                        </UiButton>
+                    </template>
+                </UiPageHeader>
 
                 <p :class="$style['returns-page__subtitle']">
                     {{ t('page.subtitle') }}
                 </p>
-            </div>
-
-            <div :class="$style['returns-page__hero-actions']">
-                <div :class="$style['returns-page__hero-button']">
-                    <UiButton appearance="primary" @click="openCreateDrawer()">
-                        {{ t('actions.createReturn') }}
-                    </UiButton>
-                </div>
             </div>
         </header>
 
@@ -80,12 +79,12 @@ import type {
 } from './types'
 
 import { UiButton } from '@retailcrm/embed-ui-v1-components/remote'
+import { UiPageHeader } from '@retailcrm/embed-ui-v1-components/remote'
 
 import { computed, onMounted, ref } from 'vue'
 import { useField, useHost } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useSettingsContext as useSettings } from '@retailcrm/embed-ui'
-import { watch } from 'vue'
 
 import EditorDrawer from './components/EditorDrawer.vue'
 import FilterPanel from './components/FilterPanel.vue'
@@ -112,7 +111,13 @@ settings.initialize()
 const i18n = useI18n()
 const t = i18n.t
 
-watch(locale, value => i18n.locale.value = value || 'ru-RU', { immediate: true })
+const customTitle = ref('')
+const title = computed({
+    get: () => t('page.title'),
+    set: (value: string) => {
+        customTitle.value = value
+    },
+})
 
 const host = useHost()
 
@@ -554,7 +559,8 @@ onMounted(async () => {
         "loadOrders": "Failed to load orders:",
         "saveReturn": "Failed to save return:",
         "requiredDate": "Specify the return date.",
-        "requiredOrder": "Select an order."
+        "requiredOrder": "Select an order.",
+        "titleRequired": "Title is required."
     }
 }
 </i18n>
@@ -633,7 +639,8 @@ onMounted(async () => {
         "loadOrders": "No se pudieron cargar los pedidos:",
         "saveReturn": "No se pudo guardar la devolución:",
         "requiredDate": "Indique la fecha de la devolución.",
-        "requiredOrder": "Seleccione un pedido."
+        "requiredOrder": "Seleccione un pedido.",
+        "titleRequired": "El título es obligatorio."
     }
 }
 </i18n>
@@ -712,7 +719,8 @@ onMounted(async () => {
         "loadOrders": "Не удалось загрузить заказы:",
         "saveReturn": "Не удалось сохранить возврат:",
         "requiredDate": "Укажите дату возврата.",
-        "requiredOrder": "Выберите заказ."
+        "requiredOrder": "Выберите заказ.",
+        "titleRequired": "Заголовок обязателен."
     }
 }
 </i18n>

@@ -2,25 +2,28 @@
     <section :class="$style['promo-settings']">
         <header :class="$style['promo-settings__header']">
             <div>
-                <h2 :class="$style['promo-settings__title']">
-                    {{ t('title') }}
-                </h2>
+                <UiPageHeader
+                    v-model:value="title"
+                    :error="t('errors.titleRequired')"
+                    editable
+                    invalid
+                >
+                    <template #actions>
+                        <UiTag :class="$style['promo-settings__status-tag']" background="#E0F2FE">
+                            {{ t('status.draft') }}
+                        </UiTag>
+                        <UiButton appearance="primary">
+                            {{ t('actions.save') }}
+                        </UiButton>
+                        <UiButton appearance="outlined">
+                            {{ t('actions.preview') }}
+                        </UiButton>
+                    </template>
+                </UiPageHeader>
 
                 <p :class="$style['promo-settings__subtitle']">
                     {{ t('subtitle') }}
                 </p>
-            </div>
-
-            <div :class="$style['promo-settings__header-actions']">
-                <UiTag :class="$style['promo-settings__status-tag']" background="#E0F2FE">
-                    {{ t('status.draft') }}
-                </UiTag>
-                <UiButton appearance="primary">
-                    {{ t('actions.save') }}
-                </UiButton>
-                <UiButton appearance="outlined">
-                    {{ t('actions.preview') }}
-                </UiButton>
             </div>
         </header>
 
@@ -391,6 +394,7 @@ import {
     UiField,
     UiLink,
     UiNumberStepper,
+    UiPageHeader,
     UiSelect,
     UiSelectOption,
     UiSwitch,
@@ -399,6 +403,7 @@ import {
     UiTimePicker,
 } from '@retailcrm/embed-ui-v1-components/remote'
 
+import { computed } from 'vue'
 import { ref } from 'vue'
 import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
@@ -416,6 +421,14 @@ const i18n = useI18n()
 const t = i18n.t
 
 watch(locale, value => i18n.locale.value = value, { immediate: true })
+
+const customTitle = ref('')
+const title = computed({
+    get: () => t('title'),
+    set: (value: string) => {
+        customTitle.value = value
+    },
+})
 
 const promoName = ref('Весенняя распродажа')
 const promoCode = ref('PROMO-2026')
@@ -459,23 +472,10 @@ const webhook = ref('https://example.com/hooks/promotions')
         flex-wrap: wrap;
     }
 
-    &__title {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0;
-    }
-
     &__subtitle {
         margin: 6px 0 0;
         color: #6b7280;
         font-size: 13px;
-    }
-
-    &__header-actions {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: wrap;
     }
 
     &__status-tag {
@@ -673,6 +673,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "export": "Export",
         "archive": "Archive"
     },
+    "errors": {
+        "titleRequired": "Title is required."
+    },
     "links": {
         "docs": "Documentation"
     },
@@ -787,6 +790,9 @@ const webhook = ref('https://example.com/hooks/promotions')
         "test": "Тестовый запуск",
         "export": "Экспортировать",
         "archive": "Архивировать"
+    },
+    "errors": {
+        "titleRequired": "Заголовок обязателен."
     },
     "links": {
         "docs": "Документация"
