@@ -1,11 +1,11 @@
 {
     "dependencies": {
-        "@omnicajs/vue-remote": "^0.2.21",
+        "@omnicajs/vue-remote": "^0.2.23",
         "@remote-ui/rpc": "^1.4.7",
-        "@retailcrm/embed-ui": "^0.9.14",
-        "@retailcrm/embed-ui-v1-components": "^0.9.14",
-        "@retailcrm/embed-ui-v1-contexts": "^0.9.14",
-        "@retailcrm/embed-ui-v1-types": "^0.9.14",
+        "@retailcrm/embed-ui": "^0.9.15",
+        "@retailcrm/embed-ui-v1-components": "^0.9.15",
+        "@retailcrm/embed-ui-v1-contexts": "^0.9.15",
+        "@retailcrm/embed-ui-v1-types": "^0.9.15",
         "lodash": "^4.17.21",
         "pinia": "^2.2.8",
         "vue": "^3.5.13",
