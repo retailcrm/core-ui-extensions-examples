@@ -238,7 +238,7 @@ const formatListProductLine = (item: ReturnItem) => {
 }
 </script>
 
-<style module lang="less">
+<style lang="less" module>
 @import (reference) "~@retailcrm/embed-ui-v1-components/assets/stylesheets/variables.less";
 @import (reference) "~@retailcrm/embed-ui-v1-components/assets/stylesheets/typography.less";
 @import (reference) "~@retailcrm/embed-ui-v1-components/assets/stylesheets/geometry.less";
