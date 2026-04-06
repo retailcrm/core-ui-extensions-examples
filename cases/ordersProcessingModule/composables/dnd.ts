@@ -1,217 +1,180 @@
+import type {
+    MoveContext,
+    MoveSnapshot,
+    Order,
+    ProcessingGroup,
+} from '../types'
+
 import type { Ref } from 'vue'
 import type { RemoteSortableEvent } from '@omnicajs/vue-remote/remote'
 
-import type {
-    ColumnState,
-    ManagerOption,
-    MoveResult,
-    MoveSnapshot,
-    OrderCard,
-    ProcessingColumnId,
-} from '../types'
+import { useMoveRequest } from './api'
 
-interface UseProcessingDragAndDropOptions {
-    appliedAssigneeId: Ref<string>;
-    ensureColumnState: (columnId: string) => ColumnState;
-    getUnassignedLabel: () => string;
-    managers: Ref<ManagerOption[]>;
-    persistCardMove: (targetColumnId: ProcessingColumnId, itemId: string) => Promise<MoveResult>;
-    setBoardError: (message: string) => void;
-    transitions: Ref<Record<ProcessingColumnId, ProcessingColumnId[]>>;
-    transitionUnavailableMessage: () => string;
+import { ErrorCode, ProcessingStatus } from '../types'
+
+const isProcessingStatus = (value: string | null): value is ProcessingStatus => {
+    return value !== null && Object.values(ProcessingStatus).includes(value as ProcessingStatus)
 }
 
-const PROCESSING_COLUMN_IDS: ProcessingColumnId[] = [
-    'unassigned',
-    'assigned',
-    'in_progress',
-    'processed',
-]
+const isMoveAllowed = (
+    transitions: Ref<Record<ProcessingStatus, ProcessingStatus[]>>,
+    sourceColumnId: ProcessingStatus,
+    targetColumnId: ProcessingStatus
+) => {
+    return sourceColumnId === targetColumnId
+        || (transitions.value[sourceColumnId] || []).includes(targetColumnId)
+}
 
-// eslint-disable-next-line max-lines-per-function
-export const useProcessingDragAndDrop = ({
-    appliedAssigneeId,
-    ensureColumnState,
-    getUnassignedLabel,
-    managers,
-    persistCardMove,
-    setBoardError,
-    transitions,
-    transitionUnavailableMessage,
-}: UseProcessingDragAndDropOptions) => {
-    const isProcessingColumnId = (value: string | null): value is ProcessingColumnId => {
-        return value !== null && PROCESSING_COLUMN_IDS.includes(value as ProcessingColumnId)
+const isMoveAccepted = (event: RemoteSortableEvent) => {
+    return event.accepted
+        && event.targetIndex !== null
+        && isProcessingStatus(event.sourceContainerId)
+        && isProcessingStatus(event.targetContainerId)
+}
+
+const findGroup = (
+    columns: ProcessingGroup[],
+    columnId: ProcessingStatus
+) => columns.find(column => column.id === columnId) || null
+
+const findIndex = (items: Order[], itemId: string) => items.findIndex(item => String(item.id) === itemId)
+const restrictIndex = (targetIndex: number, orders: Order[]) => {
+    return Math.min(Math.max(targetIndex, 0), orders.length)
+}
+
+const createMoveSnapshot = (
+    sourceState: ProcessingGroup,
+    targetState: ProcessingGroup,
+    sourceColumnId: ProcessingStatus,
+    targetColumnId: ProcessingStatus,
+    sourceIndex: number,
+    targetIndex: number
+): MoveSnapshot => {
+    return {
+        item: { ...sourceState.orders[sourceIndex] },
+        sourceColumnId,
+        sourceIndex,
+        sourceTotalCount: sourceState.totalOrders,
+        targetColumnId,
+        targetIndex: restrictIndex(targetIndex, targetState.orders),
+        targetTotalCount: targetState.totalOrders,
+    }
+}
+
+const resolve = (event: RemoteSortableEvent) => isMoveAccepted(event) ? {
+    itemId: event.itemId,
+    sourceColumnId: event.sourceContainerId as ProcessingStatus,
+    targetColumnId: event.targetContainerId as ProcessingStatus,
+    targetIndex: event.targetIndex as number,
+} as MoveContext : null
+
+const capture = (
+    columns: Ref<ProcessingGroup[]>,
+    context: MoveContext
+): MoveSnapshot | null => {
+    const { sourceColumnId, targetColumnId, targetIndex } = context
+
+    const sourceState = findGroup(columns.value, sourceColumnId)
+    const targetState = findGroup(columns.value, targetColumnId)
+
+    if (!sourceState || !targetState) return null
+
+    const sourceIndex = findIndex(sourceState.orders, context.itemId)
+    if (sourceIndex < 0) return null
+
+    return createMoveSnapshot(
+        sourceState,
+        targetState,
+        sourceColumnId,
+        targetColumnId,
+        sourceIndex,
+        targetIndex
+    )
+}
+
+const apply = (
+    columns: Ref<ProcessingGroup[]>,
+    context: MoveContext
+) => {
+    const { sourceColumnId, targetColumnId } = context
+
+    const sourceState = findGroup(columns.value, sourceColumnId)
+    const targetState = findGroup(columns.value, targetColumnId)
+
+    if (!sourceState || !targetState) return
+
+    const sourceIndex = findIndex(sourceState.orders, context.itemId)
+    const targetIndex = restrictIndex(context.targetIndex, targetState.orders)
+
+    if (sourceIndex < 0) return
+
+    const order = { ...sourceState.orders[sourceIndex], processingStatus: targetColumnId }
+
+    sourceState.orders.splice(sourceIndex, 1)
+    targetState.orders.splice(targetIndex, 0, order)
+
+    if (sourceColumnId !== targetColumnId) {
+        sourceState.totalOrders = Math.max(0, sourceState.totalOrders - 1)
+        targetState.totalOrders += 1
+    }
+}
+
+const commit = (columns: Ref<ProcessingGroup[]>, order: Order, targetColumnId: ProcessingStatus) => {
+    const targetState = findGroup(columns.value, targetColumnId)
+    if (!targetState) return
+
+    const currentTargetIndex = targetState.orders.findIndex(entry => entry.id === order.id)
+    if (currentTargetIndex >= 0) {
+        targetState.orders.splice(currentTargetIndex, 1, order)
+    }
+}
+
+const rollback = (columns: Ref<ProcessingGroup[]>, snapshot: MoveSnapshot) => {
+    const sourceState = findGroup(columns.value, snapshot.sourceColumnId)
+    const targetState = findGroup(columns.value, snapshot.targetColumnId)
+
+    if (!sourceState || !targetState) return
+
+    const currentTargetIndex = targetState.orders.findIndex(item => item.id === snapshot.item.id)
+    if (currentTargetIndex >= 0) {
+        targetState.orders.splice(currentTargetIndex, 1)
     }
 
-    const getManagerName = (managerId: number | null) => {
-        if (!managerId) {
-            return getUnassignedLabel()
+    sourceState.orders.splice(snapshot.sourceIndex, 0, snapshot.item)
+    sourceState.totalOrders = snapshot.sourceTotalCount
+    targetState.totalOrders = snapshot.targetTotalCount
+}
+
+export const useMove = ({ groups, transitions, onError }: {
+    groups: Ref<ProcessingGroup[]>;
+    transitions: Ref<Record<ProcessingStatus, ProcessingStatus[]>>;
+    onError: (code: ErrorCode | null) => void;
+}) => {
+    const persist = useMoveRequest()
+
+    return async (event: RemoteSortableEvent) => {
+        const context = resolve(event)
+        if (!context) return
+
+        const { sourceColumnId, targetColumnId } = context
+
+        if (!isMoveAllowed(transitions, sourceColumnId, targetColumnId)) {
+            return onError(ErrorCode.TransitionUnavailable)
         }
 
-        return managers.value.find(manager => manager.id === managerId)?.name || getUnassignedLabel()
-    }
-
-    const resolveOptimisticAssigneeId = (card: OrderCard, targetColumnId: ProcessingColumnId) => {
-        if (targetColumnId === 'unassigned') {
-            return null
-        }
-
-        const filteredManagerId = Number(appliedAssigneeId.value)
-
-        if (Number.isFinite(filteredManagerId) && managers.value.some(manager => manager.id === filteredManagerId)) {
-            return filteredManagerId
-        }
-
-        if (card.assigneeId && managers.value.some(manager => manager.id === card.assigneeId)) {
-            return card.assigneeId
-        }
-
-        if (card.crmManagerId && managers.value.some(manager => manager.id === card.crmManagerId)) {
-            return card.crmManagerId
-        }
-
-        return managers.value[0]?.id ?? null
-    }
-
-    const buildOptimisticCard = (card: OrderCard, targetColumnId: ProcessingColumnId): OrderCard => {
-        const assigneeId = resolveOptimisticAssigneeId(card, targetColumnId)
-
-        return {
-            ...card,
-            processingStatus: targetColumnId,
-            assigneeId,
-            assigneeName: getManagerName(assigneeId),
-        }
-    }
-
-    const captureMoveSnapshot = (
-        sourceColumnId: ProcessingColumnId,
-        targetColumnId: ProcessingColumnId,
-        itemId: string,
-        targetIndex: number
-    ): MoveSnapshot | null => {
-        const sourceState = ensureColumnState(sourceColumnId)
-        const targetState = ensureColumnState(targetColumnId)
-        const sourceIndex = sourceState.items.findIndex(item => String(item.id) === itemId)
-
-        if (sourceIndex < 0) {
-            return null
-        }
-
-        return {
-            item: { ...sourceState.items[sourceIndex] },
-            sourceColumnId,
-            sourceIndex,
-            sourceTotalCount: sourceState.totalCount,
-            targetColumnId,
-            targetIndex: Math.min(Math.max(targetIndex, 0), targetState.items.length),
-            targetTotalCount: targetState.totalCount,
-        }
-    }
-
-    const applyLocalCardMove = (
-        sourceColumnId: ProcessingColumnId,
-        targetColumnId: ProcessingColumnId,
-        itemId: string,
-        targetIndex: number
-    ) => {
-        const sourceState = ensureColumnState(sourceColumnId)
-        const targetState = ensureColumnState(targetColumnId)
-        const sourceIndex = sourceState.items.findIndex(item => String(item.id) === itemId)
-
-        if (sourceIndex < 0) {
-            return
-        }
-
-        const [card] = sourceState.items.splice(sourceIndex, 1)
-        const normalizedTargetIndex = Math.min(Math.max(targetIndex, 0), targetState.items.length)
-
-        targetState.items.splice(normalizedTargetIndex, 0, buildOptimisticCard(card, targetColumnId))
-
-        if (sourceColumnId !== targetColumnId) {
-            sourceState.totalCount = Math.max(0, sourceState.totalCount - 1)
-            targetState.totalCount += 1
-        }
-    }
-
-    const rollbackLocalCardMove = (snapshot: MoveSnapshot) => {
-        const sourceState = ensureColumnState(snapshot.sourceColumnId)
-        const targetState = ensureColumnState(snapshot.targetColumnId)
-        const currentTargetIndex = targetState.items.findIndex(item => item.id === snapshot.item.id)
-
-        if (currentTargetIndex >= 0) {
-            targetState.items.splice(currentTargetIndex, 1)
-        }
-
-        sourceState.items.splice(snapshot.sourceIndex, 0, snapshot.item)
-        sourceState.totalCount = snapshot.sourceTotalCount
-        targetState.totalCount = snapshot.targetTotalCount
-    }
-
-    const replaceMovedCard = (targetColumnId: ProcessingColumnId, item: OrderCard) => {
-        const targetState = ensureColumnState(targetColumnId)
-        const currentTargetIndex = targetState.items.findIndex(entry => entry.id === item.id)
-
-        if (currentTargetIndex >= 0) {
-            targetState.items.splice(currentTargetIndex, 1, item)
-        }
-    }
-
-    const resolveMoveContext = (event: RemoteSortableEvent) => {
-        if (
-            !event.accepted
-            || event.targetIndex === null
-            || !isProcessingColumnId(event.sourceContainerId)
-            || !isProcessingColumnId(event.targetContainerId)
-        ) {
-            return null
-        }
-
-        return {
-            sourceColumnId: event.sourceContainerId,
-            targetColumnId: event.targetContainerId,
-            targetIndex: event.targetIndex,
-        }
-    }
-
-    const moveCard = async (event: RemoteSortableEvent) => {
-        const context = resolveMoveContext(event)
-
-        if (!context) {
-            return
-        }
-
-        const { sourceColumnId, targetColumnId, targetIndex } = context
-        const allowedTargets = transitions.value[sourceColumnId] || []
-
-        if (sourceColumnId !== targetColumnId && !allowedTargets.includes(targetColumnId)) {
-            setBoardError(transitionUnavailableMessage())
-            return
-        }
-
-        const snapshot = captureMoveSnapshot(sourceColumnId, targetColumnId, event.itemId, targetIndex)
+        const snapshot = capture(groups, context)
         if (!snapshot) return
 
-        applyLocalCardMove(sourceColumnId, targetColumnId, event.itemId, targetIndex)
+        apply(groups, context)
 
-        if (sourceColumnId === targetColumnId) {
-            setBoardError('')
-            return
-        }
+        if (sourceColumnId === targetColumnId) return onError(null)
 
-        const result = await persistCardMove(targetColumnId, event.itemId)
+        const { item: order, error } = await persist(targetColumnId, context.itemId)
 
-        if (!result.ok) {
-            rollbackLocalCardMove(snapshot)
-            setBoardError(result.error)
-            return
-        }
+        onError(error)
 
-        replaceMovedCard(targetColumnId, result.item)
-        setBoardError('')
-    }
-
-    return {
-        moveCard,
+        return order
+            ? commit(groups, order, targetColumnId)
+            : rollback(groups, snapshot)
     }
 }

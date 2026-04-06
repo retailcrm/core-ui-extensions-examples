@@ -1,4 +1,16 @@
-export type ProcessingColumnId = 'unassigned' | 'assigned' | 'in_progress' | 'processed'
+export enum ProcessingStatus {
+    Unassigned = 'unassigned',
+    Assigned = 'assigned',
+    InProgress = 'in_progress',
+    Processed = 'processed',
+}
+
+export enum ErrorCode {
+    LoadBoard = 'loadBoard',
+    LoadColumn = 'loadColumn',
+    MoveCard = 'moveCard',
+    TransitionUnavailable = 'transitionUnavailable',
+}
 
 export interface ManagerOption {
     id: number;
@@ -10,71 +22,58 @@ export interface DictionaryOption {
     name: string;
 }
 
-export interface ProcessingFilters {
+export interface OrderFilter {
     assigneeId: string;
-    crmStatus: string;
     orderType: string;
     site: string;
+    status: string;
 }
 
-export interface ProcessingColumn {
-    id: ProcessingColumnId;
-    title: string;
-    accent: string;
-}
-
-export interface OrderCard {
+export interface Order {
     id: number;
     number: string;
-    crmStatus: string;
-    crmStatusLabel: string;
-    processingStatus: ProcessingColumnId;
+    orderType: string;
+    orderTypeLabel: string;
+    site: string;
+    siteLabel: string;
     customerName: string;
     phone: string;
     totalSumm: number;
-    createdAt: string;
     assigneeId: number | null;
     assigneeName: string;
-    crmManagerId: number | null;
-    crmManagerName: string;
-    site: string;
-    siteLabel: string;
-    orderType: string;
-    orderTypeLabel: string;
     customerComment: string;
     managerComment: string;
+    status: string;
+    statusLabel: string;
+    createdAt: string;
+    processingStatus: ProcessingStatus;
 }
 
-export interface ColumnState {
-    items: OrderCard[];
+export interface ProcessingGroup {
+    id: ProcessingStatus;
+    accent: string;
+    orders: Order[];
     page: number;
     limit: number;
-    totalCount: number;
-    totalPageCount: number;
+    totalOrders: number;
+    totalPages: number;
+    initializing: boolean;
     loading: boolean;
-    loadingMore: boolean;
-    error: string;
+    error: ErrorCode | null;
 }
 
-export type ColumnStateGetter = (columnId: string) => ColumnState
-
-export interface ColumnView extends ProcessingColumn, ColumnState {
-    loadedCount: number;
-    hasMore: boolean;
-    isVisuallyEmpty: boolean;
+export interface ProcessingGroupFilter {
+    column: ProcessingStatus;
+    assigneeIds: string[];
+    statuses: string[];
+    orderTypes: string[];
+    sites: string[];
+    page: number;
+    limit: number;
 }
 
-export interface BootstrapPayload {
-    columns: ProcessingColumn[];
-    transitionsMap: Record<ProcessingColumnId, ProcessingColumnId[]>;
-    managers: Array<{ id: number; firstName: string; lastName: string }>;
-    crmStatuses: DictionaryOption[];
-    orderTypes: DictionaryOption[];
-    sites: DictionaryOption[];
-}
-
-export interface ColumnPayload {
-    items: OrderCard[];
+export interface ProcessingGroupPayload {
+    items: Order[];
     pagination: {
         currentPage: number;
         limit: number;
@@ -83,33 +82,23 @@ export interface ColumnPayload {
     };
 }
 
-export interface ColumnRequestPayload {
-    column: string;
-    page: number;
-    limit: number;
-    assigneeIds: string[];
-    crmStatuses: string[];
-    orderTypes: string[];
-    sites: string[];
-}
-
-export interface ProcessingLocationQuery {
-    assignee?: string;
-    crmStatus?: string;
-    orderType?: string;
-    site?: string;
+export type MoveContext = {
+    itemId: string;
+    sourceColumnId: ProcessingStatus;
+    targetColumnId: ProcessingStatus;
+    targetIndex: number;
 }
 
 export interface MoveSnapshot {
-    item: OrderCard;
-    sourceColumnId: ProcessingColumnId;
+    item: Order;
+    sourceColumnId: ProcessingStatus;
     sourceIndex: number;
     sourceTotalCount: number;
-    targetColumnId: ProcessingColumnId;
+    targetColumnId: ProcessingStatus;
     targetIndex: number;
     targetTotalCount: number;
 }
 
 export type MoveResult =
-    | { ok: true; item: OrderCard }
-    | { ok: false; error: string }
+    | { ok: true; item: Order, error: null }
+    | { ok: false; item: null, error: ErrorCode }

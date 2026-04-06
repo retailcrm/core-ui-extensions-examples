@@ -1,9 +1,8 @@
 import {
-    crmStatuses as mockCrmStatuses,
+    statuses as mockStatuses,
     managers as mockManagers,
     mockOrders,
     orderTypes as mockOrderTypes,
-    processingColumns,
     sites as mockSites,
     transitionsMap,
 } from '../data/orders-processing-reference.mjs'
@@ -20,7 +19,7 @@ const getRetailCrmClient = () => {
 
 const applyMockOrderFilters = (payload) => {
     const assigneeIds = Array.isArray(payload.assigneeIds) ? payload.assigneeIds.map(String) : []
-    const crmStatuses = Array.isArray(payload.crmStatuses) ? payload.crmStatuses.map(String) : []
+    const statuses = Array.isArray(payload.statuses) ? payload.statuses.map(String) : []
     const orderTypes = Array.isArray(payload.orderTypes) ? payload.orderTypes.map(String) : []
     const sites = Array.isArray(payload.sites) ? payload.sites.map(String) : []
 
@@ -29,7 +28,7 @@ const applyMockOrderFilters = (payload) => {
             return false
         }
 
-        if (crmStatuses.length > 0 && !crmStatuses.includes(order.status)) {
+        if (statuses.length > 0 && !statuses.includes(order.status)) {
             return false
         }
 
@@ -68,7 +67,7 @@ const fetchStatusesFromApi = async () => {
     ])
 
     return {
-        crmStatuses: statusesResponse.statuses,
+        statuses: statusesResponse.statuses,
         orderTypes: orderTypesResponse.orderTypes,
     }
 }
@@ -83,10 +82,9 @@ const fetchSitesFromApi = async () => {
 export const loadOrdersProcessingBootstrap = async () => {
     if (!isRetailCrmConfigured()) {
         return {
-            columns: processingColumns,
             transitionsMap,
             managers: mockManagers,
-            crmStatuses: mockCrmStatuses,
+            statuses: mockStatuses,
             orderTypes: mockOrderTypes,
             sites: mockSites,
         }
@@ -100,10 +98,9 @@ export const loadOrdersProcessingBootstrap = async () => {
         ])
 
         return {
-            columns: processingColumns,
             transitionsMap,
             managers,
-            crmStatuses: statuses.crmStatuses,
+            statuses: statuses.statuses,
             orderTypes: statuses.orderTypes,
             sites,
         }
@@ -111,10 +108,9 @@ export const loadOrdersProcessingBootstrap = async () => {
         console.error('Orders processing bootstrap fallback to mock mode', error)
 
         return {
-            columns: processingColumns,
             transitionsMap,
             managers: mockManagers,
-            crmStatuses: mockCrmStatuses,
+            statuses: mockStatuses,
             orderTypes: mockOrderTypes,
             sites: mockSites,
         }
@@ -150,7 +146,7 @@ export const loadOrdersProcessingOrders = async (payload) => {
             page,
             limit,
             assigneeIds: payload.assigneeIds || [],
-            crmStatuses: payload.crmStatuses || [],
+            statuses: payload.statuses || [],
             orderTypes: payload.orderTypes || [],
             sites: payload.sites || [],
             createdAtFrom: payload.createdAtFrom,

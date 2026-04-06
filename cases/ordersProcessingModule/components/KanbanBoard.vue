@@ -1,9 +1,9 @@
 <template>
     <div :class="$style['board-shell']">
-        <section v-if="initializing && columns.length === 0" :class="$style['board']">
+        <section v-if="initializing" :class="$style['board']">
             <article
-                v-for="column in 4"
-                :key="column"
+                v-for="i in 4"
+                :key="i"
                 :class="$style['column']"
             >
                 <header :class="$style['column__header']">
@@ -105,31 +105,31 @@
             :class="$style['board']"
         >
             <article
-                v-for="column in columns"
-                :key="column.id"
+                v-for="g in groups"
+                :key="g.id"
                 :class="$style['column']"
             >
                 <header
                     :class="$style['column__header']"
-                    :style="{ '--column-accent': column.accent }"
+                    :style="{ '--column-accent': g.accent }"
                 >
                     <div>
                         <h2 :class="$style['column__title']">
-                            {{ column.title }}
+                            {{ groupTitle(g.id) }}
                         </h2>
 
                         <p :class="$style['column__caption']">
-                            {{ t('board.columnLoaded', { loaded: column.loadedCount, total: column.totalCount }) }}
+                            {{ t('columnLoaded', { loaded: g.orders.length, total: g.totalOrders }) }}
                         </p>
                     </div>
 
-                    <UiTag :background="column.accent">
-                        {{ column.totalCount }}
+                    <UiTag :background="g.accent">
+                        {{ g.totalOrders }}
                     </UiTag>
                 </header>
 
                 <div
-                    v-if="column.loading && column.items.length === 0"
+                    v-if="g.initializing && g.orders.length === 0"
                     :class="$style['cards-loading']"
                 >
                     <article
@@ -204,36 +204,36 @@
                     :accepts="['order-processing-card']"
                     :class="{
                         [$style['cards']]: true,
-                        [$style['cards_empty']]: column.isVisuallyEmpty,
+                        [$style['cards_empty']]: g.orders.length === 0,
                     }"
-                    :container-id="column.id"
-                    :data-empty-label="t('board.emptyDropZone')"
+                    :container-id="g.id"
+                    :data-empty-label="t('emptyDropZone')"
                     orientation="vertical"
                     @drop="emit('move', $event)"
                 >
                     <RemoteSortableItem
-                        v-for="(item, index) in column.items"
+                        v-for="(item, index) in g.orders"
                         :key="item.id"
                         as="article"
                         :class="$style['order-card']"
-                        :container-id="column.id"
+                        :container-id="g.id"
                         :index="index"
                         :item-id="String(item.id)"
                         type="order-processing-card"
                         @dragcancel="emit('drag-cancel')"
                         @dragend="emit('drag-end')"
-                        @dragstart="emit('drag-start', item, column.id)"
+                        @dragstart="emit('drag-start', item, g.id)"
                     >
                         <div :class="$style['order-card__head']">
                             <RemoteDragHandle
                                 as="button"
                                 :class="$style['order-card__handle']"
                             >
-                                {{ t('card.dragHandle') }}
+                                {{ t('drag') }}
                             </RemoteDragHandle>
 
                             <UiLink
-                                :href="getOrderHref(item.id)"
+                                :href="router.generate('crm_orders_edit', { id: item.id })"
                                 :class="$style['order-card__number']"
                             >
                                 #{{ item.number }}
@@ -252,7 +252,7 @@
 
                         <div :class="$style['order-card__tags']">
                             <UiTag :background="'#EDF4FF'">
-                                {{ item.crmStatusLabel }}
+                                {{ item.statusLabel }}
                             </UiTag>
 
                             <UiTag :background="'#F3F4F6'">
@@ -263,7 +263,7 @@
                         <dl :class="$style['order-card__meta']">
                             <div :class="$style['order-card__meta-row']">
                                 <dt :class="$style['order-card__label']">
-                                    {{ t('card.fields.amount') }}
+                                    {{ t('amount') }}
                                 </dt>
 
                                 <dd :class="$style['order-card__value']">
@@ -273,7 +273,7 @@
 
                             <div :class="$style['order-card__meta-row']">
                                 <dt :class="$style['order-card__label']">
-                                    {{ t('card.fields.manager') }}
+                                    {{ t('manager') }}
                                 </dt>
 
                                 <dd :class="$style['order-card__value']">
@@ -283,7 +283,7 @@
 
                             <div :class="$style['order-card__meta-row']">
                                 <dt :class="$style['order-card__label']">
-                                    {{ t('card.fields.createdAt') }}
+                                    {{ t('createdAt') }}
                                 </dt>
 
                                 <dd :class="$style['order-card__value']">
@@ -295,41 +295,29 @@
                 </RemoteSortableContainer>
 
                 <footer :class="$style['column__footer']">
-                    <p
-                        v-if="column.error"
-                        :class="$style['column__error']"
-                    >
-                        {{ column.error }}
+                    <p v-if="g.error" :class="$style['column__error']">
+                        {{ t('columnLoadFailed') }}
                     </p>
 
-                    <span
-                        v-if="column.loadingMore"
-                        :class="$style['column__status']"
-                    >
-                        {{ t('board.loadingMore') }}
+                    <span v-if="g.loading" :class="$style['column__status']">
+                        {{ t('loadingMore') }}
                     </span>
 
-                    <span
-                        v-else-if="column.loading"
-                        :class="$style['column__status']"
-                    >
-                        {{ t('board.refreshingColumn') }}
+                    <span v-else-if="g.initializing" :class="$style['column__status']">
+                        {{ t('refreshingColumn') }}
                     </span>
 
                     <UiButton
-                        v-else-if="column.hasMore"
+                        v-else-if="g.page < g.totalPages"
                         appearance="secondary"
                         size="md"
-                        @click="emit('next', column.id)"
+                        @click="emit('next', g.id)"
                     >
-                        {{ t('actions.loadMore') }}
+                        {{ t('loadMore') }}
                     </UiButton>
 
-                    <span
-                        v-else
-                        :class="$style['column__end']"
-                    >
-                        {{ t('board.allCardsLoaded') }}
+                    <span v-else :class="$style['column__end']">
+                        {{ t('allCardsLoaded') }}
                     </span>
                 </footer>
             </article>
@@ -340,7 +328,7 @@
 <script lang="ts" remote setup>
 import type { RemoteSortableEvent } from '@omnicajs/vue-remote/remote'
 
-import type { ColumnView, OrderCard, ProcessingColumnId } from '../types'
+import type { Order, ProcessingGroup } from '../types'
 
 import {
     RemoteDragHandle,
@@ -359,20 +347,22 @@ import { useField } from '@retailcrm/embed-ui'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useSettingsContext as useSettings } from '@retailcrm/embed-ui'
 
+import { ProcessingStatus } from '../types'
+
 defineProps<{
-    columns: ColumnView[];
+    groups: ProcessingGroup[];
     initializing: boolean;
 }>()
 
 const emit = defineEmits<{
     move: [RemoteSortableEvent];
-    next: [string];
-    'drag-start': [OrderCard, ProcessingColumnId];
+    next: [ProcessingStatus];
+    'drag-start': [Order, ProcessingStatus];
     'drag-cancel': [];
     'drag-end': [];
 }>()
 
-const { t } = useI18n({ useScope: 'local' })
+const { t } = useI18n()
 
 const settings = useSettings()
 const locale = useField(settings, 'system.locale')
@@ -391,10 +381,79 @@ const formatCurrency = (value: number) => new Intl.NumberFormat(locale.value || 
     maximumFractionDigits: 0,
 }).format(value)
 
-const getOrderHref = (orderId: number) => {
-    return router.value.generate('crm_orders_edit', { id: orderId })
+const groupTitle = (status: ProcessingStatus): string => {
+    switch (status) {
+        case ProcessingStatus.Unassigned:
+            return t('unassigned')
+        case ProcessingStatus.Assigned:
+            return t('assigned')
+        case ProcessingStatus.InProgress:
+            return t('inProgress')
+        case ProcessingStatus.Processed:
+            return t('processed')
+    }
 }
 </script>
+
+<i18n locale="en-GB">
+{
+    "loadMore": "Show more",
+    "unassigned": "Unassigned",
+    "assigned": "Assigned",
+    "inProgress": "In progress",
+    "processed": "Processed",
+    "columnLoaded": "{loaded} of {total}",
+    "emptyDropZone": "Drop the order here",
+    "loadingMore": "Loading more...",
+    "refreshingColumn": "Refreshing column...",
+    "allCardsLoaded": "All cards are loaded",
+    "columnLoadFailed": "Failed to load the column.",
+    "drag": "Drag",
+    "amount": "Amount",
+    "manager": "Manager",
+    "createdAt": "Created"
+}
+</i18n>
+
+<i18n locale="es-ES">
+{
+    "loadMore": "Mostrar más",
+    "unassigned": "Sin asignar",
+    "assigned": "Asignado",
+    "inProgress": "En curso",
+    "processed": "Procesado",
+    "columnLoaded": "{loaded} de {total}",
+    "emptyDropZone": "Suelte aquí el pedido",
+    "loadingMore": "Cargando más...",
+    "refreshingColumn": "Actualizando columna...",
+    "allCardsLoaded": "Todas las tarjetas están cargadas",
+    "columnLoadFailed": "No se pudo cargar la columna.",
+    "drag": "Arrastrar",
+    "amount": "Importe",
+    "manager": "Gestor",
+    "createdAt": "Creado"
+}
+</i18n>
+
+<i18n locale="ru-RU">
+{
+    "loadMore": "Показать ещё",
+    "unassigned": "Не назначен",
+    "assigned": "Назначен",
+    "inProgress": "В работе",
+    "processed": "Обработан",
+    "columnLoaded": "{loaded} из {total}",
+    "emptyDropZone": "Перетащите сюда заказ",
+    "loadingMore": "Загружаем ещё...",
+    "refreshingColumn": "Обновляем колонку...",
+    "allCardsLoaded": "Все карточки загружены",
+    "columnLoadFailed": "Не удалось загрузить колонку.",
+    "drag": "Тянуть",
+    "amount": "Сумма",
+    "manager": "Менеджер",
+    "createdAt": "Создан"
+}
+</i18n>
 
 <style lang="less" module>
 @import (reference) "~@retailcrm/embed-ui-v1-components/assets/stylesheets/variables.less";
@@ -703,72 +762,3 @@ const getOrderHref = (orderId: number) => {
     gap: @spacing-xxs;
 }
 </style>
-
-<i18n locale="en-GB">
-{
-    "actions": {
-        "loadMore": "Show more"
-    },
-    "board": {
-        "columnLoaded": "{loaded} of {total}",
-        "emptyDropZone": "Drop the order here",
-        "loadingMore": "Loading more...",
-        "refreshingColumn": "Refreshing column...",
-        "allCardsLoaded": "All cards are loaded"
-    },
-    "card": {
-        "dragHandle": "Drag",
-        "fields": {
-            "amount": "Amount",
-            "manager": "Manager",
-            "createdAt": "Created"
-        }
-    }
-}
-</i18n>
-
-<i18n locale="es-ES">
-{
-    "actions": {
-        "loadMore": "Mostrar más"
-    },
-    "board": {
-        "columnLoaded": "{loaded} de {total}",
-        "emptyDropZone": "Suelte aquí el pedido",
-        "loadingMore": "Cargando más...",
-        "refreshingColumn": "Actualizando columna...",
-        "allCardsLoaded": "Todas las tarjetas están cargadas"
-    },
-    "card": {
-        "dragHandle": "Arrastrar",
-        "fields": {
-            "amount": "Importe",
-            "manager": "Gestor",
-            "createdAt": "Creado"
-        }
-    }
-}
-</i18n>
-
-<i18n locale="ru-RU">
-{
-    "actions": {
-        "loadMore": "Показать ещё"
-    },
-    "board": {
-        "columnLoaded": "{loaded} из {total}",
-        "emptyDropZone": "Перетащите сюда заказ",
-        "loadingMore": "Загружаем ещё...",
-        "refreshingColumn": "Обновляем колонку...",
-        "allCardsLoaded": "Все карточки загружены"
-    },
-    "card": {
-        "dragHandle": "Тянуть",
-        "fields": {
-            "amount": "Сумма",
-            "manager": "Менеджер",
-            "createdAt": "Создан"
-        }
-    }
-}
-</i18n>

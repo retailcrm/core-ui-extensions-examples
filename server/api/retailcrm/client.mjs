@@ -124,7 +124,7 @@ export const createRetailCrmClient = (overrides = {}) => {
         },
         async getOrders({
             assigneeIds = [],
-            crmStatuses = [],
+            statuses = [],
             createdAtFrom,
             createdAtTo,
             limit = 20,
@@ -137,7 +137,7 @@ export const createRetailCrmClient = (overrides = {}) => {
                 ['page', page],
                 ['limit', normalizedLimit],
                 ['filter[managers][]', assigneeIds],
-                ['filter[extendedStatus][]', crmStatuses],
+                ['filter[extendedStatus][]', statuses],
                 ['filter[orderTypes][]', orderTypes],
                 ['filter[sites][]', sites],
                 ['filter[createdAtFrom]', createdAtFrom],

@@ -22,19 +22,15 @@ const customerLastNames = [
 
 export const processingColumns = [{
     id: 'unassigned',
-    title: 'Не назначен',
     accent: '#FFE8C2',
 }, {
     id: 'assigned',
-    title: 'Назначен',
     accent: '#DDEBFF',
 }, {
     id: 'in_progress',
-    title: 'В работе',
     accent: '#D9F4EA',
 }, {
     id: 'processed',
-    title: 'Обработан',
     accent: '#E9E4FF',
 }]
 
@@ -107,7 +103,7 @@ export const managers = [{
     groups: [{ id: 503, name: 'VIP' }],
 }]
 
-export const crmStatuses = [{
+export const statuses = [{
     code: 'new',
     name: 'Новый',
     group: 'new',
@@ -162,7 +158,7 @@ export const sites = [{
 }]
 
 export const managerById = new Map(managers.map(manager => [manager.id, manager]))
-export const crmStatusByCode = new Map(crmStatuses.map(status => [status.code, status]))
+export const statusByCode = new Map(statuses.map(status => [status.code, status]))
 export const orderTypeByCode = new Map(orderTypes.map(type => [type.code, type]))
 export const siteByCode = new Map(sites.map(site => [site.code, site]))
 
@@ -177,7 +173,7 @@ export const mockOrders = Array.from({ length: 64 }, (_, index) => {
     const number = String(120500 + index)
     const firstName = customerFirstNames[index % customerFirstNames.length]
     const lastName = customerLastNames[(index * 2) % customerLastNames.length]
-    const crmStatus = crmStatuses[index % crmStatuses.length]
+    const status = statuses[index % statuses.length]
     const orderType = orderTypes[index % orderTypes.length]
     const site = sites[index % sites.length]
     const manager = managers[(index + 1) % managers.length]
@@ -186,7 +182,7 @@ export const mockOrders = Array.from({ length: 64 }, (_, index) => {
     return {
         id,
         number,
-        status: crmStatus.code,
+        status: status.code,
         createdAt: formatDateOffset(index),
         totalSumm: 1490 + (index % 9) * 730,
         firstName,

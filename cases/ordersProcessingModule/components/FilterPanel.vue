@@ -1,6 +1,6 @@
 <template>
     <section
-        v-if="isSkeletonVisible"
+        v-if="initializing"
         :class="$style['filters']"
     >
         <div
@@ -45,15 +45,15 @@
         :class="$style['filters']"
         @submit.prevent="submitDraft"
     >
-        <UiField id="orders-processing-manager" :label="t('filters.manager.label')">
+        <UiField id="orders-processing-manager" :label="t('managerLabel')">
             <UiSelect
                 id="orders-processing-manager"
                 :value="draft.assigneeId"
-                :placeholder="t('filters.manager.placeholder')"
+                :placeholder="t('managerPlaceholder')"
                 width="fluid"
                 @update:value="draft.assigneeId = String($event ?? '')"
             >
-                <UiSelectOption value="" :label="t('filters.manager.any')" />
+                <UiSelectOption value="" :label="t('managerAny')" />
                 <UiSelectOption
                     v-for="manager in managers"
                     :key="manager.id"
@@ -63,15 +63,15 @@
             </UiSelect>
         </UiField>
 
-        <UiField id="orders-processing-crm-status" :label="t('filters.status.label')">
+        <UiField id="orders-processing-crm-status" :label="t('statusLabel')">
             <UiSelect
                 id="orders-processing-crm-status"
-                :value="draft.crmStatus"
-                :placeholder="t('filters.status.placeholder')"
+                :value="draft.status"
+                :placeholder="t('statusPlaceholder')"
                 width="fluid"
-                @update:value="draft.crmStatus = String($event ?? '')"
+                @update:value="draft.status = String($event ?? '')"
             >
-                <UiSelectOption value="" :label="t('filters.status.any')" />
+                <UiSelectOption value="" :label="t('statusAny')" />
                 <UiSelectOption
                     v-for="statusOption in statuses"
                     :key="statusOption.code"
@@ -81,15 +81,15 @@
             </UiSelect>
         </UiField>
 
-        <UiField id="orders-processing-order-type" :label="t('filters.orderType.label')">
+        <UiField id="orders-processing-order-type" :label="t('orderTypeLabel')">
             <UiSelect
                 id="orders-processing-order-type"
                 :value="draft.orderType"
-                :placeholder="t('filters.orderType.placeholder')"
+                :placeholder="t('orderTypePlaceholder')"
                 width="fluid"
                 @update:value="draft.orderType = String($event ?? '')"
             >
-                <UiSelectOption value="" :label="t('filters.orderType.any')" />
+                <UiSelectOption value="" :label="t('orderTypeAny')" />
                 <UiSelectOption
                     v-for="type in orderTypes"
                     :key="type.code"
@@ -99,15 +99,15 @@
             </UiSelect>
         </UiField>
 
-        <UiField id="orders-processing-site" :label="t('filters.site.label')">
+        <UiField id="orders-processing-site" :label="t('siteLabel')">
             <UiSelect
                 id="orders-processing-site"
                 :value="draft.site"
-                :placeholder="t('filters.site.placeholder')"
+                :placeholder="t('sitePlaceholder')"
                 width="fluid"
                 @update:value="draft.site = String($event ?? '')"
             >
-                <UiSelectOption value="" :label="t('filters.site.any')" />
+                <UiSelectOption value="" :label="t('siteAny')" />
 
                 <UiSelectOption
                     v-for="siteOption in sites"
@@ -122,17 +122,17 @@
             <UiButton
                 appearance="secondary"
                 type="button"
-                :disabled="isApplying"
+                :disabled="applying"
                 @click="submitDraft"
             >
-                {{ t('actions.applyFilters') }}
+                {{ t('applyFilters') }}
             </UiButton>
 
             <UiButton
-                :aria-label="t('actions.resetFilters')"
+                :aria-label="t('resetFilters')"
                 appearance="secondary"
                 type="button"
-                :disabled="isApplying"
+                :disabled="applying"
                 @click="resetDraft"
             >
                 <IconClear aria-hidden="true" />
@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts" remote setup>
-import type { DictionaryOption, ManagerOption, ProcessingFilters } from '../types'
+import type { DictionaryOption, ManagerOption, OrderFilter } from '../types'
 
 import {
     UiButton,
@@ -159,35 +159,35 @@ import { watch } from 'vue'
 import IconClear from '@retailcrm/embed-ui-v1-components/assets/sprites/actions/clear.svg'
 
 const props = defineProps<{
+    filters: OrderFilter;
     managers: ManagerOption[];
     orderTypes: DictionaryOption[];
     sites: DictionaryOption[];
     statuses: DictionaryOption[];
-    filters: ProcessingFilters;
-    isApplying: boolean;
-    isSkeletonVisible: boolean;
+    applying: boolean;
+    initializing: boolean;
 }>()
 
 const emit = defineEmits<{
-    submit: [ProcessingFilters];
+    submit: [OrderFilter];
 }>()
 
-const { t } = useI18n({ useScope: 'local' })
+const { t } = useI18n()
 
-const createEmptyFilters = (): ProcessingFilters => ({
+const createEmptyFilters = (): OrderFilter => ({
     assigneeId: '',
     orderType: '',
     site: '',
-    crmStatus: '',
+    status: '',
 })
 
-const draft = reactive<ProcessingFilters>(createEmptyFilters())
+const draft = reactive<OrderFilter>(createEmptyFilters())
 
 watch(
     () => props.filters,
     value => {
         draft.assigneeId = value.assigneeId
-        draft.crmStatus = value.crmStatus
+        draft.status = value.status
         draft.orderType = value.orderType
         draft.site = value.site
     },
@@ -197,7 +197,7 @@ watch(
 const submitDraft = () => {
     emit('submit', {
         assigneeId: draft.assigneeId,
-        crmStatus: draft.crmStatus,
+        status: draft.status,
         orderType: draft.orderType,
         site: draft.site,
     })
@@ -205,7 +205,7 @@ const submitDraft = () => {
 
 const resetDraft = () => {
     draft.assigneeId = ''
-    draft.crmStatus = ''
+    draft.status = ''
     draft.orderType = ''
     draft.site = ''
 
@@ -244,93 +244,57 @@ const resetDraft = () => {
 
 <i18n locale="en-GB">
 {
-    "filters": {
-        "manager": {
-            "label": "Manager",
-            "placeholder": "Select manager",
-            "any": "All managers"
-        },
-        "orderType": {
-            "label": "Order type",
-            "placeholder": "Select order type",
-            "any": "All types"
-        },
-        "site": {
-            "label": "Site",
-            "placeholder": "Select site",
-            "any": "All sites"
-        },
-        "status": {
-            "label": "CRM status",
-            "placeholder": "Select CRM status",
-            "any": "All statuses"
-        }
-    },
-    "actions": {
-        "applyFilters": "Apply filters",
-        "resetFilters": "Reset filters"
-    }
+    "managerLabel": "Manager",
+    "managerPlaceholder": "Select manager",
+    "managerAny": "All managers",
+    "orderTypeLabel": "Order type",
+    "orderTypePlaceholder": "Select order type",
+    "orderTypeAny": "All types",
+    "siteLabel": "Site",
+    "sitePlaceholder": "Select site",
+    "siteAny": "All sites",
+    "statusLabel": "CRM status",
+    "statusPlaceholder": "Select CRM status",
+    "statusAny": "All statuses",
+    "applyFilters": "Apply filters",
+    "resetFilters": "Reset filters"
 }
 </i18n>
 
 <i18n locale="es-ES">
 {
-    "filters": {
-        "manager": {
-            "label": "Gestor",
-            "placeholder": "Seleccione gestor",
-            "any": "Todos los gestores"
-        },
-        "orderType": {
-            "label": "Tipo de pedido",
-            "placeholder": "Seleccione tipo de pedido",
-            "any": "Todos los tipos"
-        },
-        "site": {
-            "label": "Sitio",
-            "placeholder": "Seleccione sitio",
-            "any": "Todos los sitios"
-        },
-        "status": {
-            "label": "Estado CRM",
-            "placeholder": "Seleccione estado CRM",
-            "any": "Todos los estados"
-        }
-    },
-    "actions": {
-        "applyFilters": "Aplicar filtros",
-        "resetFilters": "Restablecer filtros"
-    }
+    "managerLabel": "Gestor",
+    "managerPlaceholder": "Seleccione gestor",
+    "managerAny": "Todos los gestores",
+    "orderTypeLabel": "Tipo de pedido",
+    "orderTypePlaceholder": "Seleccione tipo de pedido",
+    "orderTypeAny": "Todos los tipos",
+    "siteLabel": "Sitio",
+    "sitePlaceholder": "Seleccione sitio",
+    "siteAny": "Todos los sitios",
+    "statusLabel": "Estado CRM",
+    "statusPlaceholder": "Seleccione estado CRM",
+    "statusAny": "Todos los estados",
+    "applyFilters": "Aplicar filtros",
+    "resetFilters": "Restablecer filtros"
 }
 </i18n>
 
 <i18n locale="ru-RU">
 {
-    "filters": {
-        "manager": {
-            "label": "Менеджер",
-            "placeholder": "Выберите менеджера",
-            "any": "Все менеджеры"
-        },
-        "orderType": {
-            "label": "Тип заказа",
-            "placeholder": "Выберите тип заказа",
-            "any": "Все типы"
-        },
-        "site": {
-            "label": "Сайт",
-            "placeholder": "Выберите сайт",
-            "any": "Все сайты"
-        },
-        "status": {
-            "label": "CRM-статус",
-            "placeholder": "Выберите CRM-статус",
-            "any": "Все статусы"
-        }
-    },
-    "actions": {
-        "applyFilters": "Применить фильтр",
-        "resetFilters": "Сбросить фильтры"
-    }
+    "managerLabel": "Менеджер",
+    "managerPlaceholder": "Выберите менеджера",
+    "managerAny": "Все менеджеры",
+    "orderTypeLabel": "Тип заказа",
+    "orderTypePlaceholder": "Выберите тип заказа",
+    "orderTypeAny": "Все типы",
+    "siteLabel": "Сайт",
+    "sitePlaceholder": "Выберите сайт",
+    "siteAny": "Все сайты",
+    "statusLabel": "CRM-статус",
+    "statusPlaceholder": "Выберите CRM-статус",
+    "statusAny": "Все статусы",
+    "applyFilters": "Применить фильтр",
+    "resetFilters": "Сбросить фильтры"
 }
 </i18n>

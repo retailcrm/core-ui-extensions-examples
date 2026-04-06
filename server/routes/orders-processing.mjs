@@ -19,7 +19,7 @@ const processingColumnById = new Map(processingColumns.map(column => [column.id,
 const createDisplayMaps = (bootstrap) => {
     return {
         managerById: new Map(bootstrap.managers.map(manager => [manager.id, manager])),
-        crmStatusByCode: new Map(bootstrap.crmStatuses.map(status => [status.code, status])),
+        statusByCode: new Map(bootstrap.statuses.map(status => [status.code, status])),
         orderTypeByCode: new Map(bootstrap.orderTypes.map(orderType => [orderType.code, orderType])),
         siteByCode: new Map(bootstrap.sites.map(site => [site.code, site])),
     }
@@ -52,24 +52,22 @@ const resolveManagerName = (managerId, managerById) => {
 }
 
 const serializeCard = (order, state, maps) => {
-    const crmStatus = maps.crmStatusByCode.get(order.status)
+    const status = maps.statusByCode.get(order.status)
     const orderType = maps.orderTypeByCode.get(order.orderType)
     const site = maps.siteByCode.get(order.site)
 
     return {
         id: order.id,
         number: order.number,
-        crmStatus: order.status,
-        crmStatusLabel: crmStatus?.name || order.status,
+        status: order.status,
+        statusLabel: status?.name || order.status,
         processingStatus: state.processingStatus,
         customerName: `${order.firstName} ${order.lastName}`.trim(),
         phone: order.phone,
         totalSumm: order.totalSumm,
         createdAt: order.createdAt,
-        assigneeId: state.assigneeId,
-        assigneeName: resolveManagerName(state.assigneeId, maps.managerById),
-        crmManagerId: order.managerId,
-        crmManagerName: resolveManagerName(order.managerId, maps.managerById),
+        assigneeId: order.managerId,
+        assigneeName: resolveManagerName(order.managerId, maps.managerById),
         site: order.site,
         siteLabel: site?.name || order.site,
         orderType: order.orderType,
@@ -79,38 +77,11 @@ const serializeCard = (order, state, maps) => {
     }
 }
 
-const normalizeStateForManagers = (state, order, managerById) => {
-    if (!state) {
-        return null
-    }
-
-    if (state.assigneeId == null) {
-        return { ...state }
-    }
-
-    if (managerById.has(state.assigneeId)) {
-        return { ...state }
-    }
-
-    if (order.managerId && managerById.has(order.managerId)) {
-        return {
-            ...state,
-            assigneeId: order.managerId,
-        }
-    }
-
-    return {
-        ...state,
-        assigneeId: null,
-    }
-}
-
-const applyOrderFilters = async (payload, managerById) => {
-    const assigneeIds = normalizeStringArray(payload.assigneeIds).map(value => Number(value)).filter(Number.isFinite)
+const applyOrderFilters = async (payload) => {
     const apiResult = await loadOrdersProcessingOrders({
         ...payload,
-        assigneeIds: [],
-        crmStatuses: normalizeStringArray(payload.crmStatuses),
+        assigneeIds: normalizeStringArray(payload.assigneeIds),
+        statuses: normalizeStringArray(payload.statuses),
         orderTypes: normalizeStringArray(payload.orderTypes),
         sites: normalizeStringArray(payload.sites),
     })
@@ -120,59 +91,15 @@ const applyOrderFilters = async (payload, managerById) => {
         items: apiResult.orders
             .map(order => ({
                 order,
-                state: normalizeStateForManagers(states.get(order.id), order, managerById),
-            }))
-            .filter(entry => {
-                if (!entry.state) {
-                    return false
-                }
-
-                if (assigneeIds.length > 0 && !assigneeIds.includes(entry.state.assigneeId || -1)) {
-                    return false
-                }
-
-                return true
-            }),
+                state: states.get(order.id),
+            })),
         pagination: apiResult.pagination,
     }
 }
 
-const resolveNextAssigneeId = (targetColumnId, payloadAssigneeId, currentState, order, managerById) => {
-    if (targetColumnId === 'unassigned') {
-        return null
-    }
-
-    const normalizedPayloadAssigneeId = Number(payloadAssigneeId)
-
-    if (Number.isFinite(normalizedPayloadAssigneeId) && managerById.has(normalizedPayloadAssigneeId)) {
-        return normalizedPayloadAssigneeId
-    }
-
-    if (currentState.assigneeId && managerById.has(currentState.assigneeId)) {
-        return currentState.assigneeId
-    }
-
-    if (order.managerId && managerById.has(order.managerId)) {
-        return order.managerId
-    }
-
-    const firstManager = managerById.values().next().value
-
-    return firstManager?.id ?? null
-}
-
-const buildNextState = (targetColumnId, currentState, order, payloadAssigneeId, managerById) => {
-    const nextAssigneeId = resolveNextAssigneeId(
-        targetColumnId,
-        payloadAssigneeId,
-        currentState,
-        order,
-        managerById,
-    )
-
+const buildNextState = (targetColumnId, currentState) => {
     return {
         processingStatus: targetColumnId,
-        assigneeId: nextAssigneeId,
         takenAt: targetColumnId === 'in_progress' || targetColumnId === 'processed'
             ? (currentState.takenAt || new Date().toISOString())
             : null,
@@ -188,15 +115,14 @@ export const registerOrdersProcessingRoutes = (app, { urlencoded }) => {
             const bootstrap = await loadOrdersProcessingBootstrap()
 
             response.status(200).json({
-                columns: bootstrap.columns,
                 transitionsMap: bootstrap.transitionsMap,
                 managers: bootstrap.managers,
-                crmStatuses: bootstrap.crmStatuses,
+                statuses: bootstrap.statuses,
                 orderTypes: bootstrap.orderTypes,
                 sites: bootstrap.sites,
                 filters: {
                     assigneeIds: [],
-                    crmStatuses: [],
+                    statuses: [],
                     orderTypes: [],
                     sites: [],
                 },
@@ -220,7 +146,7 @@ export const registerOrdersProcessingRoutes = (app, { urlencoded }) => {
                 return
             }
 
-            const filtered = await applyOrderFilters(payload, maps.managerById)
+            const filtered = await applyOrderFilters(payload)
             const columnItems = filtered.items
                 .filter(entry => entry.state.processingStatus === columnId)
                 .sort((left, right) => right.order.createdAt.localeCompare(left.order.createdAt))
@@ -275,13 +201,7 @@ export const registerOrdersProcessingRoutes = (app, { urlencoded }) => {
                 return
             }
 
-            const nextState = buildNextState(
-                targetColumnId,
-                currentState,
-                order,
-                payload.assigneeId,
-                maps.managerById,
-            )
+            const nextState = buildNextState(targetColumnId, currentState)
             const persisted = await updateOrderProcessingState(orderId, nextState)
 
             response.status(200).json({
