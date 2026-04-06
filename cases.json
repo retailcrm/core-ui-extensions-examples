@@ -110,5 +110,10 @@
     "name": "tasksModule",
     "script": "tasksModule.js",
     "stylesheet": "tasksModule.css"
+  }, {
+    "uuid": "f1f66f07-6f07-4fbb-a8db-9e2543be5f28",
+    "name": "ordersProcessingModule",
+    "script": "ordersProcessingModule.js",
+    "stylesheet": "ordersProcessingModule.css"
   }
 ]}

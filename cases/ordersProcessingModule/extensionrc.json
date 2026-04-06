@@ -1,0 +1,21 @@
+{
+    "code": "ordersProcessingModule",
+    "name": "Обработка заказов",
+    "uuid": "f1f66f07-6f07-4fbb-a8db-9e2543be5f28",
+    "version": "0.1.0",
+    "entrypoint": "script",
+    "stylesheet": true,
+    "pages": [
+        {
+            "code": "board",
+            "menu": "activity_main_menu",
+            "menuItemOrdering": 17,
+            "menuItemTitle": {
+                "ru": "Обработка заказов",
+                "en": "Order processing",
+                "es": "Procesamiento de pedidos"
+            },
+            "pageHelpLink": null
+        }
+    ]
+}
