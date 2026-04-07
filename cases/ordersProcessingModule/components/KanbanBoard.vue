@@ -571,9 +571,6 @@ const groupTitle = (status: ProcessingStatus): string => {
     flex-direction: column;
     gap: @spacing-s;
     min-height: 240px;
-    border: 1px dashed #D1D5DB;
-    border-radius: @border-radius-lg;
-    padding: @spacing-s;
 }
 
 .cards [data-dnd-placeholder='true'] {
