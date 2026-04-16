@@ -16,6 +16,7 @@ make publish-case case=tasksModule
 ```
 
 Для `tasksModule` включен режим `entrypoint: "script"`, поэтому страница публикуется как JS endpoint.
+Для page-case скрипт публикации отправляет `integrations.embedJs.runner = "worker"`.
 
 ## URL страницы и меню
 

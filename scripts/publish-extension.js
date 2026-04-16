@@ -57,6 +57,7 @@ const manifestSchema = z.object({
     clientId: z.string().min(1).optional(),
     entrypoint: z.union([z.enum(['html', 'script']), z.string().min(1)]).optional(),
     entrypointType: z.enum(['html', 'script']).optional(),
+    runner: z.enum(['iframe', 'worker']).optional(),
 })
 
 const parsedManifest = manifestSchema.safeParse(manifestRaw)
@@ -101,6 +102,7 @@ const entrypointType = manifest.entrypoint === 'html' || manifest.entrypoint ===
 const pages = manifest.pages
 const hasTargets = Array.isArray(manifest.targets) && manifest.targets.length > 0
 const hasPages = Array.isArray(pages) && pages.length > 0
+const runner = manifest.runner
 
 if (!hasTargets && !hasPages) {
     console.error('Specify at least one target or page in extensionrc.json')
@@ -182,6 +184,7 @@ const extensionManifest = {
     version,
     entrypoint: archiveEntrypoint,
     scripts: [scriptFile],
+    runner,
 }
 
 if (hasTargets) {
@@ -222,6 +225,7 @@ try {
 
 const embedJs = {
     entrypoint,
+    runner,
 }
 
 if (hasTargets) {
