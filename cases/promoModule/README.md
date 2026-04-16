@@ -20,6 +20,7 @@
 Это значит:
 - в `dist/promoModule.zip` поле `manifest.json.entrypoint` будет указывать на собранный JS-файл,
 - в CRM по умолчанию уйдет `integrations.embedJs.entrypoint = "/extension/8ebe1617-d609-43e4-b35a-fbfae011eee3/script"`.
+- для page-case указывается `integrations.embedJs.runner = "worker"`.
 
 Что должно быть в кейсе:
 - `cases/<case>/extensionrc.json` с полями:
@@ -28,6 +29,7 @@
   - `uuid` — UUID модуля,
   - `version` — версия модуля,
   - `entrypoint` — `html`, `script` или явный URL/путь; в режиме `script` рецепт публикует JS как entrypoint внутри zip и переключает дефолтный CRM endpoint на `/extension/<uuid>/script`,
+  - `runner` — `iframe` или `worker`; если указан `pages`, должен быть `worker`,
   - `targets` — массив целей,
   - `stylesheet` — `true` (автоподстановка `/extension/<uuid>/stylesheet`) или строка,
   - `pages` — массив кодов страниц или объектов с меню и переводами (опционально),
@@ -81,6 +83,7 @@
     "order/card:common.after"
   ],
   "entrypoint": "https://example.com/extension/8ebe1617-d609-43e4-b35a-fbfae011eee3",
+  "runner": "worker",
   "stylesheet": "https://example.com/extension/8ebe1617-d609-43e4-b35a-fbfae011eee3/stylesheet",
   "pages": [
     {

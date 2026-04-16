@@ -28,6 +28,7 @@ make publish-case case=returnsModule
 Это значит:
 - в `dist/returnsModule.zip` поле `manifest.json.entrypoint` будет указывать на собранный JS-файл;
 - в CRM по умолчанию уйдет `integrations.embedJs.entrypoint = "/extension/79aa7a7a-3b66-4e85-b623-f7c1fef97bc7/script"`.
+- для page-case указывается `integrations.embedJs.runner = "worker"`.
 
 Также требуются переменные окружения в `.env`:
 - `CRM_API_HOST`
@@ -60,6 +61,7 @@ make publish-case case=returnsModule
   "uuid": "79aa7a7a-3b66-4e85-b623-f7c1fef97bc7",
   "version": "0.1.0",
   "entrypoint": "script",
+  "runner": "worker",
   "stylesheet": true,
   "pages": [
     {

@@ -30,6 +30,7 @@ make publish-case case=ordersProcessingModule
 
 - в `dist/ordersProcessingModule.zip` поле `manifest.json.entrypoint` будет указывать на собранный JS-файл;
 - в CRM по умолчанию уйдет `integrations.embedJs.entrypoint = "/extension/f1f66f07-6f07-4fbb-a8db-9e2543be5f28/script"`.
+- для page-case указывается `integrations.embedJs.runner = "worker"`.
 
 Также требуются переменные окружения в `.env`:
 
@@ -73,6 +74,7 @@ make publish-case case=ordersProcessingModule
   "uuid": "f1f66f07-6f07-4fbb-a8db-9e2543be5f28",
   "version": "0.1.0",
   "entrypoint": "script",
+  "runner": "worker",
   "stylesheet": true,
   "pages": [
     {

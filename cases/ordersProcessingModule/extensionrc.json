@@ -4,6 +4,7 @@
     "uuid": "f1f66f07-6f07-4fbb-a8db-9e2543be5f28",
     "version": "0.1.0",
     "entrypoint": "script",
+    "runner": "worker",
     "stylesheet": true,
     "pages": [
         {
