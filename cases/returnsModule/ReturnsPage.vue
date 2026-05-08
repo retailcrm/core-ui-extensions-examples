@@ -487,6 +487,7 @@ onMounted(async () => {
         "title": "Returns",
         "subtitle": "Demo registry of returns with filters, pagination and sidebar state stored in query string."
     },
+    "info": "A short description of the action is provided here.",
     "filters": {
         "title": "Filters",
         "note": "Filter the registry by exact date, status, order number or amount.",
@@ -567,6 +568,7 @@ onMounted(async () => {
         "title": "Devoluciones",
         "subtitle": "Registro de devoluciones con filtros, paginación y estado de la barra lateral guardado en el query string."
     },
+    "info": "Aquí se indica una breve descripción de la acción.",
     "filters": {
         "title": "Filtros",
         "note": "Filtre el registro por fecha exacta, estado, número de pedido o importe.",
@@ -647,6 +649,7 @@ onMounted(async () => {
         "title": "Возвраты",
         "subtitle": "Демо-реестр возвратов с фильтрами, пагинацией и состоянием шторки, сохраненными в query string."
     },
+    "info": "Здесь указывается короткое описание действия.",
     "filters": {
         "title": "Фильтры",
         "note": "Можно отфильтровать список по точной дате, статусу, номеру заказа и сумме.",
