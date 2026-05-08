@@ -143,14 +143,34 @@
         </div>
 
         <template #footer>
-            <div :class="$style['editor-drawer__actions']">
-                <UiButton appearance="secondary" :disabled="saving" @click="emit('update:opened', false)">
-                    {{ t('actions.cancel') }}
-                </UiButton>
+            <div :class="$style['editor-drawer__footer']">
+                <div :class="$style['editor-drawer__footer-main']">
+                    <UiButton appearance="primary" :disabled="saving" @click="emit('save')">
+                        {{ saving ? t('actions.saving') : t('actions.save') }}
+                    </UiButton>
 
-                <UiButton appearance="primary" :disabled="saving" @click="emit('save')">
-                    {{ saving ? t('actions.saving') : t('actions.save') }}
-                </UiButton>
+                    <UiButton appearance="secondary" :disabled="saving" @click="emit('update:opened', false)">
+                        {{ t('actions.cancel') }}
+                    </UiButton>
+                </div>
+
+                <UiPopconfirm
+                    :title="title"
+                    ok-variant="danger"
+                >
+                    <template #trigger>
+                        <UiButton
+                            aria-label="Delete"
+                            appearance="tertiary"
+                            :class="$style['editor-drawer__footer-delete']"
+                            variant="danger"
+                        >
+                            <IconDelete aria-hidden="true" />
+                        </UiButton>
+                    </template>
+
+                    {{ t('info') }}
+                </UiPopconfirm>
             </div>
         </template>
     </UiModalSidebar>
@@ -167,12 +187,15 @@ import {
     UiField,
     UiLoader,
     UiModalSidebar,
+    UiPopconfirm,
     UiSelect,
     UiSelectOption,
     UiTag,
     UiTextbox,
 } from '@retailcrm/embed-ui-v1-components/remote'
 import { useI18n } from 'vue-i18n'
+
+import IconDelete from  '@retailcrm/embed-ui-v1-components/assets/sprites/ui/delete-outlined.svg'
 
 import {
     formatCurrency,
@@ -289,6 +312,28 @@ const onOrderQueryChange = (value: string | number) => {
         display: flex;
         flex-direction: column;
         gap: @spacing-s;
+    }
+
+    &__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    &__footer-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    &__footer-delete {
+      color: @grey-800;
+    }
+
+    &__footer-delete:hover,
+    &__footer-delete:focus-visible {
+      color: @red-600;
     }
 
     &__grid {
