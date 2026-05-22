@@ -1,10 +1,10 @@
 TARGET_HEADER=@echo -e '===== \e[34m' $@ '\e[0m'
-YARN=docker-compose run --rm node yarn
+DOCKER_COMPOSE=$(shell command -v docker-compose >/dev/null 2>&1 && echo docker-compose || echo docker compose)
+YARN=$(DOCKER_COMPOSE) run --rm node yarn
 
-.PHONY: node_modules
 node_modules: package.json yarn.lock ## Installs dependencies
 	$(TARGET_HEADER)
-	@docker-compose run --rm node yarn install --silent
+	@$(YARN) install --silent
 	@touch node_modules || true
 
 .PHONY: build
@@ -19,20 +19,20 @@ build-dev: ## Builds the package
 
 start:
 	$(TARGET_HEADER)
-	@docker-compose up -d
+	@$(DOCKER_COMPOSE) up -d
 
 stop:
 	$(TARGET_HEADER)
-	@docker-compose stop
+	@$(DOCKER_COMPOSE) stop
 
 .PHONY: restart
 restart: ## Restarts all docker services or a particular service, if argument "service" is specified (example: make restart service="server").
 	$(TARGET_HEADER)
 
 ifdef service
-	yes | docker-compose rm -s -v $(service) && docker-compose up -d $(service)
+	yes | $(DOCKER_COMPOSE) rm -s -v $(service) && $(DOCKER_COMPOSE) up -d $(service)
 else
-	docker-compose stop && docker-compose up -d
+	$(DOCKER_COMPOSE) stop && $(DOCKER_COMPOSE) up -d
 endif
 
 .PHONY: help
