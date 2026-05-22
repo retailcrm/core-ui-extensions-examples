@@ -7,10 +7,6 @@
                         {{ t('status.draft') }}
                     </UiTag>
 
-                    <UiButton appearance="primary">
-                        {{ t('actions.save') }}
-                    </UiButton>
-
                     <UiButton appearance="outlined">
                         {{ t('actions.preview') }}
                     </UiButton>
@@ -374,6 +370,14 @@
                 </section>
             </aside>
         </div>
+
+        <UiPageFooter>
+            <template #actions>
+                <UiButton appearance="primary" variant="success">
+                    {{ t('actions.save') }}
+                </UiButton>
+            </template>
+        </UiPageFooter>
     </section>
 </template>
 
@@ -387,6 +391,7 @@ import {
     UiField,
     UiLink,
     UiNumberStepper,
+    UiPageFooter,
     UiPageHeader,
     UiSelect,
     UiSelectOption,
@@ -445,13 +450,14 @@ const webhook = ref('https://example.com/hooks/promotions')
 <style module lang="less">
 .promo-settings {
     display: flex;
+    padding-block-end: 24px;
     flex-direction: column;
     gap: 16px;
 
     &__subtitle {
-        margin: 6px 0 0;
         color: #6b7280;
         font-size: 13px;
+        margin: 6px 0 0;
     }
 
     &__status-tag {
