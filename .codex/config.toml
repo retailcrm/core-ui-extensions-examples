@@ -1,0 +1,2 @@
+[mcp_servers.retailcrm-embed-ui-v1-endpoint]
+command = "./node_modules/.bin/embed-ui-v1-endpoint-mcp"
