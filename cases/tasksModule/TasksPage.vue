@@ -605,18 +605,18 @@ const resetBoard = () => {
     }
 
     &__lane-cards_empty {
-        justify-content: center;
+        overflow: hidden;
     }
 
     &__lane-cards_empty::after {
         .text-small();
 
         content: attr(data-empty-label);
+        position: absolute;
+        inset: 0;
         display: flex;
-        flex: 1 1 auto;
         align-items: center;
         justify-content: center;
-        min-height: 100%;
         padding: @spacing-s;
         color: @grey-900;
         text-align: center;
