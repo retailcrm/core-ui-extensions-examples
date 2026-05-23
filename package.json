@@ -11,6 +11,12 @@
     "lint:fix": "eslint --fix cases",
     "typecheck": "vue-tsc --noEmit --project tsconfig.json"
   },
+  "resolutions": {
+    "nth-check@npm:^1.0.2": "npm:2.1.1",
+    "path-to-regexp@npm:0.1.10": "npm:0.1.13",
+    "qs@npm:6.13.0": "npm:6.14.1",
+    "serialize-javascript@npm:^6.0.2": "npm:7.0.5"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@intlify/vue-i18n-loader": "^4.2.0",
@@ -21,7 +27,6 @@
     "@retailcrm/embed-ui-v1-components": "^0.9.23-alpha.2",
     "@retailcrm/embed-ui-v1-contexts": "^0.9.23-alpha.2",
     "@retailcrm/embed-ui-v1-types": "^0.9.23-alpha.2",
-    "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
     "@vue/compiler-sfc": "^3.5.13",
@@ -48,7 +53,7 @@
     "mini-css-extract-plugin": "^2.9.4",
     "pinia": "^2.2.8",
     "postcss": "^8.5.3",
-    "terser-webpack-plugin": "^5.3.15",
+    "terser-webpack-plugin": "^5.6.0",
     "tslib": "^2.8.1",
     "typescript": "~5.9.3",
     "vue": "^3.5.13",
@@ -56,7 +61,7 @@
     "vue-loader": "^17.4.2",
     "vue-svg-loader": "^0.17.0-beta.2",
     "vue-tsc": "^3.2.5",
-    "webpack": "^5.103.0",
+    "webpack": "^5.107.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-manifest-plugin": "^5.0.0",
