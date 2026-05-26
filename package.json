@@ -12,9 +12,14 @@
     "typecheck": "vue-tsc --noEmit --project tsconfig.json"
   },
   "resolutions": {
+    "js-yaml@npm:^3.13.1": "npm:3.14.2",
+    "js-yaml@npm:^4.1.0": "npm:4.1.1",
+    "minimatch@npm:^10.1.1": "npm:10.2.4",
+    "minimatch@npm:^3.1.1": "npm:3.1.5",
+    "minimatch@npm:^3.1.2": "npm:3.1.5",
     "nth-check@npm:^1.0.2": "npm:2.1.1",
     "path-to-regexp@npm:0.1.10": "npm:0.1.13",
-    "qs@npm:6.13.0": "npm:6.14.1",
+    "qs@npm:6.13.0": "npm:6.15.2",
     "serialize-javascript@npm:^6.0.2": "npm:7.0.5"
   },
   "devDependencies": {
