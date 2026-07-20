@@ -176,6 +176,29 @@ Page-case с kanban-доской задач для пользователей CR
 
 ## Запуск
 
+### Browser-тесты worker-расширений
+
+Worker-based cases проверяются в реальном Chromium через Vitest Browser и
+`@retailcrm/embed-ui-v1-sandbox`. Suite запускает настоящий `cases/<name>/index.ts`,
+монтирует page или widget runner и подменяет только backend-вызовы `host.httpCall`.
+CRM, `server.mjs` и опубликованный delivery URL для этих тестов не нужны.
+
+Перед первым запуском установите Chromium:
+
+```bash
+yarn test:browsers:install
+```
+
+Запуск browser suite:
+
+```bash
+yarn test:browser
+```
+
+Тесты находятся в `tests/browser`. Сейчас suite поддерживает только cases с
+`"runner": "worker"`: `promoModule`, `returnsModule`, `tasksModule` и
+`ordersProcessingModule`. Legacy iframe-cases в browser suite не входят.
+
 ### Начальное развертывание
 
 Установка зависимостей

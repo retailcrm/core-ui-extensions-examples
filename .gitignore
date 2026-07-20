@@ -14,4 +14,7 @@ node_modules/
 
 .DS_Store
 
+.vitest-attachments/
+artifacts/
+
 server/data/orders-processing-state.json

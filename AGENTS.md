@@ -194,8 +194,16 @@
 
 Перед завершением UI-задачи по возможности прогонять релевантные проверки:
 
+- `yarn test:browser` для worker-based extension cases
 - `yarn lint`
 - `yarn typecheck`
 - `yarn build`
+
+Browser integration tests находятся в `tests/browser` и запускают настоящие
+entrypoints из `cases/*` через публичный API
+`@retailcrm/embed-ui-v1-sandbox/automation/browser`. Они должны мокать только
+`host.httpCall`, проверять пользовательское поведение и завершать runtime после
+каждого теста. Добавлять в этот suite можно только cases с `runner: "worker"`;
+legacy iframe-cases здесь не поддерживаются.
 
 Если проверка не запускалась или уперлась в окружение, это нужно явно сообщать.

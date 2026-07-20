@@ -206,6 +206,48 @@ export default [
             ...typescriptRules,
         },
     },
+    {
+        files: ['tests/**/*.ts'],
+        languageOptions: {
+            parser: tsParser,
+            sourceType: 'module',
+            globals: globals.browser,
+        },
+        plugins: {
+            dependencies: dependenciesPlugin,
+            '@typescript-eslint': tsPlugin,
+            import: importPlugin,
+            'unused-imports': unusedImportsPlugin,
+        },
+        rules: {
+            ...tsRecommendedRules,
+            ...commonRules,
+            ...importSortingRules,
+            ...typescriptRules,
+            'max-lines-per-function': 'off',
+            'no-undef': 'off',
+        },
+    },
+    {
+        files: ['vitest.config.browser.ts'],
+        languageOptions: {
+            parser: tsParser,
+            sourceType: 'module',
+            globals: globals.node,
+        },
+        plugins: {
+            dependencies: dependenciesPlugin,
+            '@typescript-eslint': tsPlugin,
+            import: importPlugin,
+            'unused-imports': unusedImportsPlugin,
+        },
+        rules: {
+            ...tsRecommendedRules,
+            ...commonRules,
+            ...importSortingRules,
+            ...typescriptRules,
+        },
+    },
     ...vuePlugin.configs['flat/recommended'].map((config) => ({
         ...config,
         files: ['cases/**/*.vue'],
