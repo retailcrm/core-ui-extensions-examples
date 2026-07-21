@@ -1,11 +1,11 @@
 import type { OrderSandboxSchemas } from '@retailcrm/embed-ui-v1-sandbox/scenario'
-import type { ReturnRecord } from '../../../cases/returnsModule/types'
+import type { ReturnRecord } from '@cases/returnsModule/types'
 import type {
     SandboxHostMiddleware,
     SandboxHttpCallRequest,
 } from '@retailcrm/embed-ui-v1-sandbox/core'
 
-import { ReturnStatus } from '../../../cases/returnsModule/enums'
+import { ReturnStatus } from '@cases/returnsModule/enums'
 
 type ReturnsPayload = {
     filters?: {
@@ -23,31 +23,31 @@ type ReturnPayload = {
 }
 
 const returns: ReturnRecord[] = [{
-    amount: 2270,
-    date: '2026-03-16',
     id: 7001,
-    items: [{ name: 'Куртка Trail', price: 590, quantity: 1 }],
+    date: '2026-03-16',
+    status: ReturnStatus.New,
     order: {
-        amount: 2270,
-        customer: 'Анна Смирнова',
         id: 1,
-        items: [{ name: 'Куртка Trail', price: 590, quantity: 1 }],
         number: '100241',
+        customer: 'Анна Смирнова',
+        amount: 2270,
+        items: [{ name: 'Куртка Trail', quantity: 1, price: 590 }],
     },
-    status: ReturnStatus.New,
+    amount: 2270,
+    items: [{ name: 'Куртка Trail', quantity: 1, price: 590 }],
 }, {
-    amount: 1840,
-    date: '2026-03-12',
     id: 7005,
-    items: [{ name: 'Фонарик Spark', price: 1840, quantity: 1 }],
-    order: {
-        amount: 10540,
-        customer: 'Виктория Соколова',
-        id: 5,
-        items: [{ name: 'Фонарик Spark', price: 1840, quantity: 2 }],
-        number: '100245',
-    },
+    date: '2026-03-12',
     status: ReturnStatus.New,
+    order: {
+        id: 5,
+        number: '100245',
+        customer: 'Виктория Соколова',
+        amount: 10540,
+        items: [{ name: 'Фонарик Spark', quantity: 2, price: 1840 }],
+    },
+    amount: 1840,
+    items: [{ name: 'Фонарик Spark', quantity: 1, price: 1840 }],
 }]
 
 const supportedActions = [
@@ -60,8 +60,8 @@ const supportedActions = [
 
 export const createReturnsHttpMiddleware = (): SandboxHostMiddleware<OrderSandboxSchemas> => {
     return async request => ({
-        body: JSON.stringify(resolveReturnsRequest(request)),
         status: supportedActions.includes(request.action) ? 200 : 404,
+        body: JSON.stringify(resolveReturnsRequest(request)),
     })
 }
 
@@ -90,7 +90,7 @@ const resolveReturnsRequest = (request: SandboxHttpCallRequest): unknown => {
 
     if (request.action === '/returns/save') return { ok: true }
 
-    return { error: `Unsupported action: ${request.action}`, ok: false }
+    return { ok: false, error: `Unsupported action: ${request.action}` }
 }
 
 const parsePayload = <T extends object>(payload: SandboxHttpCallRequest['payload']): T => {

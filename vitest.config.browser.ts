@@ -22,6 +22,7 @@ export default defineConfig({
                 __dirname,
                 'node_modules/@retailcrm/embed-ui-v1-components'
             ),
+            '@cases': join(__dirname, 'cases'),
         },
     },
     optimizeDeps: {

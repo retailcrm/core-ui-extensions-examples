@@ -229,7 +229,7 @@ export default [
         },
     },
     {
-        files: ['vitest.config.browser.ts'],
+        files: ['vitest.config*.ts'],
         languageOptions: {
             parser: tsParser,
             sourceType: 'module',

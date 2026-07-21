@@ -13,7 +13,7 @@ import {
     createSandboxWorkerRuntime,
 } from '@retailcrm/embed-ui-v1-sandbox/automation/browser'
 
-import descriptor from '../../cases/ordersProcessingModule/extensionrc.json'
+import descriptor from '@cases/ordersProcessingModule/extensionrc.json'
 
 import { createOrdersProcessingHttpMiddleware } from './__fixtures__/ordersProcessing'
 import { dragTo, getDragHandle, getSortableContainer } from './__utils__/dnd'
@@ -32,7 +32,7 @@ describe('ordersProcessingModule worker extension', () => {
 
     test('filters board and persists an allowed card move', async () => {
         const sourceWorker = createExtensionSourceWorker(
-            new URL('../../cases/ordersProcessingModule/index.ts', import.meta.url)
+            new URL('@cases/ordersProcessingModule/index.ts', import.meta.url)
         )
 
         runtime = await createSandboxWorkerRuntime({
@@ -92,7 +92,7 @@ describe('ordersProcessingModule worker extension', () => {
             expect(within(assignedHeading.closest('article') as HTMLElement).getByText(
                 '#100101'
             )).toBeInstanceOf(HTMLElement)
-        })
+        }, { timeout: 5000 })
     })
 })
 

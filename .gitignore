@@ -11,6 +11,7 @@ node_modules/
 .yarn/install-state.gz
 
 .env
+.env.sandbox
 
 .DS_Store
 
