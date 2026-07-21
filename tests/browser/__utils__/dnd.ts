@@ -1,3 +1,5 @@
+import { waitFor } from '@testing-library/dom'
+
 type Coordinates = {
     clientX: number;
     clientY: number;
@@ -32,20 +34,49 @@ const center = (element: Element): Coordinates => {
     }
 }
 
-export const dragTo = (handle: HTMLElement, target: HTMLElement) => {
+const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+
+const waitForAttribute = async (
+    element: HTMLElement,
+    attribute: string
+) => {
+    await waitFor(() => {
+        if (element.getAttribute(attribute) !== 'true') {
+            throw new Error(`Element did not receive ${attribute}.`)
+        }
+    })
+}
+
+export const dragTo = async (handle: HTMLElement, target: HTMLElement) => {
+    handle.scrollIntoView({ block: 'center', inline: 'center' })
+    await nextFrame()
+
     const start = center(handle)
 
     handle.dispatchEvent(pointer('pointerdown', start))
-    target.scrollIntoView({ block: 'center', inline: 'center' })
-
-    const end = center(target)
-
     document.dispatchEvent(pointer('pointermove', {
         clientX: start.clientX + 10,
         clientY: start.clientY + 10,
     }))
+
+    const source = handle.closest('[data-dnd-sortable-item="true"]')
+
+    if (!(source instanceof HTMLElement)) {
+        throw new Error('Sortable source was not rendered.')
+    }
+
+    await waitForAttribute(source, 'data-dnd-dragging')
+
+    target.scrollIntoView({ block: 'center', inline: 'center' })
+    await nextFrame()
+
+    const end = center(target)
+
     document.dispatchEvent(pointer('pointermove', end))
+    await waitForAttribute(target, 'data-dnd-drag-over')
+
     document.dispatchEvent(pointer('pointerup', end))
+    await nextFrame()
 }
 
 export const getSortableContainer = (heading: HTMLElement): HTMLElement => {

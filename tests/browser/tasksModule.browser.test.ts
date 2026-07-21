@@ -12,7 +12,7 @@ import {
     createSandboxWorkerRuntime,
 } from '@retailcrm/embed-ui-v1-sandbox/automation/browser'
 
-import descriptor from '../../cases/tasksModule/extensionrc.json'
+import descriptor from '@cases/tasksModule/extensionrc.json'
 
 import { dragTo, getDragHandle, getSortableContainer } from './__utils__/dnd'
 
@@ -28,7 +28,16 @@ describe('tasksModule worker extension', () => {
     })
 
     test('renders board and moves task between columns', async () => {
-        runtime = await createTasksRuntime()
+        const sourceWorker = createExtensionSourceWorker(
+            new URL('@cases/tasksModule/index.ts', import.meta.url)
+        )
+
+        runtime = await createSandboxWorkerRuntime({
+            descriptorUuid: descriptor.code,
+            ready: sourceWorker.ready,
+            worker: sourceWorker.worker,
+        })
+
         await runtime.runPage(descriptor.pages[0].code)
 
         expect(await screen.findByRole('heading', { name: 'Доска задач CRM' })).toBeInstanceOf(HTMLElement)
@@ -38,7 +47,7 @@ describe('tasksModule worker extension', () => {
         })
         const targetHeading = screen.getByRole('heading', { name: 'В работе' })
 
-        dragTo(getDragHandle(taskTitle), getSortableContainer(targetHeading))
+        await dragTo(getDragHandle(taskTitle), getSortableContainer(targetHeading))
 
         await waitFor(async () => {
             await runtime?.flush()
@@ -49,7 +58,16 @@ describe('tasksModule worker extension', () => {
     })
 
     test('renders summary metrics', async () => {
-        runtime = await createTasksRuntime()
+        const sourceWorker = createExtensionSourceWorker(
+            new URL('@cases/tasksModule/index.ts', import.meta.url)
+        )
+
+        runtime = await createSandboxWorkerRuntime({
+            descriptorUuid: descriptor.code,
+            ready: sourceWorker.ready,
+            worker: sourceWorker.worker,
+        })
+
         await runtime.runPage(descriptor.pages[1].code)
 
         expect(await screen.findByRole('heading', { name: 'Сводка по задачам' })).toBeInstanceOf(HTMLElement)
@@ -59,15 +77,3 @@ describe('tasksModule worker extension', () => {
         expect(screen.getByRole('heading', { name: 'Фокус сейчас' })).toBeInstanceOf(HTMLElement)
     })
 })
-
-const createTasksRuntime = async () => {
-    const sourceWorker = createExtensionSourceWorker(
-        new URL('../../cases/tasksModule/index.ts', import.meta.url)
-    )
-
-    return createSandboxWorkerRuntime({
-        descriptorUuid: descriptor.code,
-        ready: sourceWorker.ready,
-        worker: sourceWorker.worker,
-    })
-}

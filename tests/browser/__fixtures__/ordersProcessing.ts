@@ -1,15 +1,15 @@
-import type { Order } from '../../../cases/ordersProcessingModule/types'
+import type { Order } from '@cases/ordersProcessingModule/types'
 import type { OrderSandboxSchemas } from '@retailcrm/embed-ui-v1-sandbox/scenario'
 import type {
     SandboxHostMiddleware,
     SandboxHttpCallRequest,
 } from '@retailcrm/embed-ui-v1-sandbox/core'
 
-import { ProcessingStatus } from '../../../cases/ordersProcessingModule/types'
+import { ProcessingStatus } from '@cases/ordersProcessingModule/types'
 
 type ColumnPayload = {
-    assigneeIds?: string[];
     column: ProcessingStatus;
+    assigneeIds?: string[];
     limit?: number;
     page?: number;
 }
@@ -25,23 +25,23 @@ const createOrder = (
     processingStatus: ProcessingStatus,
     assigneeId: number | null
 ): Order => ({
-    assigneeId,
-    assigneeName: assigneeId === 1 ? 'Анна Смирнова' : 'Иван Петров',
-    createdAt: '2026-03-16T10:00:00.000Z',
-    customerComment: '',
-    customerName: `Клиент ${number}`,
     id,
-    managerComment: '',
     number,
     orderType: 'eshop-individual',
     orderTypeLabel: 'Физическое лицо',
-    phone: '+7 900 000-00-00',
-    processingStatus,
     site: 'demo',
     siteLabel: 'Demo',
+    customerName: `Клиент ${number}`,
+    phone: '+7 900 000-00-00',
+    totalSumm: 12500,
+    assigneeId,
+    assigneeName: assigneeId === 1 ? 'Анна Смирнова' : 'Иван Петров',
+    customerComment: '',
+    managerComment: '',
     status: 'new',
     statusLabel: 'Новый',
-    totalSumm: 12500,
+    createdAt: '2026-03-16T10:00:00.000Z',
+    processingStatus,
 })
 
 const orders: Order[] = [
@@ -59,8 +59,8 @@ const supportedActions = [
 
 export const createOrdersProcessingHttpMiddleware = (): SandboxHostMiddleware<OrderSandboxSchemas> => {
     return async request => ({
-        body: JSON.stringify(resolveRequest(request)),
         status: supportedActions.includes(request.action) ? 200 : 404,
+        body: JSON.stringify(resolveRequest(request)),
     })
 }
 
@@ -68,8 +68,8 @@ const resolveRequest = (request: SandboxHttpCallRequest): unknown => {
     if (request.action === '/orders-processing/bootstrap') {
         return {
             managers: [
-                { firstName: 'Анна', id: 1, lastName: 'Смирнова' },
-                { firstName: 'Иван', id: 2, lastName: 'Петров' },
+                { id: 1, firstName: 'Анна', lastName: 'Смирнова' },
+                { id: 2, firstName: 'Иван', lastName: 'Петров' },
             ],
             orderTypes: [{ code: 'eshop-individual', name: 'Физическое лицо' }],
             sites: [{ code: 'demo', name: 'Demo' }],
@@ -95,7 +95,7 @@ const resolveRequest = (request: SandboxHttpCallRequest): unknown => {
         return { item }
     }
 
-    return { error: `Unsupported action: ${request.action}`, ok: false }
+    return { ok: false, error: `Unsupported action: ${request.action}` }
 }
 
 const resolveColumn = (payload: ColumnPayload) => {

@@ -25,6 +25,29 @@ stop:
 	$(TARGET_HEADER)
 	@$(DOCKER_COMPOSE) stop
 
+.PHONY: playwright-install
+playwright-install: ## Pulls Playwright image with Chromium and system dependencies
+	$(TARGET_HEADER)
+	$(DOCKER_COMPOSE) pull playwright
+
+.PHONY: test-jsdom
+test-jsdom: node_modules ## Run jsdom unit tests
+	$(TARGET_HEADER)
+	$(YARN) test:unit
+
+.PHONY: test-browser
+test-browser: node_modules ## Runs browser mode tests
+	$(TARGET_HEADER)
+	$(DOCKER_COMPOSE) run --rm --user "$$(id -u):$$(id -g)" playwright yarn test:browser
+
+.PHONY: test-e2e
+test-e2e: node_modules ## Runs e2e tests
+	$(TARGET_HEADER)
+	$(DOCKER_COMPOSE) run --rm --user "$$(id -u):$$(id -g)" playwright yarn test:e2e
+
+.PHONY: test-all
+test-all: test-jsdom test-browser test-e2e ## Runs all tests
+
 .PHONY: restart
 restart: ## Restarts all docker services or a particular service, if argument "service" is specified (example: make restart service="server").
 	$(TARGET_HEADER)
@@ -117,4 +140,4 @@ publish-case:
 		echo "Usage: make publish-case case=<case-name>"; \
 		exit 1; \
 	fi
-	@node scripts/publish-extension.js "$(case)"
+	@node scripts/publish-extension.cjs "$(case)"

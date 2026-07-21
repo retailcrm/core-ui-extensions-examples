@@ -9,6 +9,14 @@ services:
             - ./:/project
         working_dir: /project
 
+    playwright:
+        image: mcr.microsoft.com/playwright:v1.61.1-noble
+        ipc: host
+        user: "${UID:-1000}:${GID:-1000}"
+        volumes:
+            - ./:/project
+        working_dir: /project
+
     server:
         image: node:20-alpine
         user: node

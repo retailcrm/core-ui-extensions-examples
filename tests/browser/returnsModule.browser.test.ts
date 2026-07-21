@@ -12,7 +12,7 @@ import {
     createSandboxWorkerRuntime,
 } from '@retailcrm/embed-ui-v1-sandbox/automation/browser'
 
-import descriptor from '../../cases/returnsModule/extensionrc.json'
+import descriptor from '@cases/returnsModule/extensionrc.json'
 
 import {
     createReturnsHttpMiddleware,
@@ -32,7 +32,7 @@ describe('returnsModule worker extension', () => {
 
     test('filters, opens and saves a return', async () => {
         const sourceWorker = createExtensionSourceWorker(
-            new URL('../../cases/returnsModule/index.ts', import.meta.url)
+            new URL('@cases/returnsModule/index.ts', import.meta.url)
         )
 
         runtime = await createSandboxWorkerRuntime({

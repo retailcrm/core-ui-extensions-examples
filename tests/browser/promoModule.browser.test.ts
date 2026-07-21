@@ -13,7 +13,7 @@ import {
     createSandboxWorkerRuntime,
 } from '@retailcrm/embed-ui-v1-sandbox/automation/browser'
 
-import descriptor from '../../cases/promoModule/extensionrc.json'
+import descriptor from '@cases/promoModule/extensionrc.json'
 
 let runtime: SandboxWorkerRuntime | null = null
 
@@ -27,7 +27,9 @@ describe('promoModule worker extension', () => {
     })
 
     test('renders promotion settings page', async () => {
-        const sourceWorker = createPromoWorker()
+        const sourceWorker = createExtensionSourceWorker(
+            new URL('@cases/promoModule/index.ts', import.meta.url)
+        )
 
         runtime = await createSandboxWorkerRuntime({
             descriptorUuid: descriptor.code,
@@ -46,7 +48,9 @@ describe('promoModule worker extension', () => {
     })
 
     test('opens order promotion widget drawer', async () => {
-        const sourceWorker = createPromoWorker()
+        const sourceWorker = createExtensionSourceWorker(
+            new URL('@cases/promoModule/index.ts', import.meta.url)
+        )
 
         runtime = await createSandboxWorkerRuntime({
             descriptorUuid: descriptor.code,
@@ -66,7 +70,3 @@ describe('promoModule worker extension', () => {
         expect(within(drawer).getByText('3 товара в заказе')).toBeInstanceOf(HTMLElement)
     })
 })
-
-const createPromoWorker = () => createExtensionSourceWorker(
-    new URL('../../cases/promoModule/index.ts', import.meta.url)
-)

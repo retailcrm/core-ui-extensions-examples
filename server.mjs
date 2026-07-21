@@ -48,8 +48,10 @@ registerReturnsRoutes(app, { urlencoded })
 registerOrdersProcessingRoutes(app, { urlencoded })
 registerDemoRoutes(app, { urlencoded })
 
-const server = app.listen(3000, () => {
-    console.log('Serving on port 3000')
+const port = Number(process.env.EXTENSION_PORT || 3000)
+
+const server = app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
 
 process.on('SIGINT', () => {
