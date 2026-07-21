@@ -1,6 +1,9 @@
 {
     "compilerOptions": {
         "allowJs": true,
+        "paths": {
+            "@cases/*": ["cases/*"]
+        },
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
         "esModuleInterop": true,
@@ -41,7 +44,8 @@
         ]
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "tests/e2e"
     ],
     "include": [
         "cases/**/*.ts",

@@ -1,0 +1,21 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "noEmit": true,
+        "types": [
+            "node"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "tests/e2e/**/*.ts",
+        "vitest.config.playwright.ts"
+    ]
+}

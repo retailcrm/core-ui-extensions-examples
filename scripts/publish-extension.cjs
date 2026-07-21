@@ -11,7 +11,7 @@ require('dotenv').config({ path: '.env' })
 const caseName = process.argv[2]
 
 if (!caseName) {
-    console.error('Usage: node scripts/publish-extension.js <case-name>')
+    console.error('Usage: node scripts/publish-extension.cjs <case-name>')
     process.exit(1)
 }
 
@@ -46,9 +46,9 @@ const descriptorPagePayloadSchema = z.union([
 ])
 
 const manifestSchema = z.object({
+    uuid: z.string().min(1),
     code: z.string().min(1).optional(),
     name: z.string().min(1).optional(),
-    uuid: z.string().min(1),
     version: z.string().min(1),
     targets: z.array(z.string().min(1)).optional(),
     stylesheet: z.union([z.boolean(), z.string().min(1)]).optional(),
@@ -243,10 +243,10 @@ if (pages && pages.length > 0) {
 const integrationModule = {
     code,
     integrationCode: code,
-    active: true,
     name,
-    clientId,
+    active: true,
     baseUrl,
+    clientId,
     integrations: {
         embedJs,
     },
