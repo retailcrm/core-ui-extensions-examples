@@ -194,8 +194,26 @@
 
 Перед завершением UI-задачи по возможности прогонять релевантные проверки:
 
+- `yarn test:unit` для утилит, mapping и worker registry
+- `yarn test:browser` для worker-based extension cases
+- `yarn test:e2e` для sandbox shell и extension delivery flow
+- `yarn test:all` для полного набора тестов
 - `yarn lint`
 - `yarn typecheck`
 - `yarn build`
+
+Browser integration tests находятся в `tests/browser` и запускают настоящие
+entrypoints из `cases/*` через публичный API
+`@retailcrm/embed-ui-v1-sandbox/automation/browser`. Они должны мокать только
+`host.httpCall`, проверять пользовательское поведение и завершать runtime после
+каждого теста. Добавлять в этот suite можно только cases с `runner: "worker"`;
+legacy iframe-cases здесь не поддерживаются.
+
+E2E-тесты находятся в `tests/e2e` и используют публичный API
+`@retailcrm/embed-ui-v1-sandbox/automation/playwright`. Они должны загружать
+расширение через настоящий delivery URL, использовать семантические селекторы и
+проверять пользовательский сценарий целиком. Локальные sandbox и extension server
+запускаются конфигурацией Playwright, если соответствующие URL не заданы в
+`.env.sandbox`.
 
 Если проверка не запускалась или уперлась в окружение, это нужно явно сообщать.

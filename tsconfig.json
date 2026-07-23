@@ -1,6 +1,9 @@
 {
     "compilerOptions": {
         "allowJs": true,
+        "paths": {
+            "@cases/*": ["cases/*"]
+        },
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
         "esModuleInterop": true,
@@ -22,6 +25,7 @@
         "strict": true,
         "target": "ES2017",
         "types": [
+            "vite/client",
             "@retailcrm/embed-ui-v1-types/context",
             "@retailcrm/embed-ui-v1-types/scaffolding",
             "@vue/compiler-core/dist/compiler-core",
@@ -40,12 +44,14 @@
         ]
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "tests/e2e"
     ],
     "include": [
         "cases/**/*.ts",
         "cases/**/*.tsx",
         "cases/**/*.vue",
-        "cases/shims-*.d.ts"
+        "cases/shims-*.d.ts",
+        "tests/**/*.ts"
     ]
 }

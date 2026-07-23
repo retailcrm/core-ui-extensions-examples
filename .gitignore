@@ -11,7 +11,11 @@ node_modules/
 .yarn/install-state.gz
 
 .env
+.env.sandbox
 
 .DS_Store
+
+.vitest-attachments/
+artifacts/
 
 server/data/orders-processing-state.json

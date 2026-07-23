@@ -50,7 +50,7 @@ import { watch } from 'vue'
 import FilterPanel from './components/FilterPanel.vue'
 import KanbanBoard from './components/KanbanBoard.vue'
 
-import { toScalar } from './utils'
+import { buildProcessingQuery, toScalar } from './utils'
 import { useDictionaries } from './composables/dictionaries'
 import { useGroups } from './composables/groups'
 import { useMove } from './composables/dnd'
@@ -92,17 +92,6 @@ const errorLabel = (code: ErrorCode): string => {
     }
 }
 
-const buildQuery = (): Record<string, string> => {
-    const query: Record<string, string> = {}
-
-    if (filter.value.assigneeId) query.assignee = filter.value.assigneeId
-    if (filter.value.orderType) query.orderType = filter.value.orderType
-    if (filter.value.site) query.site = filter.value.site
-    if (filter.value.status) query.status = filter.value.status
-
-    return query
-}
-
 const {
     managers,
     orderTypes,
@@ -134,7 +123,7 @@ const submitFilters = async (data: OrderFilter) => {
 
     try {
         reset()
-        await host.replaceQuery(buildQuery())
+        await host.replaceQuery(buildProcessingQuery(filter.value))
         await init()
     } finally {
         applying.value = false

@@ -174,6 +174,93 @@ Page-case с kanban-доской задач для пользователей CR
 * remote-компонент должен быть помечен как `<script lang="ts" remote setup>`
 * в PhpStorm / WebStorm должен быть включен `Vue Language Server 3.x Preview`
 
+## Тестирование
+
+В проекте используются три уровня тестов:
+
+* unit — Vitest с окружением jsdom;
+* browser — Vitest Browser в реальном Chromium;
+* e2e — Playwright через sandbox shell и настоящий extension delivery.
+
+### Локальный запуск через Yarn
+
+Unit-тесты не требуют браузера:
+
+```bash
+yarn test:unit
+```
+
+Перед первым локальным запуском browser- или e2e-тестов установите Chromium:
+
+```bash
+yarn test:browsers:install
+```
+
+Запуск browser-тестов:
+
+```bash
+yarn test:browser
+```
+
+Для e2e-тестов создайте локальный файл окружения:
+
+```bash
+cp .env.sandbox.dist .env.sandbox
+yarn test:e2e
+```
+
+При пустых `SANDBOX_BASE_URL` и `SANDBOX_EXTENSION_URL` Playwright автоматически
+запускает локальные sandbox и extension server. Внешние адреса можно задать в
+`.env.sandbox`; в этом случае соответствующие локальные серверы запускаться не будут.
+Если локальный порт `3000` занят, задайте другой `EXTENSION_PORT` в
+`.env`. Playwright передаст его extension server и использует при построении
+delivery URL.
+
+Обычный набор без e2e и полный набор тестов запускаются командами:
+
+```bash
+yarn test
+yarn test:all
+```
+
+### Запуск через Docker Compose и Make
+
+Перед первым запуском browser/e2e-тестов скачайте зафиксированный Playwright-образ:
+
+```bash
+make playwright-install
+```
+
+Docker сохранит образ в локальном кеше, повторно устанавливать Chromium перед
+каждым запуском не нужно. Unit-тесты выполняются в обычном Node.js-контейнере,
+а browser/e2e-тесты — в отдельном Playwright-контейнере:
+
+```bash
+make test-jsdom
+make test-browser
+make test-e2e
+make test-all
+```
+
+### Browser-тесты worker-расширений
+
+Worker-based cases проверяются в реальном Chromium через Vitest Browser и
+`@retailcrm/embed-ui-v1-sandbox`. Suite запускает настоящий `cases/<name>/index.ts`,
+монтирует page или widget runner и подменяет только backend-вызовы `host.httpCall`.
+CRM, `server.mjs` и опубликованный delivery URL для этих тестов не нужны.
+
+Тесты находятся в `tests/browser`. Сейчас suite поддерживает только cases с
+`"runner": "worker"`: `promoModule`, `returnsModule`, `tasksModule` и
+`ordersProcessingModule`. Legacy iframe-cases в browser suite не входят.
+
+### E2E-тесты extension delivery
+
+E2E-тесты находятся в `tests/e2e`. Они запускают sandbox shell, загружают
+расширение через `/extension/:uuid`, проверяют stylesheet и пользовательские
+сценарии через публичный API `@retailcrm/embed-ui-v1-sandbox/automation/playwright`.
+HTML-отчёт, screenshots, traces и остальные артефакты сохраняются в
+`artifacts/playwright`.
+
 ## Запуск
 
 ### Начальное развертывание
