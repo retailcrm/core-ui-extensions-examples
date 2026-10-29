@@ -10185,6 +10185,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ticketClaim-b1ebc9@workspace:cases/ticketClaim":
+  version: 0.0.0-use.local
+  resolution: "ticketClaim-b1ebc9@workspace:cases/ticketClaim"
+  dependencies:
+    "@retailcrm/embed-ui-v1-components": ^0.9.33
+    "@retailcrm/embed-ui-v1-contexts": ^0.9.33
+    "@retailcrm/embed-ui-v1-endpoint": ^0.9.33
+    pinia: ^2.2.8
+    vue: ^3.5.13
+    vue-i18n: ^10.0.8
+  languageName: unknown
+  linkType: soft
+
+"ticketEscalation-9de68e@workspace:cases/ticketEscalation":
+  version: 0.0.0-use.local
+  resolution: "ticketEscalation-9de68e@workspace:cases/ticketEscalation"
+  dependencies:
+    "@retailcrm/embed-ui-v1-components": ^0.9.33
+    "@retailcrm/embed-ui-v1-contexts": ^0.9.33
+    "@retailcrm/embed-ui-v1-endpoint": ^0.9.33
+    pinia: ^2.2.8
+    vue: ^3.5.13
+    vue-i18n: ^10.0.8
+  languageName: unknown
+  linkType: soft
+
 "tinybench@npm:^2.9.0":
   version: 2.9.0
   resolution: "tinybench@npm:2.9.0"

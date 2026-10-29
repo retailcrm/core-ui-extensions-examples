@@ -115,6 +115,24 @@ Page-case с kanban-доской задач для пользователей CR
 
 Подробности по публикации, URL страницы и устройству кейса: [cases/tasksModule/README.md](cases/tasksModule/README.md).
 
+### 13. Передача на вторую линию `cases/ticketEscalation`
+
+Worker-case для `ticket/view:common.before`: выбор вопросов, сотрудника и статуса,
+предпросмотр сводки и последовательная передача с добавлением комментария.
+Сотрудники загружаются из CRM через backend расширения; после частичного отказа
+можно продолжить незавершённые шаги.
+
+Запуск и проверки: [cases/ticketEscalation/README.md](cases/ticketEscalation/README.md).
+
+### 14. Мастер оформления претензии `cases/ticketClaim`
+
+Worker-case для `ticket/edit:issues.after`: выбор товаров привязанных заказов,
+сбор обстоятельств, классификация вопроса и предпросмотр итогового описания.
+Изменяет только черновик. Сохранение и закрытие формы остаются за CRM.
+
+Запуск, проверки и ограничение preview песочницы `0.9.33`:
+[cases/ticketClaim/README.md](cases/ticketClaim/README.md).
+
 ## Tooling и IDE
 
 В проект добавлен `@omnicajs/vue-remote/tooling`, подключенный через `vueCompilerOptions.plugins` в `tsconfig.json`.
@@ -248,13 +266,18 @@ CRM, `server.mjs` и опубликованный delivery URL для этих �
 
 Тесты находятся в `tests/browser`. Сейчас suite поддерживает только cases с
 `"runner": "worker"`: `promoModule`, `returnsModule`, `tasksModule` и
-`ordersProcessingModule`. Legacy iframe-cases в browser suite не входят.
+`ordersProcessingModule`, `ticketEscalation` и `ticketClaim`. Legacy iframe-cases
+в browser suite не входят. У редактора пока отдельный тестовый хост на публичном
+`sandbox/core`: встроенного editor fixture в `0.9.33` нет.
 
 ### E2E-тесты extension delivery
 
 E2E-тесты находятся в `tests/e2e`. Они запускают sandbox shell, загружают
 расширение через `/extension/:uuid`, проверяют stylesheet и пользовательские
 сценарии через публичный API `@retailcrm/embed-ui-v1-sandbox/automation/playwright`.
+Запуск выполняется через `launchSandboxExtension` с runtime descriptor и выбранным
+fixture. Помимо page-case возвратов и виджета акций проверяется виджет просмотрщика
+обращения; редактор пока проверяется отдельным browser-тестом.
 HTML-отчёт, screenshots, traces и остальные артефакты сохраняются в
 `artifacts/playwright`.
 

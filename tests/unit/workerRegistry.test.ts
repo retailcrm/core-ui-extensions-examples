@@ -4,6 +4,8 @@ import ordersProcessingDescriptor from '@cases/ordersProcessingModule/extensionr
 import promoDescriptor from '@cases/promoModule/extensionrc.json'
 import returnsDescriptor from '@cases/returnsModule/extensionrc.json'
 import tasksDescriptor from '@cases/tasksModule/extensionrc.json'
+import ticketClaimDescriptor from '@cases/ticketClaim/extensionrc.json'
+import ticketEscalationDescriptor from '@cases/ticketEscalation/extensionrc.json'
 
 import registry from '../../cases.json'
 
@@ -12,6 +14,8 @@ const workerDescriptors = [
     promoDescriptor,
     returnsDescriptor,
     tasksDescriptor,
+    ticketEscalationDescriptor,
+    ticketClaimDescriptor,
 ]
 
 describe('worker descriptor registry', () => {

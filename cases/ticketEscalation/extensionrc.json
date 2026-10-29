@@ -1,0 +1,12 @@
+{
+    "code": "ticketEscalation",
+    "name": "Передача на вторую линию",
+    "uuid": "be53c974-defc-4114-b148-0f07b1ff918a",
+    "version": "0.1.0",
+    "entrypoint": "script",
+    "runner": "worker",
+    "targets": [
+        "ticket/view:common.before"
+    ],
+    "stylesheet": true
+}
