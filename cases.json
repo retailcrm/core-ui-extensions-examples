@@ -115,5 +115,21 @@
     "name": "ordersProcessingModule",
     "script": "ordersProcessingModule.js",
     "stylesheet": "ordersProcessingModule.css"
+  }, {
+    "uuid": "be53c974-defc-4114-b148-0f07b1ff918a",
+    "name": "ticketEscalation",
+    "targets": [
+      "ticket/view:common.before"
+    ],
+    "script": "ticketEscalation.js",
+    "stylesheet": "ticketEscalation.css"
+  }, {
+    "uuid": "ab2b087e-77cb-478b-a2dd-06fc3a3e065f",
+    "name": "ticketClaim",
+    "targets": [
+      "ticket/edit:issues.after"
+    ],
+    "script": "ticketClaim.js",
+    "stylesheet": "ticketClaim.css"
   }
 ]}

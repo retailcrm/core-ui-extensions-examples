@@ -9,6 +9,7 @@ import { registerDemoRoutes } from './server/routes/demo.mjs'
 import { registerEntrypointRoutes } from './server/routes/entrypoints.mjs'
 import { registerOrdersProcessingRoutes } from './server/routes/orders-processing.mjs'
 import { registerReturnsRoutes } from './server/routes/returns.mjs'
+import { registerTicketWorkflowRoutes } from './server/routes/ticket-workflows.mjs'
 
 configEnv({ path: '.env' })
 
@@ -47,6 +48,7 @@ registerEntrypointRoutes(app, { rootDir: __dirname })
 registerReturnsRoutes(app, { urlencoded })
 registerOrdersProcessingRoutes(app, { urlencoded })
 registerDemoRoutes(app, { urlencoded })
+registerTicketWorkflowRoutes(app, { urlencoded })
 
 const server = app.listen(3000, () => {
     console.log('Serving on port 3000')

@@ -1,0 +1,12 @@
+{
+    "code": "ticketClaim",
+    "name": "Мастер оформления претензии",
+    "uuid": "ab2b087e-77cb-478b-a2dd-06fc3a3e065f",
+    "version": "0.1.0",
+    "entrypoint": "script",
+    "runner": "worker",
+    "targets": [
+        "ticket/edit:issues.after"
+    ],
+    "stylesheet": true
+}
