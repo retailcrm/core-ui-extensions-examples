@@ -1,27 +1,22 @@
 import { expect, test } from '@playwright/test'
 
 import {
-    createExternalExtensionUrl,
-    createSandboxPagePath,
     getExtensionPageCodes,
     readSandboxSnapshot,
 } from '@retailcrm/embed-ui-v1-sandbox/automation/playwright'
 
-import { readExtensionDescriptor } from './__utils__/extensions'
+import { launchExample, readExtensionDescriptor } from './__utils__/extensions'
 
 const descriptor = readExtensionDescriptor('returnsModule')
 
 test('loads returns page through delivery, filters, opens and saves a return', async ({ page }) => {
-    const extensionUrl = createExternalExtensionUrl(descriptor)
     const [pageCode] = getExtensionPageCodes(descriptor)
 
-    await page.goto(createSandboxPagePath({
-        extensionUrl,
-        manifestUrl: extensionUrl,
+    await launchExample(page, descriptor, {
+        mode: 'page',
+        fixture: 'order-basic',
         pageCode,
-    }))
-
-    await expect(page).toHaveURL(/mode=page/u)
+    })
     await expect(page.getByRole('heading', { name: 'Список возвратов' })).toBeVisible()
 
     await page.getByPlaceholder('Например 100245').fill('100245')
